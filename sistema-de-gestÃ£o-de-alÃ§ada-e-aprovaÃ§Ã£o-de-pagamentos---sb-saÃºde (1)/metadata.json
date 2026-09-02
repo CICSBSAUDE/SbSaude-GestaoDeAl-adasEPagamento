@@ -1,6 +1,0 @@
-{
-  "name": "Sistema de Gestão de Alçada e Aprovação de Pagamentos - SB Saúde",
-  "description": "Sistema corporativo de governança financeira, enquadramento automático de alçadas (POL-DIR-01), controle FOR-FIN-01, aprovação multinível, conferência financeira, tesouraria e auditoria imutável.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

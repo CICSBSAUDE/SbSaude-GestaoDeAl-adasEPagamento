@@ -825,14 +825,17 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             {/* Monthly Ceiling Exceeded Warning */}
             {enquadramento.tetoMensalEstourado && (
-              <div className="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start space-x-3">
+              <div className="p-4 rounded-xl bg-amber-50 border-2 border-amber-300 text-amber-900 text-xs flex items-start space-x-3 shadow-sm">
                 <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold text-amber-900">
-                    Teto Mensal do Processo Excedido no Mês Atual
+                <div className="space-y-1">
+                  <p className="font-bold text-amber-950 text-xs uppercase tracking-wide">
+                    ⚠️ Teto Mensal Excedido — Liberação Exclusiva da Diretoria Executiva (POL-DIR-01)
                   </p>
-                  <p className="text-[11px] mt-0.5 text-amber-800">
-                    O valor acumulado neste mês atinge R$ {(enquadramento.tetoMensalAcumuladoAtual + Number(valorTotal)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}, superando o teto de R$ {enquadramento.tetoMensalProcesso.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}. Será exigida justificativa técnica para a Diretoria.
+                  <p className="text-[11px] text-amber-900 leading-relaxed">
+                    O valor acumulado neste mês atinge <strong className="font-mono">R$ {(enquadramento.tetoMensalAcumuladoAtual + Number(valorTotal)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>, superando o teto mensal de <strong className="font-mono">R$ {enquadramento.tetoMensalProcesso.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>.
+                  </p>
+                  <p className="text-[11px] font-semibold text-amber-950 bg-amber-100/80 p-2 rounded-lg border border-amber-200">
+                    🏛️ <strong>Regra de Governança:</strong> Esta solicitação incluirá obrigatoriamente a <strong>4ª Alçada (Diretoria Executiva / Conselho)</strong> e só poderá ser liberada por usuário com o Centro de Custo <strong>'Diretoria Executiva'</strong> ou <strong>'Diretoria Executiva / Conselho'</strong>.
                   </p>
                 </div>
               </div>

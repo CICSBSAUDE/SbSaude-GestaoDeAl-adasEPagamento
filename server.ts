@@ -12,8 +12,13 @@ async function startServer() {
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-  // API Routes
-  app.use('/api', apiRouter);
+  // API Routes with No-Cache headers to prevent stale data across browsers
+  app.use('/api', (req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+  }, apiRouter);
 
   // Health check
   app.get('/api/health', (req, res) => {
@@ -40,7 +45,7 @@ async function startServer() {
     });
   }
 
-  await db.loadFromFirestore();
+  await db.loadFromDatabase();
   console.log('[SB Saúde] Sincronização com o Cloud SQL Postgres concluída.');
 
   app.listen(PORT, '0.0.0.0', () => {

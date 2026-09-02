@@ -441,7 +441,28 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
                   {request.tetoMensalProcesso > 0 ? formatCurrency(request.tetoMensalProcesso) : 'Sem limite'}
                 </span>
               </div>
+              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-slate-500 block text-[9px] uppercase font-bold">Limite Semanal/Evento:</span>
+                <span className="font-mono text-slate-700">
+                  {(request.tetoSemanalProcesso || 0) > 0 ? formatCurrency(request.tetoSemanalProcesso || 0) : 'Sem limite'}
+                </span>
+              </div>
             </div>
+
+            {request.tetoMensalEstourado && (
+              <div className="p-3.5 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-start space-x-3">
+                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-amber-950">
+                    Teto Mensal do Processo Excedido (POL-DIR-01)
+                  </p>
+                  <p className="text-[11px] text-amber-800 mt-0.5">
+                    {request.motivoLiberacaoDiretoriaExecutiva ||
+                      "Esta solicitação excede o teto mensal orçado e exige liberação exclusiva por usuário do Centro de Custo 'Diretoria Executiva' ou 'Diretoria Executiva / Conselho'."}
+                  </p>
+                </div>
+              </div>
+            )}
 
             {request.analiseFracionamento?.possivelFracionamentoIdentificado && (
               <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start space-x-2">
@@ -670,6 +691,18 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
                   Avaliador: {currentUser?.name} ({currentUser?.cargo})
                 </span>
               </div>
+
+              {request.tetoMensalEstourado && activePendingEtapa?.nivel === 4 && (
+                <div className="p-3 rounded-lg bg-amber-100/90 border border-amber-300 text-amber-950 text-xs flex items-start space-x-2.5">
+                  <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="block font-bold">Liberação de Alçada Máxima — Teto Mensal Excedido (POL-DIR-01)</strong>
+                    <span className="text-[11px] text-amber-900">
+                      Esta despesa supera o teto mensal orçado do processo e sua liberação é de competência exclusiva de usuários com o Centro de Custo <strong>'Diretoria Executiva'</strong> ou <strong>'Diretoria Executiva / Conselho'</strong>.
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {approvalError && (
                 <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center space-x-2">

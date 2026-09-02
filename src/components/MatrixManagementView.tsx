@@ -162,7 +162,7 @@ export const MatrixManagementView: React.FC = () => {
   ];
 
   const getEffectiveAlcadas = (regra: RegraAlcada): (1 | 2 | 3 | 4)[] => {
-    if (regra.alcadasObrigatorias && regra.alcadasObrigatorias.length > 0) {
+    if (regra.alcadasObrigatorias && Array.isArray(regra.alcadasObrigatorias)) {
       return [...regra.alcadasObrigatorias].sort((a, b) => a - b);
     }
     const detected: (1 | 2 | 3 | 4)[] = [];
@@ -289,10 +289,10 @@ export const MatrixManagementView: React.FC = () => {
         alcadasObrigatorias: sortedAlcadas,
         cargosHabilitadosSolicitante: editCargosSolicitante,
         cargoHabilitadoDocumento: editCargosSolicitante.join(', ') || 'Todos os Colaboradores',
-        cargosHabilitados1: editCargos1,
-        cargosHabilitados2: editCargos2,
-        cargosHabilitados3: editCargos3,
-        cargosHabilitados4: editCargos4,
+        cargosHabilitados1: sortedAlcadas.includes(1) ? editCargos1 : [],
+        cargosHabilitados2: sortedAlcadas.includes(2) ? editCargos2 : [],
+        cargosHabilitados3: sortedAlcadas.includes(3) ? editCargos3 : [],
+        cargosHabilitados4: sortedAlcadas.includes(4) ? editCargos4 : [],
         alçadaPorEvento: Number(editAlcadaPorEvento),
         tetoMensal: Number(editTetoMensal),
         risco: editRisco,
@@ -303,22 +303,28 @@ export const MatrixManagementView: React.FC = () => {
 
       const res = await api.updateMatrixRule(selectedMatrix.id, editingRule.id, payload);
 
-      // Update local state
-      setMatrices((prev) =>
-        prev.map((m) => {
-          if (m.id !== selectedMatrix.id) return m;
-          const updatedRegras = (m.regras || []).map((r) => {
-            if (r.id === editingRule.id) {
-              return { ...r, ...payload };
-            }
-            return r;
-          });
-          return { ...m, regras: updatedRegras };
-        })
-      );
+      // Update local state and reload matrices
+      if (res && res.matrix) {
+        setMatrices((prev) =>
+          prev.map((m) => (m.id === res.matrix.id ? res.matrix : m))
+        );
+      } else {
+        setMatrices((prev) =>
+          prev.map((m) => {
+            if (m.id !== selectedMatrix.id) return m;
+            const updatedRegras = (m.regras || []).map((r) => {
+              if (r.id === editingRule.id) {
+                return { ...r, ...payload };
+              }
+              return r;
+            });
+            return { ...m, regras: updatedRegras };
+          })
+        );
+      }
 
       setToastMessage(
-        `Regra do processo "${editingRule.processoNome}" atualizada com sucesso! Solicitantes: ${editCargosSolicitante.length > 0 ? editCargosSolicitante.join(', ') : 'Padrão'}. Alçadas: ${sortedAlcadas.map((n) => `N${n}`).join(' ➔ ') || 'Isento'}.`
+        `Regra do processo "${editingRule.processoNome}" atualizada e persistida com sucesso no banco de dados! Solicitantes: ${editCargosSolicitante.length > 0 ? editCargosSolicitante.join(', ') : 'Padrão'}. Alçadas: ${sortedAlcadas.map((n) => `N${n}`).join(' ➔ ') || 'Isento'}.`
       );
       setTimeout(() => setToastMessage(null), 5000);
 

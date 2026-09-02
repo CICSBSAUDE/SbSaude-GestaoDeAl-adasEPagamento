@@ -309,6 +309,11 @@ export interface Solicitacao {
   tetoMensalProcesso: number;
   tetoMensalAcumuladoAtual: number;
   tetoMensalEstourado: boolean;
+  tetoSemanalProcesso?: number;
+  tetoSemanalAcumuladoAtual?: number;
+  tetoSemanalEstourado?: boolean;
+  requerLiberacaoDiretoriaExecutiva?: boolean;
+  motivoLiberacaoDiretoriaExecutiva?: string;
 
   // 4. Verificação dos Princípios Inegociáveis (Declarações obrigatórias)
   declaracaoSegregacaoFuncoes: boolean;
@@ -426,6 +431,8 @@ export interface EnquadramentoResult {
   tetoSemanalProcesso?: number;
   tetoSemanalAcumuladoAtual?: number;
   tetoSemanalEstourado?: boolean;
+  requerLiberacaoDiretoriaExecutiva?: boolean;
+  motivoLiberacaoDiretoriaExecutiva?: string;
   isentoAprovacaoHierarquica?: boolean;
   autorizacaoSolicitante?: {
     autorizado: boolean;

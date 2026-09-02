@@ -27,6 +27,50 @@ export interface EnquadramentoParams {
 
 export class MatrixEngine {
   /**
+   * Helper to verify if a user belongs to the "Diretoria Executiva" or "Diretoria Executiva / Conselho" Cost Center / Cargo
+   */
+  static isUserDiretoriaExecutiva(user: {
+    name?: string;
+    email?: string;
+    cargo?: string;
+    area?: string;
+    centroCusto?: string;
+    centrosCusto?: string[];
+    roles?: string[];
+  }): boolean {
+    if (!user) return false;
+    const uCCs = [
+      user.centroCusto || '',
+      ...(user.centrosCusto || [])
+    ].map((c) => c.toUpperCase().trim());
+
+    const targetKeywords = [
+      'DIRETORIA EXECUTIVA',
+      'CONSELHO EXECUTIVO',
+      'CONSELHO',
+      'CC-9000',
+      'CC-9090',
+      'CC-9000-DEC',
+      'CC-9000-DEX',
+      'CC-9000-CSH'
+    ];
+
+    // 1. Check user cost centers
+    if (uCCs.some((cc) => targetKeywords.some((kw) => cc.includes(kw)))) {
+      return true;
+    }
+
+    // 2. Check cargo or area
+    const uCargo = (user.cargo || '').toUpperCase().trim();
+    const uArea = (user.area || '').toUpperCase().trim();
+    if (targetKeywords.some((kw) => uCargo.includes(kw) || uArea.includes(kw))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Helper to verify if a user has exact/direct or linked cost center assignment matching the requested cost center
    */
   static userMatchesCentroCustoStrict(
@@ -519,7 +563,7 @@ export class MatrixEngine {
     });
 
     const acumuladoMes = monthlyRequests.reduce((acc, r) => acc + r.valorTotal, 0);
-    const tetoEstourado = regra.tetoMensal > 0 && acumuladoMes + valorTotal > regra.tetoMensal;
+    const tetoEstourado = regra.tetoMensal > 0 && (acumuladoMes + valorTotal > regra.tetoMensal || valorTotal > regra.tetoMensal);
 
     // 4.1 Calculate weekly ceiling / event limit usage
     const weekMs = 7 * 24 * 60 * 60 * 1000;
@@ -535,7 +579,14 @@ export class MatrixEngine {
 
     const acumuladoSemana = weeklyRequests.reduce((acc, r) => acc + r.valorTotal, 0);
     const limiteSemanal = regra.alçadaPorEvento || 0; // Same as por evento
-    const tetoSemanalEstourado = limiteSemanal > 0 && (acumuladoSemana + valorTotal) > limiteSemanal;
+    const tetoSemanalEstourado = limiteSemanal > 0 && ((acumuladoSemana + valorTotal) > limiteSemanal || valorTotal > limiteSemanal);
+
+    // Mandatory Corporate Governance Rule:
+    // Any request exceeding the monthly limit MUST be cleared by Diretoria Executiva / Conselho
+    const requerLiberacaoDiretoriaExecutiva = tetoEstourado;
+    const motivoLiberacaoDiretoriaExecutiva = tetoEstourado
+      ? `Solicitação acima do Teto Mensal (R$ ${regra.tetoMensal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}). Conforme regra corporativa POL-DIR-01, despesas que ultrapassam o teto mensal só podem ser liberadas por usuário com Centro de Custo 'Diretoria Executiva' ou 'Diretoria Executiva / Conselho'.`
+      : undefined;
     
     // 3. Determine required approval chain levels according to POL-DIR-01
     let isentoAprovacaoHierarquica = false;
@@ -570,6 +621,12 @@ export class MatrixEngine {
       } else if (valorTotal > 50000 && !requiredLevels.includes(3) && !requiredLevels.includes(4)) {
         requiredLevels.push(3);
       }
+
+      // Mandatory Corporate Governance: If monthly limit is exceeded, 4ª Alçada (Diretoria Executiva / Conselho) is mandatory
+      if (tetoEstourado && !requiredLevels.includes(4)) {
+        requiredLevels.push(4);
+      }
+
       requiredLevels.sort((a, b) => a - b);
     }
 
@@ -618,12 +675,33 @@ export class MatrixEngine {
 
       const roleName = `APROVADOR_${lvl}` as UserRole;
 
+      // Special Governance Priority for Level 4 (4ª Alçada - Diretoria Executiva / Conselho)
+      // or whenever monthly limit is exceeded:
+      if (lvl === 4 || tetoEstourado) {
+        // 0. Priority 0: Active user with APROVADOR_4 whose CC or Cargo is Diretoria Executiva / Conselho
+        eligibleUser = db.users.find((u) => {
+          if (u.status !== 'ATIVO' || usedUserIds.has(u.id)) return false;
+          if (!u.roles.includes('APROVADOR_4')) return false;
+          return MatrixEngine.isUserDiretoriaExecutiva(u);
+        });
+
+        // 0.1 Priority 0.1: Any active user with role APROVADOR_4
+        if (!eligibleUser && lvl === 4) {
+          eligibleUser = db.users.find((u) => {
+            if (u.status !== 'ATIVO' || usedUserIds.has(u.id)) return false;
+            return u.roles.includes('APROVADOR_4');
+          });
+        }
+      }
+
       // 1. Priority 1: Active user with role APROVADOR_{lvl} who matches Matrix Cargos Habilitados AND matches the requested Cost Center
-      eligibleUser = db.users.find((u) => {
-        if (u.status !== 'ATIVO' || usedUserIds.has(u.id)) return false;
-        if (!u.roles.includes(roleName)) return false;
-        return matchesCargoList(u) && MatrixEngine.userMatchesCentroCustoStrict(u, centroCusto);
-      });
+      if (!eligibleUser) {
+        eligibleUser = db.users.find((u) => {
+          if (u.status !== 'ATIVO' || usedUserIds.has(u.id)) return false;
+          if (!u.roles.includes(roleName)) return false;
+          return matchesCargoList(u) && MatrixEngine.userMatchesCentroCustoStrict(u, centroCusto);
+        });
+      }
 
       // 2. Priority 2: Active user with role APROVADOR_{lvl} who matches Matrix Cargos Habilitados
       // (Supremacy of the Matrix of Approvals: if the rule designates Diretoria Financeira / Diretor Financeiro,
@@ -739,6 +817,8 @@ export class MatrixEngine {
       tetoSemanalProcesso: limiteSemanal,
       tetoSemanalAcumuladoAtual: acumuladoSemana,
       tetoSemanalEstourado: tetoSemanalEstourado,
+      requerLiberacaoDiretoriaExecutiva,
+      motivoLiberacaoDiretoriaExecutiva,
       isentoAprovacaoHierarquica,
       autorizacaoSolicitante,
       cadeiaAprovacao,

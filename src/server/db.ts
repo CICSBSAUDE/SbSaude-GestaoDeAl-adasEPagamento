@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import { db as sqlDb } from '../db/index.ts';
 import { appData } from '../db/schema.ts';
 import { eq, and } from 'drizzle-orm';
@@ -15,9 +13,7 @@ import {
   CostCenter,
 } from '../types.ts';
 
-const DATA_BACKUP_FILE = path.join(process.cwd(), '.app_data_store.json');
-
-// In-memory data store with transactional methods and seed data
+// Cloud SQL PostgreSQL transactional data store
 class Database {
   users: User[] = [];
   processes: ProcessItem[] = [];
@@ -42,95 +38,11 @@ class Database {
 
   constructor() {
     this.seed();
-    this.loadFromLocalBackup();
   }
 
-  private loadFromLocalBackup() {
+  public async loadFromDatabase() {
     try {
-      if (fs.existsSync(DATA_BACKUP_FILE)) {
-        const raw = fs.readFileSync(DATA_BACKUP_FILE, 'utf8');
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed.users) && parsed.users.length > 0) {
-          this.users = parsed.users;
-        }
-        if (Array.isArray(parsed.processes) && parsed.processes.length > 0) {
-          this.processes = parsed.processes;
-        }
-        if (Array.isArray(parsed.matrices) && parsed.matrices.length > 0) {
-          this.matrices = parsed.matrices;
-        }
-        if (Array.isArray(parsed.requests) && parsed.requests.length > 0) {
-          this.requests = parsed.requests;
-        }
-        if (Array.isArray(parsed.auditLogs) && parsed.auditLogs.length > 0) {
-          this.auditLogs = parsed.auditLogs;
-        }
-        if (Array.isArray(parsed.notifications) && parsed.notifications.length > 0) {
-          this.notifications = parsed.notifications;
-        }
-        if (Array.isArray(parsed.costCenters) && parsed.costCenters.length > 0) {
-          this.costCenters = parsed.costCenters;
-        }
-        if (parsed.config) {
-          this.config = { ...this.config, ...parsed.config };
-        }
-      }
-
-      // Ensure every user has a valid password
-      this.users.forEach((u) => {
-        if (!u.password) {
-          u.password = '123456';
-        }
-      });
-
-      // Ensure Ramon Reis (User's account) is present in users
-      const hasRamon = this.users.some(u => u.email.toLowerCase() === 'ramonreis.mmn@gmail.com');
-      if (!hasRamon) {
-        this.users.push({
-          id: 'usr-ramon',
-          name: 'Ramon Reis',
-          email: 'ramonreis.mmn@gmail.com',
-          cargo: 'Analista de Operações e Governança',
-          area: 'Operações e Governança',
-          centroCusto: 'CC-1010 - Gente e Gestão',
-          phone: '(11) 99999-8888',
-          roles: ['SOLICITANTE', 'APROVADOR_1', 'APROVADOR_2', 'ADMINISTRADOR'],
-          status: 'ATIVO',
-          authType: 'GOOGLE',
-          isEmailVerified: true,
-          password: '••••••••',
-          createdAt: '2026-07-01T08:00:00Z',
-          lastLoginAt: new Date().toISOString(),
-        });
-      }
-      this.syncCostCentersFromMatrices();
-    } catch (e) {
-      console.error('[DB] Erro ao carregar backup local:', e);
-    }
-  }
-
-  public saveToLocalBackup() {
-    try {
-      const data = {
-        users: this.users,
-        processes: this.processes,
-        matrices: this.matrices,
-        requests: this.requests,
-        auditLogs: this.auditLogs,
-        notifications: this.notifications,
-        costCenters: this.costCenters,
-        config: this.config,
-        savedAt: new Date().toISOString(),
-      };
-      fs.writeFileSync(DATA_BACKUP_FILE, JSON.stringify(data, null, 2), 'utf8');
-    } catch (e) {
-      console.error('[DB] Erro ao salvar backup local:', e);
-    }
-  }
-
-  public async loadFromFirestore() {
-    try {
-      // Load all collections from Cloud SQL PostgreSQL database
+      // Load all collections directly from Cloud SQL PostgreSQL
       const rows = await sqlDb.select().from(appData);
       if (rows.length > 0) {
         const usersList: User[] = [];
@@ -155,38 +67,74 @@ class Database {
 
         if (usersList.length > 0) this.users = usersList;
         if (processesList.length > 0) this.processes = processesList;
-        if (matricesList.length > 0) this.matrices = matricesList;
+        if (matricesList.length > 0) {
+          this.matrices = matricesList;
+        } else {
+          for (const m of this.matrices) await this.syncToSql('matrices', m.id, m);
+        }
         if (requestsList.length > 0) this.requests = requestsList;
         if (logsList.length > 0) this.auditLogs = logsList;
         if (notifsList.length > 0) this.notifications = notifsList;
         if (costCentersList.length > 0) this.costCenters = costCentersList;
+        else {
+          for (const c of this.costCenters) await this.syncToSql('costCenters', c.id, c);
+        }
         if (loadedConfig) this.config = { ...this.config, ...loadedConfig };
+
+        // Ensure robust user password persistence and prevent masked placeholders
+        let usersUpdated = false;
+        for (const user of this.users) {
+          const userEmail = (user.email || '').toLowerCase().trim();
+          const userGoogleEmail = (user.googleEmail || '').toLowerCase().trim();
+
+          // Ramon Reis account configuration
+          if (userEmail.includes('ramon') || userGoogleEmail.includes('ramonreis')) {
+            if (!user.password || user.password === '••••••••') {
+              user.password = 'v3ntimL3m0s';
+            }
+            user.email = 'ramon.reis@sbsaude.com.br';
+            user.googleEmail = 'ramonreis.mmn@gmail.com';
+            user.status = 'ATIVO';
+            user.mustChangePassword = false;
+            user.tempPassword = undefined;
+            await this.syncToSql('users', user.id, user);
+            usersUpdated = true;
+          } 
+          // Default fallback passwords for users with empty/masked placeholders
+          else if (!user.password || user.password === '••••••••') {
+            user.password = '123456';
+            await this.syncToSql('users', user.id, user);
+            usersUpdated = true;
+          }
+        }
 
         console.log(`[Cloud SQL Postgres] Dados carregados com sucesso: ${this.users.length} usuários, ${this.requests.length} solicitações, ${this.matrices.length} matrizes.`);
       } else {
-        // Initial database seed to Cloud SQL
+        // Initial database seed to Cloud SQL PostgreSQL
         console.log('[Cloud SQL Postgres] Banco vazio. Realizando seed inicial...');
-        for (const u of this.users) await this.syncToFirestore('users', u.id, u);
-        for (const c of this.costCenters) await this.syncToFirestore('costCenters', c.id, c);
-        for (const p of this.processes) await this.syncToFirestore('processes', p.id, p);
-        for (const m of this.matrices) await this.syncToFirestore('matrices', m.id, m);
-        for (const r of this.requests) await this.syncToFirestore('requests', r.id, r);
-        for (const l of this.auditLogs) await this.syncToFirestore('auditLogs', l.id, l);
-        for (const n of this.notifications) await this.syncToFirestore('notifications', n.id, n);
-        await this.syncToFirestore('config', 'cfg-default', this.config);
+        for (const u of this.users) await this.syncToSql('users', u.id, u);
+        for (const c of this.costCenters) await this.syncToSql('costCenters', c.id, c);
+        for (const p of this.processes) await this.syncToSql('processes', p.id, p);
+        for (const m of this.matrices) await this.syncToSql('matrices', m.id, m);
+        for (const r of this.requests) await this.syncToSql('requests', r.id, r);
+        for (const l of this.auditLogs) await this.syncToSql('auditLogs', l.id, l);
+        for (const n of this.notifications) await this.syncToSql('notifications', n.id, n);
+        await this.syncToSql('config', 'cfg-default', this.config);
         console.log('[Cloud SQL Postgres] Seed inicial concluído.');
       }
 
       this.syncCostCentersFromMatrices();
-      this.saveToLocalBackup();
     } catch (e: any) {
       console.error('[Cloud SQL Postgres] Erro ao sincronizar com o banco:', e?.message || e);
-      this.saveToLocalBackup();
     }
   }
 
-  public async syncToFirestore(collection: string, docId: string, data: any) {
-    this.saveToLocalBackup();
+  // Alias for backward compatibility if called
+  public async loadFromFirestore() {
+    return this.loadFromDatabase();
+  }
+
+  public async syncToSql(collection: string, docId: string, data: any) {
     try {
       await sqlDb.insert(appData).values({
         collection,
@@ -204,13 +152,20 @@ class Database {
     }
   }
 
-  public async deleteFromFirestore(collection: string, docId: string) {
-    this.saveToLocalBackup();
+  public async syncToFirestore(collection: string, docId: string, data: any) {
+    return this.syncToSql(collection, docId, data);
+  }
+
+  public async deleteFromSql(collection: string, docId: string) {
     try {
       await sqlDb.delete(appData).where(and(eq(appData.collection, collection), eq(appData.id, docId)));
     } catch (e: any) {
       console.warn(`[Cloud SQL Postgres] Erro ao excluir (${collection}/${docId}):`, e?.message || e);
     }
+  }
+
+  public async deleteFromFirestore(collection: string, docId: string) {
+    return this.deleteFromSql(collection, docId);
   }
 
   private seed() {
@@ -252,7 +207,8 @@ class Database {
       {
         id: 'usr-ramon',
         name: 'Ramon Reis',
-        email: 'ramonreis.mmn@gmail.com',
+        email: 'ramon.reis@sbsaude.com.br',
+        googleEmail: 'ramonreis.mmn@gmail.com',
         cargo: 'Analista de Sistemas',
         area: 'Tecnologia da Informação',
         centroCusto: 'CC-6060 - Tecnologia da Informação',
@@ -262,7 +218,7 @@ class Database {
         status: 'ATIVO',
         authType: 'GOOGLE',
         isEmailVerified: true,
-        password: '••••••••',
+        password: 'v3ntimL3m0s',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -279,7 +235,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -296,7 +252,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -313,7 +269,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -330,7 +286,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -347,7 +303,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -364,7 +320,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -381,7 +337,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -398,7 +354,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -415,7 +371,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -432,7 +388,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -449,7 +405,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -466,7 +422,7 @@ class Database {
         status: 'ATIVO',
         authType: 'EMAIL_PASSWORD',
         isEmailVerified: true,
-        password: '••••••••',
+        password: '123456',
         createdAt: '2026-07-01T08:00:00Z',
         lastLoginAt: '2026-08-27T07:30:00Z',
       },
@@ -934,10 +890,10 @@ class Database {
         risco: 'ALTO',
         alçadaPorEvento: 0,
         tetoMensal: 0,
-        alcadasObrigatorias: [3, 4],
-        cargosHabilitados3: ['Diretoria de Operações', 'Diretora de Operações', 'Diretoria Financeira', 'Diretor Financeiro'],
-        cargosHabilitados4: ['Diretoria Executiva / Conselho', 'Diretoria Executiva', 'Conselho'],
-        nivelMaximoRequerido: 4,
+        alcadasObrigatorias: [3],
+        cargosHabilitados3: ['Diretoria de Operações', 'Diretora de Operações'],
+        cargosHabilitados4: [],
+        nivelMaximoRequerido: 3,
         requerJustificativaSeAcimaLimite: true,
         cargoHabilitadoDocumento: 'Diretoria de Operações',
         cargosHabilitadosSolicitante: ["Diretoria de Operações","Diretora de Operações","Operações","CC-5050","CC-5000-DOP"],
@@ -953,7 +909,7 @@ class Database {
         tetoMensal: 0,
         alcadasObrigatorias: [3],
         cargosHabilitados3: ['Diretoria Financeira', 'Diretor Financeiro'],
-        cargosHabilitados4: ['Diretoria Executiva / Conselho', 'Diretoria Executiva', 'Conselho'],
+        cargosHabilitados4: [],
         nivelMaximoRequerido: 3,
         requerJustificativaSeAcimaLimite: false,
         cargoHabilitadoDocumento: 'DIRETORIA FINANCEIRA',
@@ -970,8 +926,8 @@ class Database {
         tetoMensal: 500000,
         alcadasObrigatorias: [2, 3, 4],
         cargosHabilitados2: ['Gerente Credenciamento', 'Gerente de Credenciamento e Núcleo Assistencial'],
-        cargosHabilitados3: ['Diretoria de Operações', 'Diretora de Operações', 'Diretoria Financeira', 'Diretor Financeiro'],
-        cargosHabilitados4: ['Diretoria Executiva / Conselho', 'Diretoria Executiva', 'Conselho'],
+        cargosHabilitados3: ['Diretoria de Operações', 'Diretora de Operações'],
+        cargosHabilitados4: ['Diretor Financeiro', 'Diretoria Financeira'],
         nivelMaximoRequerido: 4,
         requerJustificativaSeAcimaLimite: true,
         cargoHabilitadoDocumento: 'Gerente Credenciamento',
@@ -987,8 +943,8 @@ class Database {
         alçadaPorEvento: 25000,
         tetoMensal: 70000,
         alcadasObrigatorias: [1, 2, 3, 4],
-        cargosHabilitados1: ['Supervisor de Credenciamento', 'Coordenação Assistencial'],
-        cargosHabilitados2: ['Gerência de Núcleo Assistencial', 'Gerente de Credenciamento e Núcleo Assistencial', 'Supervisora de Credenciamento'],
+        cargosHabilitados1: ['Acolhimento a Gestantes', 'Supervisor de Credenciamento'],
+        cargosHabilitados2: ['Gerência de Núcleo Assistencial', 'Gerente de Credenciamento e Núcleo Assistencial'],
         cargosHabilitados3: ['Diretoria de Operações', 'Diretora de Operações', 'Diretoria Financeira', 'Diretor Financeiro'],
         cargosHabilitados4: ['Diretoria Executiva / Conselho', 'Diretoria Executiva', 'Conselho'],
         nivelMaximoRequerido: 4,
@@ -1630,7 +1586,7 @@ class Database {
         };
 
         this.costCenters.push(newCC);
-        this.syncToFirestore('costCenters', newCC.id, newCC);
+        this.syncToSql('costCenters', newCC.id, newCC);
         addedCount++;
       }
     });
@@ -1639,13 +1595,10 @@ class Database {
     (this.users || []).forEach((u) => {
       if (!u.centrosCusto || u.centrosCusto.length === 0) {
         u.centrosCusto = u.centroCusto ? [u.centroCusto] : ['CC-1010 - Recursos Humanos'];
-        this.syncToFirestore('users', u.id, u);
+        this.syncToSql('users', u.id, u);
       }
     });
 
-    if (addedCount > 0) {
-      this.saveToLocalBackup();
-    }
     return addedCount;
   }
 
@@ -1672,7 +1625,7 @@ class Database {
     };
     // Logs are strictly immutable: append-only
     this.auditLogs.unshift(newLog);
-    this.syncToFirestore('auditLogs', newLog.id, newLog);
+    this.syncToSql('auditLogs', newLog.id, newLog);
     return newLog;
   }
 
@@ -1684,7 +1637,7 @@ class Database {
       createdAt: new Date().toISOString(),
     };
     this.notifications.unshift(newNotif);
-    this.syncToFirestore('notifications', newNotif.id, newNotif);
+    this.syncToSql('notifications', newNotif.id, newNotif);
     return newNotif;
   }
 }
