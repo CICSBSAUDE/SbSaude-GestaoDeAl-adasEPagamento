@@ -1,6 +1,8 @@
-import { adminDb } from './firebaseAdmin';
 import fs from 'fs';
 import path from 'path';
+import { db as sqlDb } from '../db/index.ts';
+import { appData } from '../db/schema.ts';
+import { eq, and } from 'drizzle-orm';
 import {
   User,
   ProcessItem,
@@ -11,7 +13,7 @@ import {
   SystemNotification,
   SystemConfig,
   CostCenter,
-} from '../types';
+} from '../types.ts';
 
 const DATA_BACKUP_FILE = path.join(process.cwd(), '.app_data_store.json');
 
@@ -128,111 +130,86 @@ class Database {
 
   public async loadFromFirestore() {
     try {
-      if (!adminDb) {
-        this.saveToLocalBackup();
-        return;
-      }
-      const usersSnap = await adminDb.collection('users').get();
-      if (!usersSnap.empty) {
-        this.users = usersSnap.docs.map(d => d.data() as User);
-      } else {
-        // First boot seed to Firestore
-        for (const u of this.users) {
-          await adminDb.collection('users').doc(u.id).set(u, { merge: true });
+      // Load all collections from Cloud SQL PostgreSQL database
+      const rows = await sqlDb.select().from(appData);
+      if (rows.length > 0) {
+        const usersList: User[] = [];
+        const processesList: ProcessItem[] = [];
+        const matricesList: MatrizAlcada[] = [];
+        const requestsList: Solicitacao[] = [];
+        const logsList: AuditLog[] = [];
+        const notifsList: SystemNotification[] = [];
+        const costCentersList: CostCenter[] = [];
+        let loadedConfig: SystemConfig | null = null;
+
+        for (const row of rows) {
+          if (row.collection === 'users') usersList.push(row.data as User);
+          else if (row.collection === 'processes') processesList.push(row.data as ProcessItem);
+          else if (row.collection === 'matrices') matricesList.push(row.data as MatrizAlcada);
+          else if (row.collection === 'requests') requestsList.push(row.data as Solicitacao);
+          else if (row.collection === 'auditLogs') logsList.push(row.data as AuditLog);
+          else if (row.collection === 'notifications') notifsList.push(row.data as SystemNotification);
+          else if (row.collection === 'costCenters') costCentersList.push(row.data as CostCenter);
+          else if (row.collection === 'config') loadedConfig = row.data as SystemConfig;
         }
-      }
 
-      const ccSnap = await adminDb.collection('costCenters').get();
-      if (!ccSnap.empty) {
-        this.costCenters = ccSnap.docs.map(d => d.data() as CostCenter);
+        if (usersList.length > 0) this.users = usersList;
+        if (processesList.length > 0) this.processes = processesList;
+        if (matricesList.length > 0) this.matrices = matricesList;
+        if (requestsList.length > 0) this.requests = requestsList;
+        if (logsList.length > 0) this.auditLogs = logsList;
+        if (notifsList.length > 0) this.notifications = notifsList;
+        if (costCentersList.length > 0) this.costCenters = costCentersList;
+        if (loadedConfig) this.config = { ...this.config, ...loadedConfig };
+
+        console.log(`[Cloud SQL Postgres] Dados carregados com sucesso: ${this.users.length} usuários, ${this.requests.length} solicitações, ${this.matrices.length} matrizes.`);
       } else {
-        for (const c of this.costCenters) {
-          await adminDb.collection('costCenters').doc(c.id).set(c, { merge: true });
-        }
-      }
-
-      const processSnap = await adminDb.collection('processes').get();
-      if (!processSnap.empty) {
-        this.processes = processSnap.docs.map(d => d.data() as ProcessItem);
-      } else {
-        for (const p of this.processes) {
-          await adminDb.collection('processes').doc(p.id).set(p, { merge: true });
-        }
-      }
-
-      const matricesSnap = await adminDb.collection('matrices').get();
-      if (!matricesSnap.empty) {
-        this.matrices = matricesSnap.docs.map(d => d.data() as MatrizAlcada);
-      } else {
-        for (const m of this.matrices) {
-          await adminDb.collection('matrices').doc(m.id).set(m, { merge: true });
-        }
-      }
-
-      const requestsSnap = await adminDb.collection('requests').get();
-      if (!requestsSnap.empty) {
-        this.requests = requestsSnap.docs.map(d => d.data() as Solicitacao);
-      } else {
-        for (const r of this.requests) {
-          await adminDb.collection('requests').doc(r.id).set(r, { merge: true });
-        }
-      }
-
-      const logsSnap = await adminDb.collection('auditLogs').get();
-      if (!logsSnap.empty) {
-        this.auditLogs = logsSnap.docs.map(d => d.data() as AuditLog);
-      }
-
-      const notifsSnap = await adminDb.collection('notifications').get();
-      if (!notifsSnap.empty) {
-        this.notifications = notifsSnap.docs.map(d => d.data() as SystemNotification);
-      }
-
-      const configSnap = await adminDb.collection('config').doc('cfg-default').get();
-      if (configSnap.exists) {
-        this.config = configSnap.data() as SystemConfig;
-      } else {
-        await adminDb.collection('config').doc('cfg-default').set(this.config, { merge: true });
+        // Initial database seed to Cloud SQL
+        console.log('[Cloud SQL Postgres] Banco vazio. Realizando seed inicial...');
+        for (const u of this.users) await this.syncToFirestore('users', u.id, u);
+        for (const c of this.costCenters) await this.syncToFirestore('costCenters', c.id, c);
+        for (const p of this.processes) await this.syncToFirestore('processes', p.id, p);
+        for (const m of this.matrices) await this.syncToFirestore('matrices', m.id, m);
+        for (const r of this.requests) await this.syncToFirestore('requests', r.id, r);
+        for (const l of this.auditLogs) await this.syncToFirestore('auditLogs', l.id, l);
+        for (const n of this.notifications) await this.syncToFirestore('notifications', n.id, n);
+        await this.syncToFirestore('config', 'cfg-default', this.config);
+        console.log('[Cloud SQL Postgres] Seed inicial concluído.');
       }
 
       this.syncCostCentersFromMatrices();
       this.saveToLocalBackup();
-      console.log(`[DB] Dados carregados com sucesso: ${this.users.length} usuários, ${this.requests.length} solicitações.`);
     } catch (e: any) {
-      if (e?.code === 7 || e?.message?.includes('PERMISSION_DENIED')) {
-        console.log('[DB] Firestore em modo de armazenamento local integrado.');
-      } else {
-        console.warn('[DB] Fallback para armazenamento persistente local:', e?.message || e);
-      }
+      console.error('[Cloud SQL Postgres] Erro ao sincronizar com o banco:', e?.message || e);
       this.saveToLocalBackup();
     }
   }
 
   public async syncToFirestore(collection: string, docId: string, data: any) {
     this.saveToLocalBackup();
-    if (!adminDb) return;
     try {
-      await adminDb.collection(collection).doc(docId).set(data, { merge: true });
+      await sqlDb.insert(appData).values({
+        collection,
+        id: docId,
+        data,
+      }).onConflictDoUpdate({
+        target: [appData.collection, appData.id],
+        set: {
+          data,
+          updatedAt: new Date(),
+        },
+      });
     } catch (e: any) {
-      if (e?.code === 7 || e?.message?.includes('PERMISSION_DENIED')) {
-        // Fallback already saved locally in saveToLocalBackup()
-      } else {
-        console.warn(`[DB] Aviso de sincronização Firestore (${collection}/${docId}):`, e?.message || e);
-      }
+      console.warn(`[Cloud SQL Postgres] Erro ao gravar (${collection}/${docId}):`, e?.message || e);
     }
   }
 
   public async deleteFromFirestore(collection: string, docId: string) {
     this.saveToLocalBackup();
-    if (!adminDb) return;
     try {
-      await adminDb.collection(collection).doc(docId).delete();
+      await sqlDb.delete(appData).where(and(eq(appData.collection, collection), eq(appData.id, docId)));
     } catch (e: any) {
-      if (e?.code === 7 || e?.message?.includes('PERMISSION_DENIED')) {
-        // Fallback already deleted locally in saveToLocalBackup()
-      } else {
-        console.warn(`[DB] Aviso de exclusão Firestore (${collection}/${docId}):`, e?.message || e);
-      }
+      console.warn(`[Cloud SQL Postgres] Erro ao excluir (${collection}/${docId}):`, e?.message || e);
     }
   }
 

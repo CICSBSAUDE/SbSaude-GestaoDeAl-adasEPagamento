@@ -742,11 +742,6 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
               <div className="p-3 rounded-lg bg-white border border-slate-200 shadow-sm">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Faixa de Valor:</span>
-                <span className="font-bold text-slate-800 text-sm">{enquadramento.faixaValorLabel}</span>
-              </div>
-
-              <div className="p-3 rounded-lg bg-white border border-slate-200 shadow-sm">
                 <span className="text-slate-500 block text-[10px] uppercase font-bold">Nível de Risco:</span>
                 <span className={`font-bold text-sm ${
                   enquadramento.nivelRisco === 'ALTO'

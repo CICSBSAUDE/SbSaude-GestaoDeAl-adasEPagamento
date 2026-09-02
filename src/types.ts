@@ -1,4 +1,4 @@
-export * from './types/index';
+export * from './types/index.ts';
 
 import {
   ProcessItem,
@@ -7,7 +7,7 @@ import {
   MatrizAlcada,
   User,
   AuditLog,
-} from './types/index';
+} from './types/index.ts';
 
 export type Processo = ProcessItem;
 export type NotificationItem = SystemNotification;

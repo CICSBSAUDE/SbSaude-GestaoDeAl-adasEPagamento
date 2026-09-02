@@ -41,7 +41,7 @@ async function startServer() {
   }
 
   await db.loadFromFirestore();
-  console.log('[SB Saúde] Sincronização com o Firestore concluída.');
+  console.log('[SB Saúde] Sincronização com o Cloud SQL Postgres concluída.');
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[SB Saúde - Gestão de Alçada] Servidor iniciado com sucesso em http://0.0.0.0:${PORT}`);

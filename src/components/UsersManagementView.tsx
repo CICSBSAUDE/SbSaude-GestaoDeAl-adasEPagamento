@@ -14,7 +14,6 @@ import {
   UserCheck,
   Building2,
   Mail,
-  Phone,
   KeyRound,
   Check,
   X,
@@ -222,7 +221,6 @@ export const UsersManagementView: React.FC = () => {
     area: string;
     centroCusto: string;
     centrosCusto: string[];
-    phone: string;
     status: 'ATIVO' | 'INATIVO';
     roles: UserRole[];
     password?: string;
@@ -234,7 +232,6 @@ export const UsersManagementView: React.FC = () => {
     area: '',
     centroCusto: '',
     centrosCusto: [],
-    phone: '',
     status: 'ATIVO',
     roles: ['SOLICITANTE'],
     password: '',
@@ -459,7 +456,6 @@ export const UsersManagementView: React.FC = () => {
       area: '',
       centroCusto: defaultCC,
       centrosCusto: [defaultCC],
-      phone: '',
       status: 'ATIVO',
       roles: ['SOLICITANTE'],
       password: '',
@@ -483,7 +479,6 @@ export const UsersManagementView: React.FC = () => {
       area: user.area,
       centroCusto: user.centroCusto || (existingCCs[0] || ''),
       centrosCusto: existingCCs,
-      phone: user.phone || '',
       status: user.status as 'ATIVO' | 'INATIVO',
       roles: [...user.roles],
       password: '',
@@ -506,7 +501,6 @@ export const UsersManagementView: React.FC = () => {
       area: user.area,
       centroCusto: user.centroCusto || (existingCCs[0] || ''),
       centrosCusto: existingCCs,
-      phone: user.phone || '',
       status: user.status as 'ATIVO' | 'INATIVO',
       roles: [...user.roles],
     });
@@ -940,12 +934,6 @@ export const UsersManagementView: React.FC = () => {
                               <div className="flex items-center space-x-1.5 text-[10px] text-blue-600 font-medium mt-0.5">
                                 <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
                                 <span>Google SSO: {user.googleEmail}</span>
-                              </div>
-                            )}
-                            {user.phone && (
-                              <div className="flex items-center space-x-1.5 text-[10px] text-slate-400">
-                                <Phone className="w-2.5 h-2.5 shrink-0" />
-                                <span>{user.phone}</span>
                               </div>
                             )}
                           </div>
@@ -1402,19 +1390,6 @@ export const UsersManagementView: React.FC = () => {
                         })}
                       </select>
                     </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-700 font-semibold mb-1">
-                      Telefone / Ramal
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="(11) 98765-4321"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
-                    />
                   </div>
 
                   {/* Senha de Acesso Inicial */}

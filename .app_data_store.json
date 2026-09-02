@@ -3,84 +3,41 @@
     {
       "id": "usr-ramon",
       "name": "Ramon Reis",
-      "email": "ramonreis.mmn@gmail.com",
+      "email": "ramon.reis@sbsaude.com.br",
       "cargo": "Analista de Sistemas",
       "area": "Tecnologia da Informação",
       "centroCusto": "CC-1010 - Tecnologia da Informação",
       "phone": "(11) 99999-8888",
       "roles": [
-        "ADMINISTRADOR",
-        "SOLICITANTE",
-        "APROVADOR_1",
-        "APROVADOR_2",
-        "APROVADOR_3",
-        "APROVADOR_4",
-        "FINANCEIRO",
-        "TESOURARIA"
+        "ADMINISTRADOR"
       ],
       "status": "ATIVO",
       "authType": "GOOGLE",
       "isEmailVerified": true,
       "password": "••••••••",
       "createdAt": "2026-07-01T08:00:00Z",
-      "lastLoginAt": "2026-08-31T18:43:23.151Z",
+      "lastLoginAt": "2026-09-02T11:46:27.850Z",
       "centrosCusto": [
         "CC-1010 - Tecnologia da Informação"
       ],
       "googleEmail": "ramonreis.mmn@gmail.com"
     },
     {
-      "id": "usr-1",
-      "name": "Raquel Marimon",
-      "email": "raquel.marimon@sbsaude.com.br",
-      "cargo": "Analista de Gente e Gestão",
-      "area": "Gente e Gestão",
-      "centroCusto": "CC-1010 - Recursos Humanos",
-      "phone": "(11) 98765-4321",
-      "roles": [
-        "SOLICITANTE"
-      ],
-      "status": "ATIVO",
-      "authType": "EMAIL_PASSWORD",
-      "isEmailVerified": true,
-      "password": "••••••••",
-      "createdAt": "2026-07-01T08:00:00Z",
-      "lastLoginAt": "2026-08-27T07:30:00Z",
-      "centrosCusto": [
-        "CC-1010 - Recursos Humanos"
-      ]
-    },
-    {
-      "id": "usr-2",
-      "name": "Haroldo Peon",
-      "email": "haroldo.peon@sbsaude.com.br",
-      "cargo": "Supervisor de Credenciamento",
-      "area": "Credenciamento",
-      "centroCusto": "CC-2020 - Rede Credenciada",
-      "phone": "(11) 98765-1111",
-      "roles": [
-        "APROVADOR_1"
-      ],
-      "status": "ATIVO",
-      "authType": "EMAIL_PASSWORD",
-      "isEmailVerified": true,
-      "password": "••••••••",
-      "createdAt": "2026-07-01T08:00:00Z",
-      "lastLoginAt": "2026-08-27T07:30:00Z",
-      "centrosCusto": [
-        "CC-2020 - Rede Credenciada"
-      ]
-    },
-    {
       "id": "usr-3",
       "name": "Janine Sena",
       "email": "janine.sena@sbsaude.com.br",
-      "cargo": "Coordenadora de Finanças",
-      "area": "Finanças e Controladoria",
+      "cargo": "Auditoria do Sistema de Alçadas",
+      "area": "Auditoria do Sistema de Alçadas",
       "centroCusto": "CC-3030 - Finanças",
       "phone": "(11) 98765-2222",
       "roles": [
-        "APROVADOR_1"
+        "APROVADOR_1",
+        "APROVADOR_2",
+        "APROVADOR_3",
+        "APROVADOR_4",
+        "FINANCEIRO",
+        "TESOURARIA",
+        "ADMINISTRADOR"
       ],
       "status": "ATIVO",
       "authType": "EMAIL_PASSWORD",
@@ -114,48 +71,6 @@
       ]
     },
     {
-      "id": "usr-5",
-      "name": "Dr. Carlos Eduardo",
-      "email": "carlos.eduardo@sbsaude.com.br",
-      "cargo": "Gerente de COM & MKT",
-      "area": "Comunicação e Marketing",
-      "centroCusto": "CC-4040 - Marketing",
-      "phone": "(11) 98765-4444",
-      "roles": [
-        "APROVADOR_2"
-      ],
-      "status": "ATIVO",
-      "authType": "EMAIL_PASSWORD",
-      "isEmailVerified": true,
-      "password": "••••••••",
-      "createdAt": "2026-07-01T08:00:00Z",
-      "lastLoginAt": "2026-08-27T07:30:00Z",
-      "centrosCusto": [
-        "CC-4040 - Marketing"
-      ]
-    },
-    {
-      "id": "usr-6",
-      "name": "Dra. Mariana Silva",
-      "email": "mariana.silva@sbsaude.com.br",
-      "cargo": "Diretora de Operações",
-      "area": "Diretoria de Operações",
-      "centroCusto": "CC-5050 - Operações",
-      "phone": "(11) 98765-5555",
-      "roles": [
-        "APROVADOR_3"
-      ],
-      "status": "ATIVO",
-      "authType": "EMAIL_PASSWORD",
-      "isEmailVerified": true,
-      "password": "••••••••",
-      "createdAt": "2026-07-01T08:00:00Z",
-      "lastLoginAt": "2026-08-27T07:30:00Z",
-      "centrosCusto": [
-        "CC-5050 - Operações"
-      ]
-    },
-    {
       "id": "usr-7",
       "name": "Ane Kellen",
       "email": "anekellen.guimaraes@sbsaude.com.br",
@@ -164,7 +79,8 @@
       "centroCusto": "CC-3030 - Finanças",
       "phone": "(11) 98765-6666",
       "roles": [
-        "APROVADOR_3"
+        "APROVADOR_3",
+        "APROVADOR_4"
       ],
       "status": "ATIVO",
       "authType": "EMAIL_PASSWORD",
@@ -198,45 +114,95 @@
       ]
     },
     {
-      "id": "usr-10",
-      "name": "Fernando Rocha",
-      "email": "fernando.rocha@sbsaude.com.br",
-      "cargo": "Coordenador de Tesouraria",
-      "area": "Tesouraria",
-      "centroCusto": "CC-3030 - Finanças",
-      "phone": "(11) 98765-9999",
-      "roles": [
-        "TESOURARIA"
-      ],
-      "status": "ATIVO",
-      "authType": "EMAIL_PASSWORD",
-      "isEmailVerified": true,
-      "password": "••••••••",
-      "createdAt": "2026-07-01T08:00:00Z",
-      "lastLoginAt": "2026-08-27T07:30:00Z",
+      "id": "usr-1788349798790",
+      "name": "William Valentin",
+      "email": "william.valentin@sbsaude.com.br",
+      "googleEmail": "williampeixoto002@gmail.com",
+      "cargo": "Analista de Suporte N3",
+      "area": "Tecnologia de Informação",
+      "centroCusto": "CC-6060 - Tecnologia da Informação",
       "centrosCusto": [
-        "CC-3030 - Finanças"
-      ]
-    },
-    {
-      "id": "usr-11",
-      "name": "Vanessa Duarte",
-      "email": "vanessa.duarte@sbsaude.com.br",
-      "cargo": "Gerente de Governança e SGQ / Admin",
-      "area": "Governança e Qualidade",
-      "centroCusto": "CC-8080 - Governança SGQ",
-      "phone": "(11) 98765-0000",
+        "CC-6060 - Tecnologia da Informação"
+      ],
+      "phone": "",
       "roles": [
         "ADMINISTRADOR"
       ],
       "status": "ATIVO",
       "authType": "EMAIL_PASSWORD",
       "isEmailVerified": true,
+      "password": "v3ntimL3m0s",
+      "createdAt": "2026-09-02T11:49:58.790Z"
+    },
+    {
+      "id": "usr-1788349857195",
+      "name": "Thiago Lustosa",
+      "email": "thiago.lustosa@sbsaude.com.br",
+      "googleEmail": "thyagolustosa@gmail.com",
+      "cargo": "Coordenador de TI",
+      "area": "Tecnologia de Informação",
+      "centroCusto": "CC-6060 - Tecnologia da Informação",
+      "centrosCusto": [
+        "CC-6060 - Tecnologia da Informação"
+      ],
+      "phone": "",
+      "roles": [
+        "APROVADOR_1",
+        "APROVADOR_2",
+        "APROVADOR_3",
+        "APROVADOR_4",
+        "FINANCEIRO",
+        "TESOURARIA",
+        "ADMINISTRADOR"
+      ],
+      "status": "ATIVO",
+      "authType": "EMAIL_PASSWORD",
+      "isEmailVerified": true,
+      "password": "v3ntimL3m0s",
+      "createdAt": "2026-09-02T11:50:57.195Z"
+    },
+    {
+      "id": "usr-1788350335620",
+      "name": "test",
+      "email": "test@test.com",
+      "cargo": "tester",
+      "area": "test area",
+      "centroCusto": "CC-1010 - Recursos Humanos",
+      "centrosCusto": [
+        "CC-1010 - Recursos Humanos"
+      ],
+      "phone": "",
+      "roles": [
+        "SOLICITANTE"
+      ],
+      "status": "ATIVO",
+      "authType": "EMAIL_PASSWORD",
+      "isEmailVerified": true,
+      "password": "password123",
+      "createdAt": "2026-09-02T11:58:55.620Z"
+    },
+    {
+      "id": "usr-ramon",
+      "name": "Ramon Reis",
+      "email": "ramonreis.mmn@gmail.com",
+      "cargo": "Analista de Operações e Governança",
+      "area": "Operações e Governança",
+      "centroCusto": "CC-1010 - Gente e Gestão",
+      "phone": "(11) 99999-8888",
+      "roles": [
+        "SOLICITANTE",
+        "APROVADOR_1",
+        "APROVADOR_2",
+        "ADMINISTRADOR"
+      ],
+      "status": "ATIVO",
+      "authType": "GOOGLE",
+      "isEmailVerified": true,
       "password": "••••••••",
       "createdAt": "2026-07-01T08:00:00Z",
-      "lastLoginAt": "2026-08-27T07:30:00Z",
+      "lastLoginAt": "2026-09-02T12:01:06.447Z",
       "centrosCusto": [
-        "CC-8080 - Governança SGQ"
+        "CC-1010 - Gente e Gestão"
       ]
     }
   ],
@@ -2269,6 +2235,537 @@
   "requests": [],
   "auditLogs": [
     {
+      "id": "aud-1788350335622-85e6k",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-1788350335620",
+      "acao": "CRIACAO_USUARIO",
+      "descricao": "Usuário test criado com senha e papéis: SOLICITANTE.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresPosteriores": {
+        "id": "usr-1788350335620",
+        "name": "test",
+        "email": "test@test.com",
+        "cargo": "tester",
+        "area": "test area",
+        "centroCusto": "CC-1010 - Recursos Humanos",
+        "centrosCusto": [
+          "CC-1010 - Recursos Humanos"
+        ],
+        "phone": "",
+        "roles": [
+          "SOLICITANTE"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-09-02T11:58:55.620Z"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "curl/7.88.1",
+      "timestamp": "2026-09-02T11:58:55.622Z"
+    },
+    {
+      "id": "aud-1788349989655-o5n9j",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-7",
+      "acao": "EDICAO_USUARIO",
+      "descricao": "Cadastro do usuário Ane Kellen atualizado por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-7",
+        "name": "Ane Kellen",
+        "email": "anekellen.guimaraes@sbsaude.com.br",
+        "cargo": "Diretor Financeiro",
+        "area": "Diretoria Financeira",
+        "centroCusto": "CC-3030 - Finanças",
+        "phone": "(11) 98765-6666",
+        "roles": [
+          "APROVADOR_3"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-28T15:07:53.817Z",
+        "centrosCusto": [
+          "CC-3030 - Finanças"
+        ]
+      },
+      "valoresPosteriores": {
+        "id": "usr-7",
+        "name": "Ane Kellen",
+        "email": "anekellen.guimaraes@sbsaude.com.br",
+        "cargo": "Diretor Financeiro",
+        "area": "Diretoria Financeira",
+        "centroCusto": "CC-3030 - Finanças",
+        "phone": "(11) 98765-6666",
+        "roles": [
+          "APROVADOR_3",
+          "APROVADOR_4"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-28T15:07:53.817Z",
+        "centrosCusto": [
+          "CC-3030 - Finanças"
+        ]
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:53:09.655Z"
+    },
+    {
+      "id": "aud-1788349857197-ux1vf",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-1788349857195",
+      "acao": "CRIACAO_USUARIO",
+      "descricao": "Usuário Thiago Lustosa criado com senha e papéis: APROVADOR_1, APROVADOR_2, APROVADOR_3, APROVADOR_4, FINANCEIRO, TESOURARIA, ADMINISTRADOR.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresPosteriores": {
+        "id": "usr-1788349857195",
+        "name": "Thiago Lustosa",
+        "email": "thiago.lustosa@sbsaude.com.br",
+        "googleEmail": "thyagolustosa@gmail.com",
+        "cargo": "Coordenador de TI",
+        "area": "Tecnologia de Informação",
+        "centroCusto": "CC-6060 - Tecnologia da Informação",
+        "centrosCusto": [
+          "CC-6060 - Tecnologia da Informação"
+        ],
+        "phone": "",
+        "roles": [
+          "APROVADOR_1",
+          "APROVADOR_2",
+          "APROVADOR_3",
+          "APROVADOR_4",
+          "FINANCEIRO",
+          "TESOURARIA",
+          "ADMINISTRADOR"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-09-02T11:50:57.195Z"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:50:57.197Z"
+    },
+    {
+      "id": "aud-1788349798791-q5v71",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-1788349798790",
+      "acao": "CRIACAO_USUARIO",
+      "descricao": "Usuário William Valentin criado com senha e papéis: ADMINISTRADOR.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresPosteriores": {
+        "id": "usr-1788349798790",
+        "name": "William Valentin",
+        "email": "william.valentin@sbsaude.com.br",
+        "googleEmail": "williampeixoto002@gmail.com",
+        "cargo": "Analista de Suporte N3",
+        "area": "Tecnologia de Informação",
+        "centroCusto": "CC-6060 - Tecnologia da Informação",
+        "centrosCusto": [
+          "CC-6060 - Tecnologia da Informação"
+        ],
+        "phone": "",
+        "roles": [
+          "ADMINISTRADOR"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-09-02T11:49:58.790Z"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:49:58.791Z"
+    },
+    {
+      "id": "aud-1788349709183-5bgry",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-3",
+      "acao": "EDICAO_USUARIO",
+      "descricao": "Cadastro do usuário Janine Sena atualizado por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-3",
+        "name": "Janine Sena",
+        "email": "janine.sena@sbsaude.com.br",
+        "cargo": "Coordenadora de Finanças",
+        "area": "Finanças e Controladoria",
+        "centroCusto": "CC-3030 - Finanças",
+        "phone": "(11) 98765-2222",
+        "roles": [
+          "APROVADOR_1"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-27T07:30:00Z",
+        "centrosCusto": [
+          "CC-3030 - Finanças"
+        ]
+      },
+      "valoresPosteriores": {
+        "id": "usr-3",
+        "name": "Janine Sena",
+        "email": "janine.sena@sbsaude.com.br",
+        "cargo": "Auditoria do Sistema de Alçadas",
+        "area": "Auditoria do Sistema de Alçadas",
+        "centroCusto": "CC-3030 - Finanças",
+        "phone": "(11) 98765-2222",
+        "roles": [
+          "APROVADOR_1",
+          "APROVADOR_2",
+          "APROVADOR_3",
+          "APROVADOR_4",
+          "FINANCEIRO",
+          "TESOURARIA",
+          "ADMINISTRADOR"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-27T07:30:00Z",
+        "centrosCusto": [
+          "CC-3030 - Finanças"
+        ]
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:48:29.183Z"
+    },
+    {
+      "id": "aud-1788349676246-x09gy",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-10",
+      "acao": "REMOCAO_USUARIO",
+      "descricao": "Usuário Fernando Rocha (fernando.rocha@sbsaude.com.br) foi removido do sistema por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-10",
+        "name": "Fernando Rocha",
+        "email": "fernando.rocha@sbsaude.com.br",
+        "cargo": "Coordenador de Tesouraria",
+        "area": "Tesouraria",
+        "centroCusto": "CC-3030 - Finanças",
+        "phone": "(11) 98765-9999",
+        "roles": [
+          "TESOURARIA"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "••••••••",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-27T07:30:00Z",
+        "centrosCusto": [
+          "CC-3030 - Finanças"
+        ]
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:47:56.246Z"
+    },
+    {
+      "id": "aud-1788349670687-ps5cz",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-5",
+      "acao": "REMOCAO_USUARIO",
+      "descricao": "Usuário Dr. Carlos Eduardo (carlos.eduardo@sbsaude.com.br) foi removido do sistema por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-5",
+        "name": "Dr. Carlos Eduardo",
+        "email": "carlos.eduardo@sbsaude.com.br",
+        "cargo": "Gerente de COM & MKT",
+        "area": "Comunicação e Marketing",
+        "centroCusto": "CC-4040 - Marketing",
+        "phone": "(11) 98765-4444",
+        "roles": [
+          "APROVADOR_2"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "••••••••",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-27T07:30:00Z",
+        "centrosCusto": [
+          "CC-4040 - Marketing"
+        ]
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:47:50.687Z"
+    },
+    {
+      "id": "aud-1788349666024-gs2eb",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-2",
+      "acao": "REMOCAO_USUARIO",
+      "descricao": "Usuário Haroldo Peon (haroldo.peon@sbsaude.com.br) foi removido do sistema por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-2",
+        "name": "Haroldo Peon",
+        "email": "haroldo.peon@sbsaude.com.br",
+        "cargo": "Supervisor de Credenciamento",
+        "area": "Credenciamento",
+        "centroCusto": "CC-2020 - Rede Credenciada",
+        "phone": "(11) 98765-1111",
+        "roles": [
+          "APROVADOR_1"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "••••••••",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-27T07:30:00Z",
+        "centrosCusto": [
+          "CC-2020 - Rede Credenciada"
+        ]
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:47:46.024Z"
+    },
+    {
+      "id": "aud-1788349662651-o3hee",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-1",
+      "acao": "REMOCAO_USUARIO",
+      "descricao": "Usuário Raquel Marimon (raquel.marimon@sbsaude.com.br) foi removido do sistema por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-1",
+        "name": "Raquel Marimon",
+        "email": "raquel.marimon@sbsaude.com.br",
+        "cargo": "Analista de Gente e Gestão",
+        "area": "Gente e Gestão",
+        "centroCusto": "CC-1010 - Recursos Humanos",
+        "phone": "(11) 98765-4321",
+        "roles": [
+          "SOLICITANTE"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "••••••••",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-27T07:30:00Z",
+        "centrosCusto": [
+          "CC-1010 - Recursos Humanos"
+        ]
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:47:42.651Z"
+    },
+    {
+      "id": "aud-1788349658818-gc336",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-6",
+      "acao": "REMOCAO_USUARIO",
+      "descricao": "Usuário Dra. Mariana Silva (mariana.silva@sbsaude.com.br) foi removido do sistema por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-6",
+        "name": "Dra. Mariana Silva",
+        "email": "mariana.silva@sbsaude.com.br",
+        "cargo": "Diretora de Operações",
+        "area": "Diretoria de Operações",
+        "centroCusto": "CC-5050 - Operações",
+        "phone": "(11) 98765-5555",
+        "roles": [
+          "APROVADOR_3"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "••••••••",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-27T07:30:00Z",
+        "centrosCusto": [
+          "CC-5050 - Operações"
+        ]
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:47:38.818Z"
+    },
+    {
+      "id": "aud-1788349653575-1qwtg",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-11",
+      "acao": "REMOCAO_USUARIO",
+      "descricao": "Usuário Vanessa Duarte (vanessa.duarte@sbsaude.com.br) foi removido do sistema por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-11",
+        "name": "Vanessa Duarte",
+        "email": "vanessa.duarte@sbsaude.com.br",
+        "cargo": "Gerente de Governança e SGQ / Admin",
+        "area": "Governança e Qualidade",
+        "centroCusto": "CC-8080 - Governança SGQ",
+        "phone": "(11) 98765-0000",
+        "roles": [
+          "ADMINISTRADOR"
+        ],
+        "status": "ATIVO",
+        "authType": "EMAIL_PASSWORD",
+        "isEmailVerified": true,
+        "password": "••••••••",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-08-27T07:30:00Z",
+        "centrosCusto": [
+          "CC-8080 - Governança SGQ"
+        ]
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:47:33.575Z"
+    },
+    {
+      "id": "aud-1788349629528-nqayb",
+      "entidade": "USUARIO",
+      "entidadeId": "usr-ramon",
+      "acao": "EDICAO_USUARIO",
+      "descricao": "Cadastro do usuário Ramon Reis atualizado por Ramon Reis.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramon.reis@sbsaude.com.br",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "valoresAnteriores": {
+        "id": "usr-ramon",
+        "name": "Ramon Reis",
+        "email": "ramonreis.mmn@gmail.com",
+        "cargo": "Analista de Sistemas",
+        "area": "Tecnologia da Informação",
+        "centroCusto": "CC-1010 - Tecnologia da Informação",
+        "phone": "(11) 99999-8888",
+        "roles": [
+          "ADMINISTRADOR",
+          "SOLICITANTE",
+          "APROVADOR_1",
+          "APROVADOR_2",
+          "APROVADOR_3",
+          "APROVADOR_4",
+          "FINANCEIRO",
+          "TESOURARIA"
+        ],
+        "status": "ATIVO",
+        "authType": "GOOGLE",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-09-02T11:46:27.850Z",
+        "centrosCusto": [
+          "CC-1010 - Tecnologia da Informação"
+        ],
+        "googleEmail": "ramonreis.mmn@gmail.com"
+      },
+      "valoresPosteriores": {
+        "id": "usr-ramon",
+        "name": "Ramon Reis",
+        "email": "ramon.reis@sbsaude.com.br",
+        "cargo": "Analista de Sistemas",
+        "area": "Tecnologia da Informação",
+        "centroCusto": "CC-1010 - Tecnologia da Informação",
+        "phone": "(11) 99999-8888",
+        "roles": [
+          "ADMINISTRADOR"
+        ],
+        "status": "ATIVO",
+        "authType": "GOOGLE",
+        "isEmailVerified": true,
+        "password": "[PROTEGIDO]",
+        "createdAt": "2026-07-01T08:00:00Z",
+        "lastLoginAt": "2026-09-02T11:46:27.850Z",
+        "centrosCusto": [
+          "CC-1010 - Tecnologia da Informação"
+        ],
+        "googleEmail": "ramonreis.mmn@gmail.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:47:09.528Z"
+    },
+    {
+      "id": "aud-1788349587851-1nfpz",
+      "entidade": "AUTENTICACAO",
+      "entidadeId": "usr-ramon",
+      "acao": "LOGIN",
+      "descricao": "Login efetuado via Google Workspace SSO pelo usuário Ramon Reis (Analista de Sistemas) com a conta ramonreis.mmn@gmail.com.",
+      "usuarioId": "usr-ramon",
+      "usuarioNome": "Ramon Reis",
+      "usuarioEmail": "ramonreis.mmn@gmail.com",
+      "usuarioCargo": "Analista de Sistemas",
+      "usuarioArea": "Tecnologia da Informação",
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "timestamp": "2026-09-02T11:46:27.851Z"
+    },
+    {
       "id": "aud-1788347483201-lqj2z",
       "entidade": "USUARIO",
       "entidadeId": "usr-9",
@@ -2787,5 +3284,5 @@
     "sgqRepositorioCodigo": "POL-DIR-01 / FOR-FIN-01 (ISO 9001:2015 7.5)",
     "tempoRetencaoAnos": 2
   },
-  "savedAt": "2026-09-02T11:19:53.920Z"
+  "savedAt": "2026-09-02T12:26:09.305Z"
 }
