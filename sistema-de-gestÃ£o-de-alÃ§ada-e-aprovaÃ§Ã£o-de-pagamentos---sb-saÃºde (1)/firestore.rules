@@ -1,0 +1,164 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================
+    // GLOBAL SAFETY NET — Deny everything not explicitly allowed
+    // =========================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // =========================================================
+    // HELPER FUNCTIONS
+    // =========================================================
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function userExists() {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return userExists() && getUserData().roles.hasAny(['ADMINISTRADOR']);
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isActiveUser() {
+      return userExists() && getUserData().status == 'ATIVO';
+    }
+
+    function hasRole(role) {
+      return isSignedIn() && userExists() && getUserData().roles.hasAny([role]);
+    }
+
+    function isValidUserData(data) {
+      return data.keys().hasAll(['name', 'email', 'roles', 'status'])
+        && data.name is string && data.name.size() <= 100
+        && data.email is string && data.email.size() <= 100
+        && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && data.status in ['ATIVO', 'INATIVO', 'PENDENTE_VERIFICACAO']
+        && data.roles is list && data.roles.size() <= 10;
+    }
+
+    // =========================================================
+    // USERS — /users/{userId}
+    // =========================================================
+    match /users/{userId} {
+      // Any signed-in and active user can read profiles (needed to resolve names in approvals)
+      allow read: if isSignedIn();
+
+      // Allow creation if:
+      //   - The document ID matches the user's own Firebase UID (self-registration on first Google login), OR
+      //   - An admin is creating the user
+      allow create: if isSignedIn()
+        && (isOwner(userId) || isAdmin())
+        && isValidUserData(request.resource.data);
+
+      // Allow update if:
+      //   - The user is updating their own profile (limited fields), OR
+      //   - An admin is updating any profile
+      allow update: if isSignedIn()
+        && (isOwner(userId) || isAdmin())
+        && isValidUserData(request.resource.data);
+
+      // Only admins can delete user profiles
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================
+    // PROCESSES — /processes/{processId}
+    // =========================================================
+    match /processes/{processId} {
+      // All active users can read processes (needed when creating requests)
+      allow read: if isActiveUser();
+
+      // Only admins can create/update/delete processes
+      allow write: if isAdmin();
+    }
+
+    // =========================================================
+    // APPROVAL MATRICES — /matrices/{matrixId}
+    // =========================================================
+    match /matrices/{matrixId} {
+      // All active users can read matrices (needed for threshold calculations)
+      allow read: if isActiveUser();
+
+      // Only admins can create/update/delete matrices
+      allow create, update, delete: if isAdmin();
+
+      // Subcollection: Rules per matrix
+      match /rules/{ruleId} {
+        // All active users can read rules
+        allow read: if isActiveUser();
+
+        // Only admins can write rules
+        allow create, update, delete: if isAdmin();
+      }
+    }
+
+    // =========================================================
+    // PAYMENT REQUESTS — /requests/{requestId}
+    // =========================================================
+    match /requests/{requestId} {
+      // All active users can read requests.
+      // The Express backend enforces row-level security (e.g., a SOLICITANTE
+      // only sees their own requests through the API).
+      allow read: if isActiveUser();
+
+      // Direct client writes are FORBIDDEN.
+      // All mutations go through the Express backend using the Admin SDK,
+      // which bypasses these rules entirely.
+      allow write: if false;
+    }
+
+    // =========================================================
+    // AUDIT LOGS — /auditLogs/{logId}
+    // =========================================================
+    match /auditLogs/{logId} {
+      // Only admins and SGQ auditors can read audit logs
+      allow read: if isSignedIn() && (isAdmin() || hasRole('AUDITOR_SGQ'));
+
+      // Audit logs are STRICTLY append-only and system-generated.
+      // No client writes allowed — all writes go through the backend Admin SDK.
+      allow write: if false;
+    }
+
+    // =========================================================
+    // NOTIFICATIONS — /notifications/{notifId}
+    // =========================================================
+    match /notifications/{notifId} {
+      // Users can only read their own notifications, or broadcast ones (userId == 'ALL')
+      allow read: if isSignedIn()
+        && (resource.data.userId == request.auth.uid || resource.data.userId == 'ALL');
+
+      // Users can update their own notification (e.g., mark as read)
+      allow update: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lida']);
+
+      // Only backend (Admin SDK) can create or delete notifications
+      allow create, delete: if false;
+    }
+
+    // =========================================================
+    // SYSTEM CONFIG — /config/{configId}
+    // =========================================================
+    match /config/{configId} {
+      // Only admins can read or write system configuration
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+  }
+}

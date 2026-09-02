@@ -1,0 +1,67 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles.hasAny(['ADMINISTRADOR']);
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['name', 'email', 'roles', 'status'])
+        && data.name is string && data.name.size() <= 100
+        && data.email is string && data.email.size() <= 100 && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && data.status in ["ATIVO", "INATIVO", "PENDENTE_VERIFICACAO"]
+        && data.roles is list && data.roles.size() <= 10;
+    }
+
+    match /users/{userId} {
+      // Anyone signed in can read user profiles to resolve names, etc.
+      allow read: if isSignedIn();
+      // Only admins can create users, or the user themselves (if registering)
+      allow create: if isSignedIn() && (isOwner(userId) || isAdmin()) && isValidUser(request.resource.data);
+      // Users can update their own profile, Admins can update any
+      allow update: if isSignedIn() && (isOwner(userId) || isAdmin()) && isValidUser(request.resource.data);
+    }
+
+    match /processes/{processId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /matrices/{matrixId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+      
+      match /rules/{ruleId} {
+        allow read: if isSignedIn();
+        allow write: if isAdmin();
+      }
+    }
+
+    match /requests/{requestId} {
+      allow read: if isSignedIn();
+      // Since requests are created and modified mostly by the Express Backend, 
+      // direct client writes are forbidden (or restricted to backend via admin SDK).
+      allow write: if false;
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if isSignedIn() && isAdmin();
+      allow write: if false; // System generated only via Backend
+    }
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile with roles and department info",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 100, "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" },
+        "cargo": { "type": "string", "maxLength": 100 },
+        "area": { "type": "string", "maxLength": 100 },
+        "centroCusto": { "type": "string", "maxLength": 50 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "roles": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["SOLICITANTE", "APROVADOR", "FINANCEIRO", "TESOURARIA", "AUDITOR_SGQ", "ADMINISTRADOR"] },
+          "maxLength": 10
+        },
+        "status": { "type": "string", "enum": ["ATIVO", "INATIVO", "PENDENTE_VERIFICACAO"] },
+        "authType": { "type": "string", "enum": ["EMAIL_PASSWORD", "GOOGLE", "SAML_SSO"] },
+        "isEmailVerified": { "type": "boolean" },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" },
+        "lastLoginAt": { "type": "string" }
+      },
+      "required": ["name", "email", "roles", "status"]
+    },
+    "ProcessItem": {
+      "title": "Process Definition",
+      "description": "Defines what kind of process this is for",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "maxLength": 50 },
+        "name": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "natureza": { "type": "string", "enum": ["OPERACIONAL", "ASSISTENCIAL", "ADMINISTRATIVO", "JURIDICO", "MARKETING", "RH", "TI", "FINANCEIRO"] },
+        "riscoPadrao": { "type": "string", "enum": ["BAIXO", "MEDIO", "ALTO"] },
+        "requerJustificativaTecnica": { "type": "boolean" },
+        "permiteParcelamento": { "type": "boolean" },
+        "ativo": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["code", "name", "natureza", "riscoPadrao", "ativo", "createdAt", "updatedAt"]
+    },
+    "MatrizAlcada": {
+      "title": "Approval Matrix",
+      "description": "The configuration for matrix approvals",
+      "type": "object",
+      "properties": {
+        "codigo": { "type": "string", "maxLength": 50 },
+        "versao": { "type": "string", "maxLength": 50 },
+        "titulo": { "type": "string", "maxLength": 200 },
+        "status": { "type": "string", "enum": ["VIGENTE", "HISTORICO", "RASCUNHO", "EM_REVISAO"] },
+        "vigenciaInicio": { "type": "string", "maxLength": 20 },
+        "vigenciaFim": { "type": "string", "maxLength": 20 },
+        "elaboracao": { "type": "string", "maxLength": 100 },
+        "revisao": { "type": "string", "maxLength": 100 },
+        "aprovacao": { "type": "string", "maxLength": 100 },
+        "publicadoPor": { "type": "string", "maxLength": 100 },
+        "publicadoEm": { "type": "string", "maxLength": 20 },
+        "historicoAlteracoes": { "type": "string", "maxLength": 5000 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["codigo", "versao", "status", "createdAt", "updatedAt"]
+    },
+    "RegraAlcada": {
+      "title": "Approval Rule",
+      "description": "Rule inside an approval matrix",
+      "type": "object",
+      "properties": {
+        "matrizId": { "type": "string", "maxLength": 100 },
+        "processoId": { "type": "string", "maxLength": 100 },
+        "processoNome": { "type": "string", "maxLength": 100 },
+        "risco": { "type": "string", "enum": ["BAIXO", "MEDIO", "ALTO"] },
+        "alçadaPorEvento": { "type": "number" },
+        "tetoMensal": { "type": "number" },
+        "cargosHabilitados1": { "type": "array", "items": { "type": "string", "maxLength": 100 }, "maxLength": 20 },
+        "cargosHabilitados2": { "type": "array", "items": { "type": "string", "maxLength": 100 }, "maxLength": 20 },
+        "cargosHabilitados3": { "type": "array", "items": { "type": "string", "maxLength": 100 }, "maxLength": 20 },
+        "cargosHabilitados4": { "type": "array", "items": { "type": "string", "maxLength": 100 }, "maxLength": 20 },
+        "nivelMaximoRequerido": { "type": "number" },
+        "requerJustificativaSeAcimaLimite": { "type": "boolean" },
+        "observacoes": { "type": "string", "maxLength": 1000 },
+        "ativo": { "type": "boolean" }
+      },
+      "required": ["matrizId", "processoId", "nivelMaximoRequerido", "ativo"]
+    },
+    "Request": {
+      "title": "Payment Request",
+      "description": "A payment request waiting for approval",
+      "type": "object",
+      "properties": {
+        "numero": { "type": "string", "maxLength": 50 },
+        "sequencial": { "type": "number" },
+        "ano": { "type": "number" },
+        "dataSolicitacao": { "type": "string", "maxLength": 50 },
+        "areaSolicitante": { "type": "string", "maxLength": 100 },
+        "centroCusto": { "type": "string", "maxLength": 100 },
+        "solicitanteId": { "type": "string", "maxLength": 100 },
+        "solicitanteNome": { "type": "string", "maxLength": 100 },
+        "solicitanteCargo": { "type": "string", "maxLength": 100 },
+        "solicitanteEmail": { "type": "string", "maxLength": 100 },
+        "processoId": { "type": "string", "maxLength": 100 },
+        "processoNome": { "type": "string", "maxLength": 100 },
+        "processoContratoNumero": { "type": "string", "maxLength": 100 },
+        "fornecedorFavorecido": { "type": "string", "maxLength": 200 },
+        "cpfCnpj": { "type": "string", "maxLength": 20 },
+        "objetoDespesa": { "type": "string", "maxLength": 1000 },
+        "valorTotal": { "type": "number" },
+        "status": { "type": "string", "maxLength": 50 },
+        "etapaAtualNivel": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["numero", "solicitanteId", "fornecedorFavorecido", "valorTotal", "status", "createdAt"]
+    },
+    "AuditLog": {
+      "title": "Audit Log",
+      "description": "System audit log",
+      "type": "object",
+      "properties": {
+        "acao": { "type": "string", "maxLength": 200 },
+        "entidade": { "type": "string", "maxLength": 100 },
+        "entidadeId": { "type": "string", "maxLength": 100 },
+        "descricao": { "type": "string", "maxLength": 2000 },
+        "usuarioId": { "type": "string", "maxLength": 100 },
+        "usuarioNome": { "type": "string", "maxLength": 100 },
+        "usuarioEmail": { "type": "string", "maxLength": 100 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["acao", "entidade", "entidadeId", "usuarioId", "timestamp"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Application users."
+    },
+    "processes": {
+      "schema": { "$ref": "#/entities/ProcessItem" },
+      "description": "Process types."
+    },
+    "matrices": {
+      "schema": { "$ref": "#/entities/MatrizAlcada" },
+      "description": "Approval matrices."
+    },
+    "matrices/{matrixId}/rules": {
+      "schema": { "$ref": "#/entities/RegraAlcada" },
+      "description": "Rules for an approval matrix."
+    },
+    "requests": {
+      "schema": { "$ref": "#/entities/Request" },
+      "description": "Requests/Solicitations."
+    },
+    "auditLogs": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Audit logs."
+    }
+  }
+}

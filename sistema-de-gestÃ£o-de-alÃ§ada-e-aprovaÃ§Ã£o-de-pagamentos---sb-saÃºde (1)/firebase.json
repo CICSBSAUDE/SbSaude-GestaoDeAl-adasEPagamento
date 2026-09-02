@@ -1,0 +1,25 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "SB Saúde — Gestão de Alçada",
+        "supportEmail": "ti@sbsaude.com.br",
+        "authorizedRedirectUris": [
+          "https://tera-galaxy-lnm9t.firebaseapp.com",
+          "http://localhost:3000",
+          "http://localhost:5173"
+        ]
+      }
+    },
+    "authorizedDomains": [
+      "localhost",
+      "tera-galaxy-lnm9t.firebaseapp.com",
+      "tera-galaxy-lnm9t.web.app"
+    ]
+  }
+}
