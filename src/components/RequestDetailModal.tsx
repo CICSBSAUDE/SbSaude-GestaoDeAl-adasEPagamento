@@ -146,7 +146,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
       <html lang="pt-BR">
       <head>
         <meta charset="UTF-8">
-        <title>FOR-FIN-01 - ${request.numero}</title>
+        <title>Solicitação - ${request.numero}</title>
         <style>
           body { font-family: system-ui, -apple-system, sans-serif; color: #1e293b; padding: 24px; font-size: 12px; line-height: 1.5; background: #fff; }
           .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 16px; margin-bottom: 20px; }
@@ -180,7 +180,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
           <div style="text-align: right; font-family: monospace; font-size: 10px;">
             <p><strong>Nº Registro:</strong> ${request.numero}</p>
             <p><strong>Data:</strong> ${request.dataSolicitacao || new Date(request.createdAt).toLocaleDateString('pt-BR')}</p>
-            <p><strong>Ref:</strong> ${request.matrizAlcadaCodigo || 'POL-DIR-01'} (${request.matrizAlcadaVersao || 'v1.0'})</p>
+            <p><strong>Versão:</strong> ${request.matrizAlcadaVersao || 'v1.0'}</p>
           </div>
         </div>
 
@@ -237,7 +237,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
         </table>
 
         <div class="footer">
-          <p>SB Saúde — Sistema de Gestão de Alçadas & Pagamentos | Em conformidade com a Política POL-DIR-01 (ISO 9001:2015 Seção 7.5)</p>
+          <p>SB Saúde — Sistema de Gestão de Alçadas & Pagamentos | Em conformidade com as Políticas de Governança (ISO 9001:2015 Seção 7.5)</p>
         </div>
 
         <script>
@@ -279,7 +279,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
             <button
               onClick={handlePrint}
               className="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-200 shadow-sm transition flex items-center space-x-1.5"
-              title="Imprimir Formulário FOR-FIN-01 Oficial"
+              title="Imprimir Formulário Oficial"
             >
               <Printer className="w-3.5 h-3.5 text-blue-600" />
               <span className="hidden sm:inline">Imprimir / Salvar PDF</span>
@@ -308,14 +308,14 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
                     SB Saúde — Operadora de Planos de Saúde
                   </h1>
                   <p className="text-[11px] text-blue-600 font-bold">
-                    FOR-FIN-01 — Formulário de Registro de Alçada e Aprovação para Pagamento
+                    Formulário de Registro de Alçada e Aprovação para Pagamento
                   </p>
                 </div>
               </div>
 
               <div className="text-right font-mono text-[10px] space-y-0.5">
                 <p className="text-slate-400">Documento Normativo Controlado</p>
-                <p className="text-blue-600 font-bold">Referência: {request.matrizAlcadaCodigo || 'POL-DIR-01'} ({request.matrizAlcadaVersao})</p>
+                <p className="text-blue-600 font-bold">Versão: {request.matrizAlcadaVersao}</p>
                 <p className="text-slate-400">ISO 9001:2015 Seção 7.5</p>
               </div>
             </div>
@@ -385,6 +385,11 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
                 <span className="font-mono font-bold text-blue-600 text-sm">
                   {formatCurrency(request.valorTotal)}
                 </span>
+                {request.parcelamento && request.quantidadeParcelas && (
+                  <span className="block text-[10px] text-slate-500 mt-0.5 font-medium">
+                    {request.quantidadeParcelas}x de {formatCurrency(request.valorTotal / request.quantidadeParcelas)}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -393,7 +398,11 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
               <p className="text-slate-800 mt-0.5">{request.objetoDespesa}</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-[11px] border-t border-slate-100">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2 text-[11px] border-t border-slate-100">
+              <div>
+                <span className="text-slate-500 block text-[10px] uppercase font-bold">Natureza:</span>
+                <span className="text-slate-800 font-semibold">{request.natureza === 'CONTINUA' ? 'Contínua / Mensal' : 'Eventual'}</span>
+              </div>
               <div>
                 <span className="text-slate-500 block text-[10px] uppercase font-bold">Forma Pagamento:</span>
                 <span className="text-slate-800 font-semibold">{request.formaPagamento}</span>
@@ -401,12 +410,12 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
               <div>
                 <span className="text-slate-500 block text-[10px] uppercase font-bold">Data Vencimento:</span>
                 <span className="font-mono text-slate-800 font-semibold">
-                  {new Date(request.dataVencimento).toLocaleDateString('pt-BR')} ({request.diasUteisAteVencimento} dias úteis)
+                  {new Date(request.dataVencimento).toLocaleDateString('pt-BR')} ({request.diasUteisAteVencimento} dias)
                 </span>
               </div>
               <div>
                 <span className="text-slate-500 block text-[10px] uppercase font-bold">Rubrica Orçamentária:</span>
-                <span className="text-slate-800 font-semibold">{request.rubricaOrcamentaria}</span>
+                <span className="text-slate-800 font-semibold truncate block" title={request.rubricaOrcamentaria}>{request.rubricaOrcamentaria}</span>
               </div>
             </div>
           </div>
@@ -415,7 +424,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
           <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-3">
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5 pb-2 border-b border-slate-100">
               <Layers className="w-4 h-4 text-blue-600" />
-              <span>3. Enquadramento e Análise de Risco (POL-DIR-01)</span>
+              <span>3. Enquadramento e Análise de Risco</span>
             </h3>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
@@ -454,7 +463,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
                 <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <div>
                   <p className="font-bold text-amber-950">
-                    Teto Mensal do Processo Excedido (POL-DIR-01)
+                    Teto Mensal do Processo Excedido
                   </p>
                   <p className="text-[11px] text-amber-800 mt-0.5">
                     {request.motivoLiberacaoDiretoriaExecutiva ||
@@ -511,7 +520,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
           <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-3">
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5 pb-2 border-b border-slate-100">
               <Lock className="w-4 h-4 text-blue-600" />
-              <span>5. Cadeia de Assinaturas e Decisões de Alçada (POL-DIR-01)</span>
+              <span>5. Cadeia de Assinaturas e Decisões de Alçada</span>
             </h3>
 
             {(!request.cadeiaAprovacao || request.cadeiaAprovacao.length === 0) ? (
@@ -522,7 +531,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
                     Isento de Aprovação Hierárquica de Alçadas
                   </p>
                   <p className="text-xs text-emerald-800 mt-1 leading-relaxed">
-                    O valor total ({formatCurrency(request.valorTotal)}) está estritamente dentro do limite semanal / por evento autorizado para este processo na norma POL-DIR-01. O pedido foi direcionado diretamente para a etapa de Conferência Financeira.
+                    O valor total ({formatCurrency(request.valorTotal)}) está estritamente dentro do limite semanal / por evento autorizado para este processo. O pedido foi direcionado diretamente para a etapa de Conferência Financeira.
                   </p>
                 </div>
               </div>
@@ -696,7 +705,7 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
                 <div className="p-3 rounded-lg bg-amber-100/90 border border-amber-300 text-amber-950 text-xs flex items-start space-x-2.5">
                   <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block font-bold">Liberação de Alçada Máxima — Teto Mensal Excedido (POL-DIR-01)</strong>
+                    <strong className="block font-bold">Liberação de Alçada Máxima — Teto Mensal Excedido</strong>
                     <span className="text-[11px] text-amber-900">
                       Esta despesa supera o teto mensal orçado do processo e sua liberação é de competência exclusiva de usuários com o Centro de Custo <strong>'Diretoria Executiva'</strong> ou <strong>'Diretoria Executiva / Conselho'</strong>.
                     </span>

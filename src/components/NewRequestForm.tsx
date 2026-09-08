@@ -436,10 +436,10 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
             </div>
             <div>
               <h2 className="text-sm font-bold text-slate-800">
-                FOR-FIN-01 — Formulário de Registro de Alçada e Aprovação para Pagamento
+                Formulário de Registro de Alçada e Aprovação para Pagamento
               </h2>
               <p className="text-xs text-slate-500">
-                Instruído conforme a POL-DIR-01 (Política de Alçada e Delegação de Autoridade)
+                Instruído conforme a Política de Alçada e Delegação de Autoridade
               </p>
             </div>
           </div>
@@ -486,7 +486,7 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
           <div className="flex items-center space-x-2 pb-3 border-b border-slate-100">
             <Layers className="w-4 h-4 text-blue-600" />
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-              1. Enquadramento no Processo da POL-DIR-01
+              1. Enquadramento no Processo
             </h3>
           </div>
 
@@ -640,7 +640,7 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+          <div className={`grid grid-cols-1 gap-4 pt-2 ${natureza === 'CONTINUA' ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Forma de Pagamento
@@ -681,13 +681,38 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
               </label>
               <select
                 value={natureza}
-                onChange={(e) => setNatureza(e.target.value as 'CONTINUA' | 'EVENTUAL')}
+                onChange={(e) => {
+                  setNatureza(e.target.value as 'CONTINUA' | 'EVENTUAL');
+                  if (e.target.value === 'CONTINUA') {
+                    setParcelamento(true);
+                  } else {
+                    setParcelamento(false);
+                    setQuantidadeParcelas(1);
+                  }
+                }}
                 className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-blue-600 focus:bg-white transition"
               >
                 <option value="EVENTUAL">Eventual / Não Recorrente</option>
                 <option value="CONTINUA">Contínua / Mensal Recorrente</option>
               </select>
             </div>
+
+            {natureza === 'CONTINUA' && (
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Número de Parcelas
+                </label>
+                <input
+                  type="number"
+                  min="2"
+                  max="120"
+                  value={quantidadeParcelas}
+                  onChange={(e) => setQuantidadeParcelas(Number(e.target.value))}
+                  required
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                />
+              </div>
+            )}
           </div>
 
           {/* Bank Info Fields */}

@@ -297,7 +297,7 @@ export class MatrixEngine {
   }
 
   /**
-   * Evaluates if a user is authorized to request a given process based on POL-DIR-01 "CARGOS HABILITADOS"
+   * Evaluates if a user is authorized to request a given process based on "CARGOS HABILITADOS"
    */
   static isUserAuthorizedToRequest(
     user: { id?: string; name?: string; email?: string; area?: string; cargo?: string; centroCusto?: string; centrosCusto?: string[]; roles?: string[] },
@@ -397,12 +397,12 @@ export class MatrixEngine {
       autorizado: false,
       cargoHabilitadoExigido,
       cargosHabilitadosLista,
-      motivo: `Conforme a POL-DIR-01 (coluna Cargos Habilitados), somente os cargos ou centros de custos habilitados [${cargoHabilitadoExigido}] possuem legitimidade para solicitar este processo. Seu cargo atual é "${user.cargo || 'Não definido'}" (${user.area || 'Área não definida'}).`,
+      motivo: `Conforme a política de governança (coluna Cargos Habilitados), somente os cargos ou centros de custos habilitados [${cargoHabilitadoExigido}] possuem legitimidade para solicitar este processo. Seu cargo atual é "${user.cargo || 'Não definido'}" (${user.area || 'Área não definida'}).`,
     };
   }
 
   /**
-   * Calculates value tier classification based on FOR-FIN-01 standard brackets
+   * Calculates value tier classification based on standard brackets
    */
   static calcularFaixaValor(valor: number): {
     faixa: 'ATE_5K' | 'DE_5K_A_20K' | 'DE_20K_A_50K' | 'DE_50K_A_100K' | 'ACIMA_100K';

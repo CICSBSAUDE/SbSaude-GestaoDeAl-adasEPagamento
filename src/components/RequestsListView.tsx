@@ -65,7 +65,7 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
       'Data Vencimento',
       'Dias até Vencimento',
       'Status Atual',
-      'Processo Operacional (POL-DIR-01)',
+      'Processo Operacional',
       'Fornecedor / Favorecido',
       'CNPJ / CPF Favorecido',
       'Objeto da Despesa',
@@ -226,10 +226,10 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
         <div>
           <h2 className="text-sm font-bold text-slate-800 flex items-center space-x-2">
             <FileSpreadsheet className="w-4 h-4 text-red-600" />
-            <span>Registro de Solicitações (FOR-FIN-01)</span>
+            <span>Registro de Solicitações</span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Consulta consolidada de autorizações de pagamento, trilha de assinaturas e alçadas da POL-DIR-01.
+            Consulta consolidada de autorizações de pagamento, trilha de assinaturas e alçadas.
           </p>
         </div>
 
@@ -346,43 +346,50 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
             <table className="w-full text-left text-xs border-collapse">
               <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100">
                 <tr>
-                  <th className="py-3 px-5">ID FOR-FIN-01</th>
-                  <th className="py-3 px-5">Processo & Objeto</th>
-                  <th className="py-3 px-5">Solicitante & Área</th>
-                  <th className="py-3 px-5">Favorecido / CNPJ</th>
-                  <th className="py-3 px-5 text-right">Valor Total</th>
-                  <th className="py-3 px-5 text-center">Risco</th>
-                  <th className="py-3 px-5">Alçada</th>
-                  <th className="py-3 px-5">Vencimento</th>
-                  <th className="py-3 px-5">Status</th>
-                  <th className="py-3 px-5 text-right">Ação</th>
+                  <th className="py-2 px-2">ID da Solicitação</th>
+                  <th className="py-2 px-2">Processo & Objeto</th>
+                  <th className="py-2 px-2">Solicitante & Área</th>
+                  <th className="py-2 px-2">Favorecido / CNPJ</th>
+                  <th className="py-2 px-2 text-right">Valor Total</th>
+                  <th className="py-2 px-2 text-center">Risco</th>
+                  <th className="py-2 px-2">Alçada</th>
+                  <th className="py-2 px-2">Vencimento</th>
+                  <th className="py-2 px-2">Status</th>
+                  <th className="py-2 px-2 text-right">Ação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filtered.map((r) => (
                   <tr key={r.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3.5 px-5 font-mono font-bold text-blue-600 whitespace-nowrap">
+                    <td className="py-2.5 px-2 font-mono font-bold text-blue-600 whitespace-nowrap">
                       {r.numero}
                       <span className="block text-[9px] text-slate-400 font-sans font-normal">
                         {r.dataSolicitacao}
                       </span>
                     </td>
-                    <td className="py-3.5 px-5">
-                      <p className="font-semibold text-slate-800 truncate max-w-xs">{r.processoNome}</p>
-                      <p className="text-[10px] text-slate-500 truncate max-w-xs">{r.objetoDespesa}</p>
+                    <td className="py-2.5 px-2">
+                      <p className="font-semibold text-slate-800 truncate max-w-[12rem]">{r.processoNome}</p>
+                      <p className="text-[10px] text-slate-500 truncate max-w-[12rem]">{r.objetoDespesa}</p>
                     </td>
-                    <td className="py-3.5 px-5">
-                      <p className="font-medium text-slate-800">{r.solicitanteNome}</p>
-                      <p className="text-[10px] text-slate-400">{r.areaSolicitante}</p>
+                    <td className="py-2.5 px-2">
+                      <p className="font-medium text-slate-800 truncate max-w-[10rem]">{r.solicitanteNome}</p>
+                      <p className="text-[10px] text-slate-400 truncate max-w-[10rem]">{r.areaSolicitante}</p>
                     </td>
-                    <td className="py-3.5 px-5">
-                      <p className="font-medium text-slate-800">{r.fornecedorFavorecido}</p>
-                      <p className="text-[10px] text-slate-400 font-mono">{r.cpfCnpj || '—'}</p>
+                    <td className="py-2.5 px-2">
+                      <p className="font-medium text-slate-800 truncate max-w-[10rem]">{r.fornecedorFavorecido}</p>
+                      <p className="text-[10px] text-slate-400 font-mono truncate max-w-[10rem]">{r.cpfCnpj || '—'}</p>
                     </td>
-                    <td className="py-3.5 px-5 font-bold text-right text-slate-800 font-mono whitespace-nowrap">
-                      {formatCurrency(r.valorTotal)}
+                    <td className="py-2.5 px-2 text-right whitespace-nowrap">
+                      <p className="font-bold text-slate-800 font-mono">
+                        {formatCurrency(r.valorTotal)}
+                      </p>
+                      {r.parcelamento && r.quantidadeParcelas && (
+                        <p className="text-[10px] text-slate-400 font-medium">
+                          {r.quantidadeParcelas}x de {formatCurrency(r.valorTotal / r.quantidadeParcelas)}
+                        </p>
+                      )}
                     </td>
-                    <td className="py-3.5 px-5 text-center whitespace-nowrap">
+                    <td className="py-2.5 px-2 text-center whitespace-nowrap">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                         r.nivelRisco === 'ALTO'
                           ? 'bg-red-50 text-red-600 border border-red-200'
@@ -393,12 +400,12 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
                         {r.nivelRisco}
                       </span>
                     </td>
-                    <td className="py-3.5 px-5 whitespace-nowrap">
+                    <td className="py-2.5 px-2 whitespace-nowrap">
                       <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-semibold">
                         {r.alcadaAplicavelMaxima}ª Alçada
                       </span>
                     </td>
-                    <td className="py-3.5 px-5 whitespace-nowrap">
+                    <td className="py-2.5 px-2 whitespace-nowrap">
                       <div className="flex items-center space-x-1.5">
                         <span className="font-mono text-slate-700">
                           {new Date(r.dataVencimento).toLocaleDateString('pt-BR')}
@@ -410,7 +417,7 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
                         )}
                       </div>
                     </td>
-                    <td className="py-3.5 px-5 whitespace-nowrap">
+                    <td className="py-2.5 px-2 whitespace-nowrap">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                         r.status.startsWith('AGUARDANDO_')
                           ? 'bg-amber-50 text-amber-700 border border-amber-200'
@@ -423,7 +430,7 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
                         {r.status.replace(/_/g, ' ')}
                       </span>
                     </td>
-                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
+                    <td className="py-2.5 px-2 text-right whitespace-nowrap">
                       <button
                         onClick={() => onOpenRequest(r)}
                         className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-600 text-slate-700 hover:text-white font-bold text-xs border border-slate-200 hover:border-blue-600 transition flex items-center space-x-1 ml-auto"

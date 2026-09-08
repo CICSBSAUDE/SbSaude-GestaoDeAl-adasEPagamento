@@ -65,7 +65,7 @@ export const SGQRepositoryView: React.FC<SGQRepositoryViewProps> = ({ isAdmin = 
               Repositório SGQ, Governança & Parâmetros Corporativos
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Documentos normativos controlados em conformidade com ISO 9001:2015 (Seção 7.5 Informação Documentada) e POL-DIR-01.
+              Documentos normativos controlados em conformidade com ISO 9001:2015 (Seção 7.5 Informação Documentada).
             </p>
           </div>
         </div>
@@ -74,13 +74,13 @@ export const SGQRepositoryView: React.FC<SGQRepositoryViewProps> = ({ isAdmin = 
       {/* Normative Documents Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        {/* POL-DIR-01 */}
+        {/* Política de Alçada */}
         <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div className="flex items-center space-x-2">
               <BookOpen className="w-5 h-5 text-blue-600" />
               <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
-                POL-DIR-01 — Política de Alçada
+                Política de Alçada e Governança
               </h3>
             </div>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
@@ -99,13 +99,13 @@ export const SGQRepositoryView: React.FC<SGQRepositoryViewProps> = ({ isAdmin = 
           </div>
         </div>
 
-        {/* FOR-FIN-01 */}
+        {/* Formulário de Registro */}
         <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div className="flex items-center space-x-2">
               <FileCheck2 className="w-5 h-5 text-blue-600" />
               <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
-                FOR-FIN-01 — Formulário de Registro
+                Formulário de Registro e Aprovação
               </h3>
             </div>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold border border-blue-200">

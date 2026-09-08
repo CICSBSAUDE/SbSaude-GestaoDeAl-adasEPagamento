@@ -42,7 +42,7 @@ interface RoleDefinition {
 const ALL_ROLES: RoleDefinition[] = [
   {
     role: 'SOLICITANTE',
-    label: 'Solicitante (FOR-FIN-01)',
+    label: 'Solicitante',
     shortLabel: 'Solicitante',
     category: 'SOLICITACAO',
     description: 'Pode abrir novas solicitações de pagamento, anexar documentos e acompanhar status.',
@@ -56,7 +56,7 @@ const ALL_ROLES: RoleDefinition[] = [
     label: '1ª Alçada — Coordenação / Supervisão',
     shortLabel: '1ª Alçada',
     category: 'ALCADA',
-    description: 'Aprovação de 1º nível para despesas operacionais dentro dos limites da POL-DIR-01.',
+    description: 'Aprovação de 1º nível para despesas operacionais dentro dos limites estabelecidos.',
     badgeBg: 'bg-indigo-50',
     badgeText: 'text-indigo-700',
     badgeBorder: 'border-indigo-200',
@@ -712,7 +712,7 @@ export const UsersManagementView: React.FC = () => {
                   Gestão de Usuários, Cargos e Atribuição de Permissões
                 </h2>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-mono border border-blue-200 font-bold">
-                  POL-DIR-01 &bull; RBAC
+                  Governança &bull; RBAC
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">

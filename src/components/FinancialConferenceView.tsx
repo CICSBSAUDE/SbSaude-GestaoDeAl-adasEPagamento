@@ -146,7 +146,7 @@ export const FinancialConferenceView: React.FC<FinancialConferenceViewProps> = (
                 Setor Financeiro — Conferência e Retenções Tributárias
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Checklist obrigatório de documentos fiscais, cálculo de retenções (ISS/INSS/IRRF/PIS-COFINS) e liberação para a Tesouraria (FOR-FIN-01 Item 7).
+                Checklist obrigatório de documentos fiscais, cálculo de retenções (ISS/INSS/IRRF/PIS-COFINS) e liberação para a Tesouraria.
               </p>
             </div>
           </div>
@@ -240,7 +240,7 @@ export const FinancialConferenceView: React.FC<FinancialConferenceViewProps> = (
                   onClick={() => onOpenRequest(selectedReq)}
                   className="text-xs text-blue-600 hover:text-blue-700 font-bold underline"
                 >
-                  Ver FOR-FIN-01 Completo
+                  Ver Solicitação Completa
                 </button>
               </div>
 

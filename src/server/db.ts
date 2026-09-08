@@ -13,7 +13,7 @@ import {
   CostCenter,
 } from '../types.ts';
 
-// Cloud SQL PostgreSQL transactional data store
+// Supabase PostgreSQL exclusively as database and backend persistence
 class Database {
   users: User[] = [];
   processes: ProcessItem[] = [];
@@ -22,6 +22,7 @@ class Database {
   auditLogs: AuditLog[] = [];
   notifications: SystemNotification[] = [];
   costCenters: CostCenter[] = [];
+  deletedCostCenterNames: string[] = [];
   config: SystemConfig = {
     id: 'cfg-default',
     diasUteisAlertaVencimento: 5,
@@ -31,7 +32,7 @@ class Database {
     restringirDominioGoogleOAuth: false,
     dominioPermitido: '@sbsaude.com.br',
     slaAprovacaoHoras: 48,
-    sgqRepositorioCodigo: 'POL-DIR-01 / FOR-FIN-01 (ISO 9001:2015 7.5)',
+    sgqRepositorioCodigo: 'SGQ (ISO 9001:2015 7.5)',
     tempoRetencaoAnos: 2,
   };
   otpCodes: Map<string, { code: string; expiresAt: number }> = new Map();
@@ -40,98 +41,156 @@ class Database {
     this.seed();
   }
 
-  public async loadFromDatabase() {
+  /**
+   * Ensures the app_data persistence table exists in Supabase PostgreSQL
+   */
+  public async ensureSupabaseTable(): Promise<boolean> {
+    const { pool } = await import('../db/index.ts');
     try {
-      // Load all collections directly from Cloud SQL PostgreSQL
-      const rows = await sqlDb.select().from(appData);
-      if (rows.length > 0) {
-        const usersList: User[] = [];
-        const processesList: ProcessItem[] = [];
-        const matricesList: MatrizAlcada[] = [];
-        const requestsList: Solicitacao[] = [];
-        const logsList: AuditLog[] = [];
-        const notifsList: SystemNotification[] = [];
-        const costCentersList: CostCenter[] = [];
-        let loadedConfig: SystemConfig | null = null;
-
-        for (const row of rows) {
-          if (row.collection === 'users') usersList.push(row.data as User);
-          else if (row.collection === 'processes') processesList.push(row.data as ProcessItem);
-          else if (row.collection === 'matrices') matricesList.push(row.data as MatrizAlcada);
-          else if (row.collection === 'requests') requestsList.push(row.data as Solicitacao);
-          else if (row.collection === 'auditLogs') logsList.push(row.data as AuditLog);
-          else if (row.collection === 'notifications') notifsList.push(row.data as SystemNotification);
-          else if (row.collection === 'costCenters') costCentersList.push(row.data as CostCenter);
-          else if (row.collection === 'config') loadedConfig = row.data as SystemConfig;
-        }
-
-        if (usersList.length > 0) this.users = usersList;
-        if (processesList.length > 0) this.processes = processesList;
-        if (matricesList.length > 0) {
-          this.matrices = matricesList;
-        } else {
-          for (const m of this.matrices) await this.syncToSql('matrices', m.id, m);
-        }
-        if (requestsList.length > 0) this.requests = requestsList;
-        if (logsList.length > 0) this.auditLogs = logsList;
-        if (notifsList.length > 0) this.notifications = notifsList;
-        if (costCentersList.length > 0) this.costCenters = costCentersList;
-        else {
-          for (const c of this.costCenters) await this.syncToSql('costCenters', c.id, c);
-        }
-        if (loadedConfig) this.config = { ...this.config, ...loadedConfig };
-
-        // Ensure robust user password persistence and prevent masked placeholders
-        let usersUpdated = false;
-        for (const user of this.users) {
-          const userEmail = (user.email || '').toLowerCase().trim();
-          const userGoogleEmail = (user.googleEmail || '').toLowerCase().trim();
-
-          // Ramon Reis account configuration
-          if (userEmail.includes('ramon') || userGoogleEmail.includes('ramonreis')) {
-            if (!user.password || user.password === '••••••••') {
-              user.password = 'v3ntimL3m0s';
-            }
-            user.email = 'ramon.reis@sbsaude.com.br';
-            user.googleEmail = 'ramonreis.mmn@gmail.com';
-            user.status = 'ATIVO';
-            user.mustChangePassword = false;
-            user.tempPassword = undefined;
-            await this.syncToSql('users', user.id, user);
-            usersUpdated = true;
-          } 
-          // Default fallback passwords for users with empty/masked placeholders
-          else if (!user.password || user.password === '••••••••') {
-            user.password = '123456';
-            await this.syncToSql('users', user.id, user);
-            usersUpdated = true;
-          }
-        }
-
-        console.log(`[Cloud SQL Postgres] Dados carregados com sucesso: ${this.users.length} usuários, ${this.requests.length} solicitações, ${this.matrices.length} matrizes.`);
-      } else {
-        // Initial database seed to Cloud SQL PostgreSQL
-        console.log('[Cloud SQL Postgres] Banco vazio. Realizando seed inicial...');
-        for (const u of this.users) await this.syncToSql('users', u.id, u);
-        for (const c of this.costCenters) await this.syncToSql('costCenters', c.id, c);
-        for (const p of this.processes) await this.syncToSql('processes', p.id, p);
-        for (const m of this.matrices) await this.syncToSql('matrices', m.id, m);
-        for (const r of this.requests) await this.syncToSql('requests', r.id, r);
-        for (const l of this.auditLogs) await this.syncToSql('auditLogs', l.id, l);
-        for (const n of this.notifications) await this.syncToSql('notifications', n.id, n);
-        await this.syncToSql('config', 'cfg-default', this.config);
-        console.log('[Cloud SQL Postgres] Seed inicial concluído.');
+      const client = await pool.connect();
+      try {
+        await client.query(`
+          CREATE TABLE IF NOT EXISTS public.app_data (
+            collection TEXT NOT NULL,
+            id TEXT NOT NULL,
+            data JSONB NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+            updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+            CONSTRAINT pk_app_data PRIMARY KEY (collection, id)
+          );
+          CREATE INDEX IF NOT EXISTS idx_app_data_collection ON public.app_data (collection);
+        `);
+        return true;
+      } finally {
+        client.release();
       }
-
-      this.syncCostCentersFromMatrices();
-    } catch (e: any) {
-      console.error('[Cloud SQL Postgres] Erro ao sincronizar com o banco:', e?.message || e);
+    } catch (err: any) {
+      console.warn('[Supabase] Falha ao verificar/criar tabela app_data no Supabase:', err?.message || err);
+      return false;
     }
   }
 
-  // Alias for backward compatibility if called
-  public async loadFromFirestore() {
-    return this.loadFromDatabase();
+  public async loadFromDatabase() {
+    await this.ensureSupabaseTable();
+
+    let rows: any[] = [];
+    let loadedFromSql = false;
+
+    try {
+      rows = await sqlDb.select().from(appData);
+      if (rows && rows.length > 0) {
+        loadedFromSql = true;
+      }
+    } catch (e: any) {
+      console.warn('[Supabase Postgres] Falha ao consultar banco Supabase:', e?.message || e);
+    }
+
+    if (rows && rows.length > 0) {
+      const usersList: User[] = [];
+      const processesList: ProcessItem[] = [];
+      const matricesList: MatrizAlcada[] = [];
+      const requestsList: Solicitacao[] = [];
+      const logsList: AuditLog[] = [];
+      const notifsList: SystemNotification[] = [];
+      const costCentersList: CostCenter[] = [];
+      let loadedConfig: SystemConfig | null = null;
+
+      for (const row of rows) {
+        if (row.collection === 'users') usersList.push(row.data as User);
+        else if (row.collection === 'processes') processesList.push(row.data as ProcessItem);
+        else if (row.collection === 'matrices') matricesList.push(row.data as MatrizAlcada);
+        else if (row.collection === 'requests') requestsList.push(row.data as Solicitacao);
+        else if (row.collection === 'auditLogs') logsList.push(row.data as AuditLog);
+        else if (row.collection === 'notifications') notifsList.push(row.data as SystemNotification);
+        else if (row.collection === 'costCenters') costCentersList.push(row.data as CostCenter);
+        else if (row.collection === 'config') loadedConfig = row.data as SystemConfig;
+      }
+
+      if (usersList.length > 0) this.users = usersList;
+      if (processesList.length > 0) this.processes = processesList;
+      if (matricesList.length > 0) this.matrices = matricesList;
+      if (requestsList.length > 0) this.requests = requestsList;
+      if (logsList.length > 0) this.auditLogs = logsList;
+      if (notifsList.length > 0) this.notifications = notifsList;
+      if (costCentersList.length > 0) this.costCenters = costCentersList;
+      if (loadedConfig) this.config = { ...this.config, ...loadedConfig };
+
+      // Ensure Ramon Reis credentials
+      for (const user of this.users) {
+        const userEmail = (user.email || '').toLowerCase().trim();
+        const userGoogleEmail = (user.googleEmail || '').toLowerCase().trim();
+
+        if (userEmail.includes('ramon') || userGoogleEmail.includes('ramonreis')) {
+          if (!user.password || user.password === '••••••••') {
+            user.password = 'v3ntimL3m0s';
+          }
+          user.email = 'ramon.reis@sbsaude.com.br';
+          user.googleEmail = 'ramonreis.mmn@gmail.com';
+          user.status = 'ATIVO';
+          user.mustChangePassword = false;
+        } else if (!user.password || user.password === '••••••••') {
+          user.password = '123456';
+        }
+      }
+
+      console.log(`[Supabase Database] Dados carregados do Supabase: ${this.users.length} usuários, ${this.requests.length} solicitações, ${this.matrices.length} matrizes.`);
+    } else {
+      // Initial database seed into Supabase
+      console.log('[Supabase Database] Tabela vazia ou inicial. Gravando seed inicial no Supabase...');
+      await this.persistAllToSql();
+    }
+
+    this.syncCostCentersFromMatrices();
+  }
+
+  public async persistAllToSql(): Promise<number> {
+    let count = 0;
+    for (const u of this.users) {
+      await this.syncToSql('users', u.id, u);
+      count++;
+    }
+    for (const c of this.costCenters) {
+      await this.syncToSql('costCenters', c.id, c);
+      count++;
+    }
+    for (const p of this.processes) {
+      await this.syncToSql('processes', p.id, p);
+      count++;
+    }
+    for (const m of this.matrices) {
+      await this.syncToSql('matrices', m.id, m);
+      count++;
+    }
+    for (const r of this.requests) {
+      await this.syncToSql('requests', r.id, r);
+      count++;
+    }
+    for (const l of this.auditLogs) {
+      await this.syncToSql('auditLogs', l.id, l);
+      count++;
+    }
+    for (const n of this.notifications) {
+      await this.syncToSql('notifications', n.id, n);
+      count++;
+    }
+    await this.syncToSql('config', 'cfg-default', this.config);
+    count++;
+    console.log(`[Supabase Database] ${count} registros persistidos com sucesso no Supabase.`);
+    return count;
+  }
+
+  public async syncMatricesFromSql(): Promise<void> {
+    try {
+      const rows = await sqlDb.select().from(appData).where(eq(appData.collection, 'matrices'));
+      if (rows && rows.length > 0) {
+        const list = rows.map((r) => r.data as MatrizAlcada);
+        if (list.length > 0) {
+          this.matrices = list;
+        }
+      }
+    } catch (e: any) {
+      console.warn('[Supabase Postgres] syncMatricesFromSql erro:', e?.message || e);
+    }
   }
 
   public async syncToSql(collection: string, docId: string, data: any) {
@@ -148,24 +207,16 @@ class Database {
         },
       });
     } catch (e: any) {
-      console.warn(`[Cloud SQL Postgres] Erro ao gravar (${collection}/${docId}):`, e?.message || e);
+      console.warn(`[Supabase Postgres] Erro ao gravar (${collection}/${docId}):`, e?.message || e);
     }
-  }
-
-  public async syncToFirestore(collection: string, docId: string, data: any) {
-    return this.syncToSql(collection, docId, data);
   }
 
   public async deleteFromSql(collection: string, docId: string) {
     try {
       await sqlDb.delete(appData).where(and(eq(appData.collection, collection), eq(appData.id, docId)));
     } catch (e: any) {
-      console.warn(`[Cloud SQL Postgres] Erro ao excluir (${collection}/${docId}):`, e?.message || e);
+      console.warn(`[Supabase Postgres] Erro ao excluir (${collection}/${docId}):`, e?.message || e);
     }
-  }
-
-  public async deleteFromFirestore(collection: string, docId: string) {
-    return this.deleteFromSql(collection, docId);
   }
 
   private seed() {
@@ -1559,10 +1610,12 @@ class Database {
       const level = match ? match.level : 1;
       const { codigo: baseCode, responsavel } = getPrefixForCargo(cargoName, level);
 
-      // Check if already exists in this.costCenters by exact or normalized name
+      // Check if already exists in this.costCenters or was explicitly deleted by user
       const alreadyExists = this.costCenters.some(
         (cc) =>
           cc.nome.toLowerCase().trim() === cargoName.toLowerCase().trim()
+      ) || (this.deletedCostCenterNames || []).some(
+        (name) => name.toLowerCase().trim() === cargoName.toLowerCase().trim()
       );
 
       if (!alreadyExists) {

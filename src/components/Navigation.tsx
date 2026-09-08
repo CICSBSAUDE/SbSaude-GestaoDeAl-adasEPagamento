@@ -173,7 +173,7 @@ export const Navigation: React.FC<NavigationProps> = ({
       {isFinancial && (
         <button
           onClick={() => handleSelect('ALL_REQUESTS')}
-          title={isCollapsed ? 'Solicitações (FOR-FIN-01)' : undefined}
+          title={isCollapsed ? 'Solicitações' : undefined}
           className={`flex items-center rounded-xl text-xs font-medium transition-all duration-200 text-left cursor-pointer ${
             isCollapsed ? 'justify-center p-3' : 'gap-3 px-3 py-2.5'
           } ${
@@ -183,7 +183,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           }`}
         >
           <FileSpreadsheet className="w-4 h-4 text-slate-400 shrink-0" />
-          {!isCollapsed && <span className="flex-1 truncate">Solicitações (FOR-FIN-01)</span>}
+          {!isCollapsed && <span className="flex-1 truncate">Solicitações</span>}
         </button>
       )}
 
@@ -259,7 +259,7 @@ export const Navigation: React.FC<NavigationProps> = ({
       {isAdmin && (
         <button
           onClick={() => handleSelect('MATRIX')}
-          title={isCollapsed ? 'Matriz de Alçada (POL-DIR-01)' : undefined}
+          title={isCollapsed ? 'Matriz de Alçada' : undefined}
           className={`flex items-center rounded-xl text-xs font-medium transition-all duration-200 text-left cursor-pointer ${
             isCollapsed ? 'justify-center p-3' : 'gap-3 px-3 py-2.5'
           } ${
@@ -345,7 +345,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         {!isCollapsed ? (
           <div>
             <div className="flex items-center justify-between text-[10px] text-slate-300 font-semibold mb-1">
-              <span>POL-DIR-01 Compliance</span>
+              <span>Compliance</span>
               <span className="text-emerald-400 font-bold">100%</span>
             </div>
             <div className="h-1.5 w-full bg-slate-700 rounded-full overflow-hidden">
@@ -357,7 +357,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             </div>
           </div>
         ) : (
-          <div className="flex justify-center" title="POL-DIR-01 Compliance 100% • Auditoria ISO 9001:2015">
+          <div className="flex justify-center" title="Compliance 100% • Auditoria ISO 9001:2015">
             <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold border border-emerald-500/40">
               ✓
             </span>

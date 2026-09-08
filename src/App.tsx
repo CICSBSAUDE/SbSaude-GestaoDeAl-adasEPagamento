@@ -168,7 +168,7 @@ const MainApp: React.FC = () => {
     const text = `${notif.title} ${notif.message}`.toLowerCase();
     if (text.includes('aprovador') || text.includes('usuário') || text.includes('senha')) {
       if (currentUser?.roles.includes('ADMINISTRADOR')) setActiveTab('USERS');
-    } else if (text.includes('matriz') || text.includes('pol-dir-01')) {
+    } else if (text.includes('matriz')) {
       setActiveTab('MATRIX');
     } else if (text.includes('sgq') || text.includes('manual')) {
       setActiveTab('SGQ');
@@ -259,7 +259,7 @@ const MainApp: React.FC = () => {
                 <RequestsListView
                   requests={requests}
                   onOpenRequest={handleOpenDetail}
-                  onOpenExportModal={() => showToast('Relatório FOR-FIN-01 consolidado pronto para impressão/exportação.')}
+                  onOpenExportModal={() => showToast('Relatório consolidado pronto para impressão/exportação.')}
                 />
               ) : (
                 <div className="bg-white rounded-2xl border border-amber-200 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4">
@@ -271,7 +271,7 @@ const MainApp: React.FC = () => {
                       Acesso Restrito ao Setor Financeiro
                     </h3>
                     <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                      A visualização consolidada de todas as solicitações <strong>FOR-FIN-01</strong> da instituição é restrita aos colaboradores do Financeiro, Controladoria, Tesouraria e Administradores.
+                      A visualização consolidada de todas as solicitações da instituição é restrita aos colaboradores do Financeiro, Controladoria, Tesouraria e Administradores.
                     </p>
                   </div>
                   <div className="pt-2">
@@ -307,7 +307,7 @@ const MainApp: React.FC = () => {
                       Acesso Restrito ao Administrador
                     </h3>
                     <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                      A visualização e edição da <strong>Matriz de Alçadas (POL-DIR-01)</strong> é restrita aos administradores do sistema conforme os padrões de governança corporativa.
+                      A visualização e edição da <strong>Matriz de Alçadas</strong> é restrita aos administradores do sistema conforme os padrões de governança corporativa.
                     </p>
                   </div>
                   <div className="pt-2">
@@ -376,7 +376,7 @@ const MainApp: React.FC = () => {
                       Acesso Restrito ao Administrador
                     </h3>
                     <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                      De acordo com a política corporativa <strong>POL-DIR-01</strong> e as normas de governança e segregação de funções SGQ (ISO 9001:2015), o gerenciamento de contas, papéis e permissões é restrito a administradores.
+                      De acordo com a política corporativa e as normas de governança e segregação de funções SGQ (ISO 9001:2015), o gerenciamento de contas, papéis e permissões é restrito a administradores.
                     </p>
                   </div>
                   <div className="pt-2">
@@ -403,16 +403,6 @@ const MainApp: React.FC = () => {
           onRefresh={loadData}
         />
       )}
-
-      {/* Sleek White Footer */}
-      <footer className="bg-white border-t border-slate-200 px-6 py-2.5 flex flex-col sm:flex-row items-center justify-between text-[10px] text-slate-500 font-medium shrink-0 gap-1">
-        <div>Processo de Registro de Alçada e Aprovação de Pagamentos</div>
-        <div>Em conformidade com a Política POL-DIR-01 (ISO 9001:2015)</div>
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span>Trilha de Auditoria Segura &bull; Sessão Ativa</span>
-        </div>
-      </footer>
 
     </div>
   );

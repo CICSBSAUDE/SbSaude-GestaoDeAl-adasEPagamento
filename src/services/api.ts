@@ -22,6 +22,9 @@ class ApiService {
   private getHeaders(): HeadersInit {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      Pragma: 'no-cache',
+      Expires: '0',
     };
     if (this.token) {
       headers['Authorization'] = `Bearer ${this.token}`;
@@ -178,14 +181,37 @@ class ApiService {
     return res.json();
   }
 
+  async updateProcess(id: string, processData: Partial<Processo>): Promise<{ process: Processo }> {
+    const res = await fetch(`${API_BASE}/processes/${id}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(processData),
+    });
+    return res.json();
+  }
+
+  async deleteProcess(id: string): Promise<{ success: boolean }> {
+    const res = await fetch(`${API_BASE}/processes/${id}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+    return res.json();
+  }
+
   // Matrices
   async getMatrixVersions(): Promise<{ matrices: MatrizAlcada[] }> {
-    const res = await fetch(`${API_BASE}/matrix/versions`, { headers: this.getHeaders() });
+    const res = await fetch(`${API_BASE}/matrix/versions?_t=${Date.now()}`, {
+      headers: this.getHeaders(),
+      cache: 'no-store',
+    });
     return res.json();
   }
 
   async getActiveMatrix(): Promise<{ matrix: MatrizAlcada }> {
-    const res = await fetch(`${API_BASE}/matrix/active`, { headers: this.getHeaders() });
+    const res = await fetch(`${API_BASE}/matrix/active?_t=${Date.now()}`, {
+      headers: this.getHeaders(),
+      cache: 'no-store',
+    });
     return res.json();
   }
 
@@ -215,6 +241,32 @@ class ApiService {
     if (!res.ok) {
       const err = await res.json();
       throw new Error(err.error || 'Erro ao atualizar regra');
+    }
+    return res.json();
+  }
+
+  async updateMatrixBulkRules(matrixId: string, updates: any[]): Promise<{ matrix: MatrizAlcada }> {
+    const res = await fetch(`${API_BASE}/matrix/${matrixId}/rules-bulk`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ updates }),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Erro ao atualizar regras em lote');
+    }
+    return res.json();
+  }
+
+  async updateMatrix(matrixId: string, matrixData: Partial<MatrizAlcada>): Promise<{ matrix: MatrizAlcada }> {
+    const res = await fetch(`${API_BASE}/matrix/${matrixId}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(matrixData),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Erro ao salvar matriz completa');
     }
     return res.json();
   }
@@ -497,6 +549,56 @@ class ApiService {
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Falha ao sincronizar centros de custo com a matriz');
     return json;
+  }
+
+  // Supabase Database Management
+  async getDatabaseStatus(): Promise<{
+    connected: boolean;
+    configured: boolean;
+    tablesCount?: number;
+    tables?: string[];
+    hasAppData?: boolean;
+    hasRelationalTables?: boolean;
+    message?: string;
+    error?: string;
+  }> {
+    const res = await fetch(`${API_BASE}/database/status`, {
+      headers: this.getHeaders(),
+    });
+    return res.json();
+  }
+
+  async getDatabaseSchemaSql(): Promise<string> {
+    const res = await fetch(`${API_BASE}/database/schema-sql`, {
+      headers: this.getHeaders(),
+    });
+    return res.text();
+  }
+
+  async migrateSupabase(): Promise<{
+    success: boolean;
+    message?: string;
+    error?: string;
+    hint?: string;
+  }> {
+    const res = await fetch(`${API_BASE}/database/migrate-supabase`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+    });
+    return res.json();
+  }
+
+  async syncAllToSupabase(): Promise<{
+    success: boolean;
+    message?: string;
+    count?: number;
+    error?: string;
+  }> {
+    const res = await fetch(`${API_BASE}/database/sync-all`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+    });
+    return res.json();
   }
 }
 

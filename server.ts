@@ -25,7 +25,7 @@ async function startServer() {
     res.json({
       status: 'ok',
       system: 'Sistema de Gestão de Alçada e Aprovação de Pagamentos - SB Saúde',
-      standard: 'POL-DIR-01 / FOR-FIN-01 / ISO 9001:2015',
+      standard: 'ISO 9001:2015',
       time: new Date().toISOString(),
     });
   });
@@ -46,7 +46,7 @@ async function startServer() {
   }
 
   await db.loadFromDatabase();
-  console.log('[SB Saúde] Sincronização com o Cloud SQL Postgres concluída.');
+  console.log('[SB Saúde] Sincronização com o banco de dados Supabase concluída.');
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[SB Saúde - Gestão de Alçada] Servidor iniciado com sucesso em http://0.0.0.0:${PORT}`);

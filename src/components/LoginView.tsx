@@ -173,7 +173,7 @@ export const LoginView: React.FC = () => {
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <p className="leading-snug">
-              Plataforma em estrita conformidade com a <strong>ISO 9001:2015</strong>, <strong>Matriz de Alçadas POL-DIR-01</strong> e <strong>Formulário FOR-FIN-01</strong>.
+              Plataforma em estrita conformidade com a <strong>ISO 9001:2015</strong> e a <strong>Matriz de Alçadas</strong>.
             </p>
           </div>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { MatrizAlcada, RegraAlcada, RiskLevel, User } from '../types';
+import { ProcessCatalogModal } from './ProcessCatalogModal';
 import {
   TableProperties,
   Layers,
@@ -13,7 +14,6 @@ import {
   History,
   Sparkles,
   Shield,
-  Edit3,
   Download,
   Info,
   X,
@@ -28,12 +28,28 @@ import {
   AlertTriangle,
   ChevronRight,
   RotateCcw,
+  Database,
+  Zap,
+  ShieldCheck,
+  Copy,
+  Terminal,
+  FileCode,
+  ExternalLink,
 } from 'lucide-react';
 
 export const MatrixManagementView: React.FC = () => {
   const { currentUser } = useAuth();
 
-  const [matrices, setMatrices] = useState<MatrizAlcada[]>([]);
+  const [matrices, setMatrices] = useState<MatrizAlcada[]>(() => {
+    try {
+      const cached = localStorage.getItem('sb_cached_matrices');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (_) {}
+    return [];
+  });
   const [selectedMatrixId, setSelectedMatrixId] = useState<string>('');
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -41,6 +57,23 @@ export const MatrixManagementView: React.FC = () => {
   const [selectedRisk, setSelectedRisk] = useState<string>('TODOS');
   const [selectedTierFilter, setSelectedTierFilter] = useState<string>('TODOS');
   const [selectedNaturezaFilter, setSelectedNaturezaFilter] = useState<string>('TODAS');
+
+  // Supabase Persistence & Row-level states
+  const [rowSavingStatus, setRowSavingStatus] = useState<Record<string, 'saving' | 'saved' | 'error'>>({});
+  const [isSavingFullMatrix, setIsSavingFullMatrix] = useState<boolean>(false);
+  const [showBatchMenu, setShowBatchMenu] = useState<boolean>(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string>(new Date().toLocaleTimeString('pt-BR'));
+
+  // Process Catalog Modal
+  const [showProcessModal, setShowProcessModal] = useState<boolean>(false);
+
+  // Supabase Architecture & Schema Modal
+  const [showSupabaseModal, setShowSupabaseModal] = useState<boolean>(false);
+  const [dbStatus, setDbStatus] = useState<any>(null);
+  const [loadingDbStatus, setLoadingDbStatus] = useState<boolean>(false);
+  const [migrating, setMigrating] = useState<boolean>(false);
+  const [migrationResult, setMigrationResult] = useState<{ success: boolean; message?: string; error?: string; hint?: string } | null>(null);
+  const [copiedSql, setCopiedSql] = useState<boolean>(false);
 
   // Success message toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -83,12 +116,24 @@ export const MatrixManagementView: React.FC = () => {
         api.getMatrixVersions(),
         api.getUsers().catch(() => ({ users: [] })),
       ]);
-      setMatrices(matRes.matrices || []);
+      if (matRes.matrices && matRes.matrices.length > 0) {
+        setMatrices(matRes.matrices);
+        try {
+          localStorage.setItem('sb_cached_matrices', JSON.stringify(matRes.matrices));
+        } catch (_) {}
+      }
       setUsers(userRes.users || []);
-      const active = matRes.matrices.find((m) => m.status === 'VIGENTE') || matRes.matrices[0];
+      const active = (matRes.matrices || []).find((m) => m.status === 'VIGENTE') || (matRes.matrices || [])[0];
       if (active) setSelectedMatrixId(active.id);
     } catch (err) {
       console.error('Failed to load matrices', err);
+      try {
+        const cached = localStorage.getItem('sb_cached_matrices');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) setMatrices(parsed);
+        }
+      } catch (_) {}
     } finally {
       setLoading(false);
     }
@@ -277,6 +322,244 @@ export const MatrixManagementView: React.FC = () => {
     else if (tier === 4) setEditCargos4(editCargos4.filter((c) => c !== cargoToRemove));
   };
 
+  // Quick direct toggle of alçadas (N1, N2, N3, N4) with immediate Supabase persistence
+  const handleQuickToggleAlcada = async (regra: RegraAlcada, tier: 1 | 2 | 3 | 4) => {
+    if (!selectedMatrix) return;
+    const currentAlcadas = getEffectiveAlcadas(regra);
+    let newAlcadas: (1 | 2 | 3 | 4)[];
+    if (currentAlcadas.includes(tier)) {
+      newAlcadas = currentAlcadas.filter((t) => t !== tier);
+    } else {
+      newAlcadas = [...currentAlcadas, tier].sort((a, b) => a - b);
+    }
+    const maxNivel = newAlcadas.length > 0 ? Math.max(...newAlcadas) : 1;
+
+    const payload = {
+      alcadasObrigatorias: newAlcadas,
+      nivelMaximoRequerido: maxNivel,
+      cargosHabilitados1: newAlcadas.includes(1) ? (regra.cargosHabilitados1 || ['Coordenação / Supervisão']) : [],
+      cargosHabilitados2: newAlcadas.includes(2) ? (regra.cargosHabilitados2 || ['Gerência de Área']) : [],
+      cargosHabilitados3: newAlcadas.includes(3) ? (regra.cargosHabilitados3 || ['Diretoria de Operações', 'Diretoria Financeira']) : [],
+      cargosHabilitados4: newAlcadas.includes(4) ? (regra.cargosHabilitados4 || ['Diretoria Executiva / Conselho']) : [],
+    };
+
+    // Optimistic update in state
+    setMatrices((prev) => {
+      const updated = prev.map((m) => {
+        if (m.id !== selectedMatrix.id) return m;
+        const updatedRegras = (m.regras || []).map((r) => {
+          if (r.id === regra.id) {
+            return { ...r, ...payload };
+          }
+          return r;
+        });
+        return { ...m, regras: updatedRegras };
+      });
+      try {
+        localStorage.setItem('sb_cached_matrices', JSON.stringify(updated));
+      } catch (_) {}
+      return updated;
+    });
+
+    setRowSavingStatus((prev) => ({ ...prev, [regra.id]: 'saving' }));
+
+    try {
+      const res = await api.updateMatrixRule(selectedMatrix.id, regra.id, payload);
+      if (res && res.matrix) {
+        setMatrices((prev) => {
+          const updated = prev.map((m) => (m.id === res.matrix.id ? res.matrix : m));
+          try {
+            localStorage.setItem('sb_cached_matrices', JSON.stringify(updated));
+          } catch (_) {}
+          return updated;
+        });
+      }
+      setLastSyncTime(new Date().toLocaleTimeString('pt-BR'));
+      setRowSavingStatus((prev) => ({ ...prev, [regra.id]: 'saved' }));
+      setTimeout(() => {
+        setRowSavingStatus((prev) => {
+          const next = { ...prev };
+          delete next[regra.id];
+          return next;
+        });
+      }, 3500);
+    } catch (err: any) {
+      console.error('Erro ao salvar alçada no Supabase:', err);
+      setRowSavingStatus((prev) => ({ ...prev, [regra.id]: 'error' }));
+      await fetchMatricesAndUsers();
+      alert(`Falha ao salvar no banco Supabase: ${err.message}`);
+    }
+  };
+
+  // Batch Preset configuration for all rules with direct Supabase save
+  const handleBatchAlcadaPreset = async (preset: 'remove-n4' | 'default-n1-n2-n3' | 'default-n2-n3' | 'exempt') => {
+    if (!selectedMatrix) return;
+    let confirmMsg = '';
+    if (preset === 'remove-n4') {
+      confirmMsg = 'Deseja remover a 4ª Alçada (N4 - Diretoria Executiva) de todos os processos da matriz e salvar no Supabase?';
+    } else if (preset === 'default-n1-n2-n3') {
+      confirmMsg = 'Deseja definir a cadeia sequencial padrão N1 ➔ N2 ➔ N3 para todos os processos e salvar no Supabase?';
+    } else if (preset === 'default-n2-n3') {
+      confirmMsg = 'Deseja definir a cadeia sequencial N2 ➔ N3 para todos os processos e salvar no Supabase?';
+    } else if (preset === 'exempt') {
+      confirmMsg = 'Deseja isentar todos os processos de aprovação hierárquica (direto para conferência Financeira) e salvar no Supabase?';
+    }
+
+    if (!confirm(confirmMsg)) return;
+
+    setShowBatchMenu(false);
+    setLoading(true);
+
+    try {
+      const updates = (selectedMatrix.regras || []).map((r) => {
+        let newAlcadas: (1 | 2 | 3 | 4)[] = [];
+        const current = getEffectiveAlcadas(r);
+        if (preset === 'remove-n4') {
+          newAlcadas = current.filter((t) => t !== 4);
+          if (newAlcadas.length === 0) newAlcadas = [1, 2, 3];
+        } else if (preset === 'default-n1-n2-n3') {
+          newAlcadas = [1, 2, 3];
+        } else if (preset === 'default-n2-n3') {
+          newAlcadas = [2, 3];
+        } else if (preset === 'exempt') {
+          newAlcadas = [];
+        }
+
+        const maxNivel = newAlcadas.length > 0 ? Math.max(...newAlcadas) : 1;
+
+        return {
+          ruleId: r.id,
+          data: {
+            alcadasObrigatorias: newAlcadas,
+            nivelMaximoRequerido: maxNivel,
+            cargosHabilitados1: newAlcadas.includes(1) ? (r.cargosHabilitados1 || ['Coordenação / Supervisão']) : [],
+            cargosHabilitados2: newAlcadas.includes(2) ? (r.cargosHabilitados2 || ['Gerência de Área']) : [],
+            cargosHabilitados3: newAlcadas.includes(3) ? (r.cargosHabilitados3 || ['Diretoria de Operações', 'Diretoria Financeira']) : [],
+            cargosHabilitados4: newAlcadas.includes(4) ? (r.cargosHabilitados4 || ['Diretoria Executiva / Conselho']) : [],
+          },
+        };
+      });
+
+      const res = await api.updateMatrixBulkRules(selectedMatrix.id, updates);
+      if (res && res.matrix) {
+        setMatrices((prev) => {
+          const updated = prev.map((m) => (m.id === res.matrix.id ? res.matrix : m));
+          try {
+            localStorage.setItem('sb_cached_matrices', JSON.stringify(updated));
+          } catch (_) {}
+          return updated;
+        });
+      }
+      setLastSyncTime(new Date().toLocaleTimeString('pt-BR'));
+      setToastMessage(
+        `Alçadas de todos os ${updates.length} processos da matriz POL-DIR-01 salvas com sucesso no Supabase!`
+      );
+      setTimeout(() => setToastMessage(null), 6000);
+    } catch (err: any) {
+      console.error('Erro na atualização em lote:', err);
+      alert(`Falha ao salvar no Supabase: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Explicit full matrix save to Supabase
+  const handleSaveFullMatrixToSql = async () => {
+    if (!selectedMatrix) return;
+    setIsSavingFullMatrix(true);
+    try {
+      const res = await api.updateMatrix(selectedMatrix.id, selectedMatrix);
+      if (res && res.matrix) {
+        setMatrices((prev) => {
+          const updated = prev.map((m) => (m.id === res.matrix.id ? res.matrix : m));
+          try {
+            localStorage.setItem('sb_cached_matrices', JSON.stringify(updated));
+          } catch (_) {}
+          return updated;
+        });
+      }
+      setLastSyncTime(new Date().toLocaleTimeString('pt-BR'));
+      setToastMessage(
+        `Matriz ${selectedMatrix.codigo} (${selectedMatrix.versao}) com todas as ${selectedMatrix.regras.length} regras sincronizada e mantida com sucesso no Supabase!`
+      );
+      setTimeout(() => setToastMessage(null), 6000);
+    } catch (err: any) {
+      console.error('Erro ao salvar matriz no Supabase:', err);
+      alert(`Falha ao salvar matriz no Supabase: ${err.message}`);
+    } finally {
+      setIsSavingFullMatrix(false);
+    }
+  };
+
+  // Reload fresh data from Supabase bypassing any local cache
+  const handleReloadFromSql = async () => {
+    try {
+      localStorage.removeItem('sb_cached_matrices');
+    } catch (_) {}
+    await fetchMatricesAndUsers();
+    setLastSyncTime(new Date().toLocaleTimeString('pt-BR'));
+    setToastMessage('Matriz de Alçadas recarregada diretamente do banco de dados!');
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
+  const handleOpenSupabaseModal = async () => {
+    setShowSupabaseModal(true);
+    setLoadingDbStatus(true);
+    setMigrationResult(null);
+    try {
+      const status = await api.getDatabaseStatus();
+      setDbStatus(status);
+    } catch (err) {
+      console.error('Falha ao obter status do Supabase', err);
+    } finally {
+      setLoadingDbStatus(false);
+    }
+  };
+
+  const handleCopySql = async () => {
+    try {
+      const sql = await api.getDatabaseSchemaSql();
+      await navigator.clipboard.writeText(sql);
+      setCopiedSql(true);
+      setTimeout(() => setCopiedSql(false), 3000);
+    } catch (err) {
+      console.error('Falha ao copiar SQL', err);
+    }
+  };
+
+  const handleDownloadSql = async () => {
+    try {
+      const sql = await api.getDatabaseSchemaSql();
+      const blob = new Blob([sql], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'supabase_schema.sql';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Falha ao baixar SQL', err);
+    }
+  };
+
+  const handleExecuteMigration = async () => {
+    if (!window.confirm('Deseja executar as instruções DDL completas (tabelas, chaves compostas, índices e RLS) no Supabase?')) {
+      return;
+    }
+    setMigrating(true);
+    setMigrationResult(null);
+    try {
+      const res = await api.migrateSupabase();
+      setMigrationResult(res);
+      const updatedStatus = await api.getDatabaseStatus();
+      setDbStatus(updatedStatus);
+    } catch (err: any) {
+      setMigrationResult({ success: false, error: err?.message || 'Falha ao executar migração' });
+    } finally {
+      setMigrating(false);
+    }
+  };
+
   const handleSaveRule = async () => {
     if (!editingRule || !selectedMatrix) return;
     setSavingRule(true);
@@ -305,12 +588,16 @@ export const MatrixManagementView: React.FC = () => {
 
       // Update local state and reload matrices
       if (res && res.matrix) {
-        setMatrices((prev) =>
-          prev.map((m) => (m.id === res.matrix.id ? res.matrix : m))
-        );
+        setMatrices((prev) => {
+          const updated = prev.map((m) => (m.id === res.matrix.id ? res.matrix : m));
+          try {
+            localStorage.setItem('sb_cached_matrices', JSON.stringify(updated));
+          } catch (_) {}
+          return updated;
+        });
       } else {
-        setMatrices((prev) =>
-          prev.map((m) => {
+        setMatrices((prev) => {
+          const updated = prev.map((m) => {
             if (m.id !== selectedMatrix.id) return m;
             const updatedRegras = (m.regras || []).map((r) => {
               if (r.id === editingRule.id) {
@@ -319,14 +606,19 @@ export const MatrixManagementView: React.FC = () => {
               return r;
             });
             return { ...m, regras: updatedRegras };
-          })
-        );
+          });
+          try {
+            localStorage.setItem('sb_cached_matrices', JSON.stringify(updated));
+          } catch (_) {}
+          return updated;
+        });
       }
 
+      setLastSyncTime(new Date().toLocaleTimeString('pt-BR'));
       setToastMessage(
-        `Regra do processo "${editingRule.processoNome}" atualizada e persistida com sucesso no banco de dados! Solicitantes: ${editCargosSolicitante.length > 0 ? editCargosSolicitante.join(', ') : 'Padrão'}. Alçadas: ${sortedAlcadas.map((n) => `N${n}`).join(' ➔ ') || 'Isento'}.`
+        `Regra do processo "${editingRule.processoNome}" salva e mantida no Supabase! Alçadas: ${sortedAlcadas.map((n) => `N${n}`).join(' ➔ ') || 'Isento'}. Solicitantes: ${editCargosSolicitante.length > 0 ? editCargosSolicitante.join(', ') : 'Todos os Colaboradores'}.`
       );
-      setTimeout(() => setToastMessage(null), 5000);
+      setTimeout(() => setToastMessage(null), 6000);
 
       setEditingRule(null);
     } catch (err: any) {
@@ -399,7 +691,7 @@ export const MatrixManagementView: React.FC = () => {
               </div>
               <div>
                 <h2 className="text-base font-bold text-slate-800">
-                  Matriz de Alçadas e Delegação de Autoridade (POL-DIR-01)
+                  Matriz de Alçadas e Delegação de Autoridade
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Configure as alçadas responsáveis (N1 a N4) e defina os cargos habilitados para a cadeia sequencial de cada processo.
@@ -408,7 +700,68 @@ export const MatrixManagementView: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Supabase Status Badge */}
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 text-[11px] font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <Database className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Supabase Sincronizado</span>
+              <span className="text-[10px] text-emerald-600/70 font-mono">({lastSyncTime})</span>
+            </div>
+
+            {/* Process Catalog Button */}
+            <button
+              onClick={() => setShowProcessModal(true)}
+              className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-semibold border border-indigo-200 transition flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+              title="Gerenciar catálogo de processos e objetos padronizados"
+            >
+              <FileCheck className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Catálogo de Processos</span>
+            </button>
+
+            {/* Supabase Architecture & Schema Button */}
+            <button
+              onClick={handleOpenSupabaseModal}
+              className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold border border-blue-200 transition flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+              title="Visualizar arquitetura do Supabase, chaves compostas, índices de busca e políticas RLS"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+              <span>Esquema Supabase (RLS)</span>
+            </button>
+
+            {/* Reload from DB Button */}
+            <button
+              onClick={handleReloadFromSql}
+              disabled={loading}
+              className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition flex items-center space-x-1.5"
+              title="Recarregar dados diretamente do banco de dados Supabase"
+            >
+              <RotateCcw className={`w-3.5 h-3.5 text-slate-600 ${loading ? 'animate-spin' : ''}`} />
+              <span>Recarregar do BD</span>
+            </button>
+
+            {/* Save Entire Matrix to DB Button */}
+            {currentUser?.roles.includes('ADMINISTRADOR') && (
+              <button
+                onClick={handleSaveFullMatrixToSql}
+                disabled={isSavingFullMatrix || loading}
+                className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-200 transition flex items-center space-x-1.5 disabled:opacity-50"
+                title="Garantir persistência completa de todas as alçadas no Supabase"
+              >
+                {isSavingFullMatrix ? (
+                  <>
+                    <RotateCcw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Salvando no BD...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-3.5 h-3.5" />
+                    <span>Salvar no Supabase</span>
+                  </>
+                )}
+              </button>
+            )}
+
             {/* Version Selector */}
             <div className="flex items-center space-x-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
               <span className="text-xs font-bold text-slate-600">Versão:</span>
@@ -429,7 +782,7 @@ export const MatrixManagementView: React.FC = () => {
             {currentUser?.roles.includes('ADMINISTRADOR') && (
               <button
                 onClick={() => setShowNewVersionModal(true)}
-                className="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition flex items-center space-x-1.5"
+                className="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition flex items-center space-x-1.5"
               >
                 <Plus className="w-3.5 h-3.5 text-blue-600" />
                 <span>Nova Revisão</span>
@@ -440,7 +793,7 @@ export const MatrixManagementView: React.FC = () => {
             {selectedMatrix?.status === 'RASCUNHO' && currentUser?.roles.includes('ADMINISTRADOR') && (
               <button
                 onClick={() => handlePublish(selectedMatrix.id)}
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200 transition flex items-center space-x-1.5"
+                className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200 transition flex items-center space-x-1.5"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Publicar como VIGENTE</span>
@@ -544,8 +897,83 @@ export const MatrixManagementView: React.FC = () => {
                 <th className="py-3.5 px-4">ALÇADA POR EVENTO</th>
                 <th className="py-3.5 px-4">TETO MENSAL</th>
                 <th className="py-3.5 px-4">CARGOS HABILITADOS (SOLICITANTE)</th>
-                <th className="py-3.5 px-4">ALÇADAS / CADEIA DE APROVAÇÃO</th>
-                <th className="py-3.5 px-4 text-right rounded-r-lg">AÇÕES</th>
+                <th className="py-3.5 px-4 relative rounded-r-lg">
+                  <div className="flex items-center justify-between">
+                    <span>ALÇADAS / CADEIA DE APROVAÇÃO</span>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setShowBatchMenu(!showBatchMenu)}
+                        className="px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-800 text-[10px] font-bold flex items-center space-x-1 transition shadow-2xs cursor-pointer"
+                        title="Configurações em lote com salvamento no Supabase"
+                      >
+                        <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
+                        <span>Em Lote</span>
+                      </button>
+
+                      {showBatchMenu && (
+                        <div className="absolute right-0 top-full mt-1.5 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 z-40 normal-case text-slate-700 font-normal">
+                          <div className="px-3 py-1.5 text-[11px] font-bold text-slate-800 border-b border-slate-100 flex items-center justify-between">
+                            <span>Ações em Lote (Supabase)</span>
+                            <button
+                              type="button"
+                              onClick={() => setShowBatchMenu(false)}
+                              className="text-slate-400 hover:text-slate-600 p-0.5"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <div className="py-1 text-xs">
+                            <button
+                              type="button"
+                              onClick={() => handleBatchAlcadaPreset('remove-n4')}
+                              className="w-full text-left px-3 py-2 hover:bg-blue-50 text-slate-700 hover:text-blue-800 transition flex items-start space-x-2"
+                            >
+                              <span className="text-amber-500 font-bold mt-0.5">•</span>
+                              <div>
+                                <p className="font-semibold text-[11px]">Remover 4ª Alçada (N4) de todos</p>
+                                <p className="text-[10px] text-slate-500">Limita aprovações até Diretoria de Área (N3)</p>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleBatchAlcadaPreset('default-n1-n2-n3')}
+                              className="w-full text-left px-3 py-2 hover:bg-blue-50 text-slate-700 hover:text-blue-800 transition flex items-start space-x-2"
+                            >
+                              <span className="text-blue-500 font-bold mt-0.5">•</span>
+                              <div>
+                                <p className="font-semibold text-[11px]">Definir padrão N1 ➔ N2 ➔ N3 em todos</p>
+                                <p className="text-[10px] text-slate-500">Coordenação ➔ Gerência ➔ Diretoria</p>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleBatchAlcadaPreset('default-n2-n3')}
+                              className="w-full text-left px-3 py-2 hover:bg-blue-50 text-slate-700 hover:text-blue-800 transition flex items-start space-x-2"
+                            >
+                              <span className="text-indigo-500 font-bold mt-0.5">•</span>
+                              <div>
+                                <p className="font-semibold text-[11px]">Definir padrão N2 ➔ N3 em todos</p>
+                                <p className="text-[10px] text-slate-500">Apenas Gerência ➔ Diretoria</p>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleBatchAlcadaPreset('exempt')}
+                              className="w-full text-left px-3 py-2 hover:bg-amber-50 text-amber-800 transition flex items-start space-x-2 border-t border-slate-100"
+                            >
+                              <span className="text-amber-600 font-bold mt-0.5">•</span>
+                              <div>
+                                <p className="font-semibold text-[11px]">Isentar todos de alçada hierárquica</p>
+                                <p className="text-[10px] text-amber-700/80">Envio direto para conferência Financeira</p>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -621,70 +1049,135 @@ export const MatrixManagementView: React.FC = () => {
                       </div>
                     </td>
 
-                    {/* Alçadas Responsáveis e Cadeia de Aprovação */}
+                    {/* Alçadas Responsáveis e Cadeia de Aprovação - Interativa e Salva no Supabase */}
                     <td className="py-4 px-4 align-top">
-                      <div className="space-y-1.5 text-[11px] max-w-sm">
-                        <div className="flex items-center space-x-1 mb-1">
-                          {alcadas.length === 0 ? (
-                            <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-500 font-mono text-[10px]">
-                              Isento de Alçada
+                      <div className="space-y-2 max-w-sm">
+                        {/* Cadeia Sequencial e Status de Salvamento */}
+                        <div className="flex items-center justify-between gap-2 flex-wrap">
+                          <div className="flex items-center space-x-1">
+                            {alcadas.length === 0 ? (
+                              <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-500 font-mono text-[10px] font-semibold">
+                                Isento de Alçada
+                              </span>
+                            ) : (
+                              <div className="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 font-mono text-[10px] font-bold space-x-1 shadow-2xs">
+                                {alcadas.map((tier, tIdx) => (
+                                  <React.Fragment key={tier}>
+                                    <span>N{tier}</span>
+                                    {tIdx < alcadas.length - 1 && (
+                                      <span className="text-blue-400 font-normal">➔</span>
+                                    )}
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Live Supabase Status Tag */}
+                          {rowSavingStatus[regra.id] && (
+                            <span
+                              className={`text-[10px] font-medium flex items-center space-x-1 shrink-0 ${
+                                rowSavingStatus[regra.id] === 'saving'
+                                  ? 'text-amber-600 animate-pulse'
+                                  : rowSavingStatus[regra.id] === 'saved'
+                                  ? 'text-emerald-700 font-bold'
+                                  : 'text-red-600 font-bold'
+                              }`}
+                            >
+                              {rowSavingStatus[regra.id] === 'saving' && (
+                                <>
+                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+                                  <span>Salvando no Supabase...</span>
+                                </>
+                              )}
+                              {rowSavingStatus[regra.id] === 'saved' && (
+                                <>
+                                  <Check className="w-3 h-3 text-emerald-600 stroke-[3]" />
+                                  <span>Salvo no Supabase</span>
+                                </>
+                              )}
+                              {rowSavingStatus[regra.id] === 'error' && (
+                                <>
+                                  <AlertCircle className="w-3 h-3 text-red-600" />
+                                  <span>Erro ao salvar</span>
+                                </>
+                              )}
                             </span>
-                          ) : (
-                            <div className="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-[10px] font-bold space-x-1 shadow-2xs">
-                              {alcadas.map((tier, tIdx) => (
-                                <React.Fragment key={tier}>
-                                  <span>N{tier}</span>
-                                  {tIdx < alcadas.length - 1 && (
-                                    <span className="text-blue-400 font-normal">➔</span>
-                                  )}
-                                </React.Fragment>
-                              ))}
-                            </div>
                           )}
                         </div>
 
-                        {alcadas.map((tier) => {
-                          const cargos =
-                            tier === 1
-                              ? regra.cargosHabilitados1
-                              : tier === 2
-                              ? regra.cargosHabilitados2
-                              : tier === 3
-                              ? regra.cargosHabilitados3
-                              : regra.cargosHabilitados4;
+                        {/* Botões Rápidos Interativos [N1] [N2] [N3] [N4] */}
+                        <div className="flex items-center space-x-1.5 pt-0.5">
+                          <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mr-0.5">
+                            Alçadas:
+                          </span>
+                          {([1, 2, 3, 4] as const).map((tier) => {
+                            const isToggled = alcadas.includes(tier);
+                            return (
+                              <button
+                                key={tier}
+                                type="button"
+                                onClick={() => handleQuickToggleAlcada(regra, tier)}
+                                className={`px-2 py-0.5 rounded text-xs font-mono font-bold transition-all flex items-center space-x-1 shadow-2xs cursor-pointer ${
+                                  isToggled
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm border border-blue-600'
+                                    : 'bg-white text-slate-500 hover:text-blue-700 hover:bg-blue-50 border border-slate-200'
+                                }`}
+                                title={`Clique para ${
+                                  isToggled ? 'remover' : 'ativar'
+                                } a ${tier}ª Alçada (N${tier}) deste processo e salvar no Supabase`}
+                              >
+                                {isToggled && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                                <span>N{tier}</span>
+                              </button>
+                            );
+                          })}
 
-                          const cargosText =
-                            (cargos || []).join(', ') ||
-                            (tier === 1
-                              ? 'Coordenação / Supervisão'
-                              : tier === 2
-                              ? 'Gerência de Área'
-                              : tier === 3
-                              ? 'Diretoria de Operações / Financeira'
-                              : 'Diretoria Executiva / Conselho');
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditRule(regra)}
+                            className="p-1 rounded text-slate-400 hover:text-blue-700 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition ml-1 cursor-pointer"
+                            title="Configurar Cargos Habilitados e Detalhes da Alçada"
+                          >
+                            <Sliders className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
 
-                          return (
-                            <div key={tier} className="leading-snug flex items-baseline">
-                              <span className="font-bold text-slate-800 mr-1.5 font-mono shrink-0">
-                                N{tier}:
-                              </span>
-                              <span className="text-slate-600">{cargosText}</span>
-                            </div>
-                          );
-                        })}
+                        {/* Cargos Habilitados por Nível Ativo */}
+                        <div className="space-y-0.5 pt-0.5">
+                          {alcadas.map((tier) => {
+                            const cargos =
+                              tier === 1
+                                ? regra.cargosHabilitados1
+                                : tier === 2
+                                ? regra.cargosHabilitados2
+                                : tier === 3
+                                ? regra.cargosHabilitados3
+                                : regra.cargosHabilitados4;
+
+                            const cargosText =
+                              (cargos || []).join(', ') ||
+                              (tier === 1
+                                ? 'Coordenação / Supervisão'
+                                : tier === 2
+                                ? 'Gerência de Área'
+                                : tier === 3
+                                ? 'Diretoria de Operações / Financeira'
+                                : 'Diretoria Executiva / Conselho');
+
+                            return (
+                              <div key={tier} className="leading-snug text-[10.5px] flex items-baseline">
+                                <span className="font-bold text-slate-700 mr-1 font-mono shrink-0">
+                                  N{tier}:
+                                </span>
+                                <span className="text-slate-600 truncate max-w-[260px]" title={cargosText}>
+                                  {cargosText}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </td>
-
-                    {/* Action */}
-                    <td className="py-4 px-4 align-top text-right whitespace-nowrap">
-                      <button
-                        onClick={() => handleOpenEditRule(regra)}
-                        className="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 font-semibold text-xs transition flex items-center space-x-1.5 ml-auto shadow-2xs"
-                        title="Configurar Cargos Habilitados e Cadeia de Aprovação"
-                      >
-                        <Edit3 className="w-3.5 h-3.5 text-blue-600" />
-                        <span>Configurar</span>
-                      </button>
                     </td>
                   </tr>
                 );
@@ -1357,17 +1850,17 @@ export const MatrixManagementView: React.FC = () => {
                 type="button"
                 onClick={handleSaveRule}
                 disabled={savingRule}
-                className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200 transition flex items-center space-x-1.5 disabled:opacity-50"
+                className="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-200 transition flex items-center space-x-1.5 disabled:opacity-50"
               >
                 {savingRule ? (
                   <>
                     <RotateCcw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Salvando...</span>
+                    <span>Salvando no Supabase...</span>
                   </>
                 ) : (
                   <>
                     <Save className="w-3.5 h-3.5" />
-                    <span>Salvar Configuração da Matriz</span>
+                    <span>Salvar e Manter no Supabase</span>
                   </>
                 )}
               </button>
@@ -1435,6 +1928,239 @@ export const MatrixManagementView: React.FC = () => {
               >
                 Criar Rascunho de Versão
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Process Catalog Modal */}
+      {showProcessModal && (
+        <ProcessCatalogModal onClose={() => setShowProcessModal(false)} />
+      )}
+
+      {/* Modal: Arquitetura e Esquema Supabase (Chaves Compostas, Índices, RLS) */}
+      {showSupabaseModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-4xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-start justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm shadow-emerald-200">
+                  <Database className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-800 flex items-center space-x-2">
+                    <span>Arquitetura de Dados Supabase (PostgreSQL)</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                      POL-DIR-01 / ISO 9001
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Esquema relacional estrito com chaves primárias compostas, índices GIN trgm e políticas de acesso RLS.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowSupabaseModal(false)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Status Card */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+              <div className="flex items-center space-x-3">
+                <div className={`w-3 h-3 rounded-full ${dbStatus?.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                <div>
+                  <div className="font-bold text-slate-800">
+                    {loadingDbStatus ? (
+                      'Verificando conexão com o Supabase...'
+                    ) : dbStatus?.connected ? (
+                      'Conexão com PostgreSQL Supabase Ativa'
+                    ) : dbStatus?.configured ? (
+                      'Configurado via DATABASE_URL (Aguardando Conexão)'
+                    ) : (
+                      'Supabase Backend Exclusivo (Configure DATABASE_URL no .env)'
+                    )}
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    {dbStatus?.message || 'Pronto para execução e sincronização bidirecional.'}
+                  </div>
+                </div>
+              </div>
+
+              {dbStatus?.tablesCount !== undefined && (
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-bold text-slate-700">
+                    {dbStatus.tablesCount} Tabelas no Schema
+                  </span>
+                  {dbStatus.hasRelationalTables && (
+                    <span className="px-2.5 py-1 rounded-lg bg-emerald-100 border border-emerald-300 font-bold text-emerald-800">
+                      Relacional Ativo
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Migration Feedback Result */}
+            {migrationResult && (
+              <div
+                className={`p-3.5 rounded-xl border text-xs flex items-start space-x-2.5 ${
+                  migrationResult.success
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                    : 'bg-red-50 border-red-200 text-red-800'
+                }`}
+              >
+                {migrationResult.success ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                )}
+                <div className="space-y-1">
+                  <p className="font-semibold">{migrationResult.message || migrationResult.error}</p>
+                  {migrationResult.hint && <p className="text-[11px] opacity-90">{migrationResult.hint}</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Grid with 4 Main Pillars */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              {/* 1. Chaves Compostas & Tabelas */}
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5">
+                <div className="flex items-center space-x-2 text-slate-800 font-bold pb-2 border-b border-slate-100">
+                  <Layers className="w-4 h-4 text-blue-600" />
+                  <span>14 Tabelas & Chaves Primárias Compostas</span>
+                </div>
+                <ul className="space-y-1.5 text-slate-600 text-[11px]">
+                  <li className="flex items-start justify-between bg-blue-50/50 p-1.5 rounded border border-blue-100">
+                    <span className="font-mono font-bold text-blue-900">regras_alcada</span>
+                    <span className="font-semibold text-blue-700">PK: (matriz_id, processo_id)</span>
+                  </li>
+                  <li className="flex items-start justify-between bg-blue-50/50 p-1.5 rounded border border-blue-100">
+                    <span className="font-mono font-bold text-blue-900">etapas_aprovacao</span>
+                    <span className="font-semibold text-blue-700">PK: (solicitacao_id, nivel)</span>
+                  </li>
+                  <li className="flex items-start justify-between bg-blue-50/50 p-1.5 rounded border border-blue-100">
+                    <span className="font-mono font-bold text-blue-900">app_data</span>
+                    <span className="font-semibold text-blue-700">PK: (collection, id)</span>
+                  </li>
+                  <li className="text-slate-500 pt-1">
+                    <strong>Tabelas Mestras:</strong> <span className="font-mono">usuarios, centros_custo, processos, matrizes_alcada, solicitacoes, conferencias_financeiras, registros_pagamento, solicitacao_documentos, auditoria_logs, notificacoes_sistema, configuracoes_sistema</span>.
+                  </li>
+                </ul>
+              </div>
+
+              {/* 2. Índices de Busca e Performance */}
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5">
+                <div className="flex items-center space-x-2 text-slate-800 font-bold pb-2 border-b border-slate-100">
+                  <Search className="w-4 h-4 text-emerald-600" />
+                  <span>Índices de Busca e Alta Performance</span>
+                </div>
+                <ul className="space-y-1.5 text-slate-600 text-[11px]">
+                  <li>
+                    <strong className="text-slate-800">Trigram Text Search (pg_trgm):</strong> Índices GIN em <span className="font-mono text-emerald-700">fornecedor_favorecido, objeto_despesa, usuarios.name, processos.name</span> para busca instantânea.
+                  </li>
+                  <li>
+                    <strong className="text-slate-800">Índices Compostos B-Tree:</strong> <span className="font-mono text-slate-700">(status, data_vencimento), (centro_custo, status), (solicitante_id, created_at DESC)</span>.
+                  </li>
+                  <li>
+                    <strong className="text-slate-800">Índices GIN JSONB:</strong> Consulta ultra-rápida em campos semi-estruturados como dados bancários, risco e justificativas técnicas.
+                  </li>
+                </ul>
+              </div>
+
+              {/* 3. Políticas de Acesso RLS */}
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5">
+                <div className="flex items-center space-x-2 text-slate-800 font-bold pb-2 border-b border-slate-100">
+                  <ShieldCheck className="w-4 h-4 text-purple-600" />
+                  <span>Políticas de Acesso (Row Level Security - RLS)</span>
+                </div>
+                <ul className="space-y-1.5 text-slate-600 text-[11px]">
+                  <li>
+                    <strong className="text-slate-800">Service Role:</strong> Acesso irrestrito de backend para transações de orquestração segura.
+                  </li>
+                  <li>
+                    <strong className="text-slate-800">Solicitantes:</strong> Leitura e edição estrita apenas das próprias solicitações em rascunho/abertas.
+                  </li>
+                  <li>
+                    <strong className="text-slate-800">Aprovadores (N1 a N4):</strong> Visibilidade e ação autorizada nas etapas sob sua responsabilidade designada.
+                  </li>
+                  <li>
+                    <strong className="text-slate-800">Trilha de Auditoria:</strong> Tabela <span className="font-mono text-purple-700">auditoria_logs</span> imutável (append-only) para conformidade ISO 9001:2015.
+                  </li>
+                </ul>
+              </div>
+
+              {/* 4. Views Analíticas & Governança */}
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5">
+                <div className="flex items-center space-x-2 text-slate-800 font-bold pb-2 border-b border-slate-100">
+                  <TableProperties className="w-4 h-4 text-amber-600" />
+                  <span>Views Analíticas & Triggers Automáticos</span>
+                </div>
+                <ul className="space-y-1.5 text-slate-600 text-[11px]">
+                  <li>
+                    <strong className="text-slate-800">vw_painel_indicadores_alcada:</strong> Consolidação de métricas gerenciais, valores e alertas em tempo real.
+                  </li>
+                  <li>
+                    <strong className="text-slate-800">vw_solicitacoes_urgentes_sla:</strong> Filtro automático de vencimentos críticos (≤ 5 dias úteis).
+                  </li>
+                  <li>
+                    <strong className="text-slate-800">Trigger de Data (updated_at):</strong> Disparador automático <span className="font-mono text-amber-700">fn_atualizar_timestamp_updated_at()</span> em todas as tabelas editáveis.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Actions Bar */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs">
+              <div className="flex items-center space-x-2 w-full sm:w-auto">
+                <button
+                  onClick={handleCopySql}
+                  className="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition flex items-center space-x-1.5"
+                >
+                  <Copy className="w-3.5 h-3.5 text-slate-600" />
+                  <span>{copiedSql ? 'Copiado para Área de Transferência!' : 'Copiar Script DDL'}</span>
+                </button>
+
+                <button
+                  onClick={handleDownloadSql}
+                  className="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition flex items-center space-x-1.5"
+                >
+                  <FileCode className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Baixar .sql</span>
+                </button>
+              </div>
+
+              <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                {currentUser?.roles.includes('ADMINISTRADOR') && (
+                  <button
+                    onClick={handleExecuteMigration}
+                    disabled={migrating}
+                    className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-sm shadow-emerald-200 transition flex items-center space-x-1.5 disabled:opacity-50"
+                  >
+                    {migrating ? (
+                      <>
+                        <RotateCcw className="w-3.5 h-3.5 animate-spin" />
+                        <span>Executando Migração...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Terminal className="w-3.5 h-3.5" />
+                        <span>Executar Migração no Supabase</span>
+                      </>
+                    )}
+                  </button>
+                )}
+
+                <button
+                  onClick={() => setShowSupabaseModal(false)}
+                  className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold"
+                >
+                  Fechar
+                </button>
+              </div>
             </div>
           </div>
         </div>

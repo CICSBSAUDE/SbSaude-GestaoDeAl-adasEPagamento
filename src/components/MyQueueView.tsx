@@ -84,29 +84,33 @@ export const MyQueueView: React.FC<MyQueueViewProps> = ({
             </div>
             <h4 className="text-sm font-bold text-slate-800">Nenhuma solicitação encontrada</h4>
             <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
-              Você ainda não originou nenhuma solicitação FOR-FIN-01 no sistema.
+              Você ainda não originou nenhuma solicitação no sistema.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
-              <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100">
+               <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100">
                 <tr>
-                  <th className="py-3 px-5">ID FOR-FIN-01</th>
+                  <th className="py-3 px-5">ID da Solicitação</th>
                   <th className="py-3 px-5">Processo / Favorecido</th>
                   <th className="py-3 px-5">Solicitante</th>
                   <th className="py-3 px-5 text-right">Valor Total</th>
                   <th className="py-3 px-5">Alçada</th>
                   <th className="py-3 px-5">Vencimento</th>
                   <th className="py-3 px-5">Status</th>
-                  <th className="py-3 px-5 text-right">Ação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {myQueueRequests.map((r) => {
                   return (
-                    <tr key={r.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-3.5 px-5 font-mono font-bold text-blue-600">
+                    <tr
+                      key={r.id}
+                      onClick={() => onOpenRequest(r)}
+                      className="hover:bg-blue-50/50 transition-colors cursor-pointer group"
+                      title="Clique para visualizar e acompanhar a solicitação"
+                    >
+                      <td className="py-3.5 px-5 font-mono font-bold text-blue-600 group-hover:underline">
                         {r.numero}
                       </td>
                       <td className="py-3.5 px-5">
@@ -149,15 +153,6 @@ export const MyQueueView: React.FC<MyQueueViewProps> = ({
                         }`}>
                           {r.status.replace(/_/g, ' ')}
                         </span>
-                      </td>
-                      <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                        <button
-                          onClick={() => onOpenRequest(r)}
-                          className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition flex items-center space-x-1 ml-auto cursor-pointer"
-                        >
-                          <span>Acompanhar</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </button>
                       </td>
                     </tr>
                   );

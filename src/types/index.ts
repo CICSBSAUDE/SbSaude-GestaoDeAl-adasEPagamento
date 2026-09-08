@@ -253,7 +253,7 @@ export interface Solicitacao {
   sequencial: number;
   ano: number;
   
-  // 1. Identificação da Solicitação (FOR-FIN-01)
+  // 1. Identificação da Solicitação
   dataSolicitacao: string;
   areaSolicitante: string;
   centroCusto: string;
@@ -268,7 +268,7 @@ export interface Solicitacao {
   cpfCnpj: string;
   objetoDespesa: string;
 
-  // 2. Dados Financeiros e Condições de Pagamento (FOR-FIN-01)
+  // 2. Dados Financeiros e Condições de Pagamento
   valorTotal: number;
   natureza: PaymentNature;
   formaPagamento: PaymentMethod;
@@ -290,7 +290,7 @@ export interface Solicitacao {
     titular?: string;
   };
 
-  // 3. Enquadramento na Matriz de Alçada (POL-DIR-01)
+  // 3. Enquadramento na Matriz de Alçada
   faixaValorCalculada: 'ATE_5K' | 'DE_5K_A_20K' | 'DE_20K_A_50K' | 'DE_50K_A_100K' | 'ACIMA_100K';
   faixaValorLabel: string;
   nivelRisco: RiskLevel;

@@ -14,6 +14,12 @@ import {
 
 export const apiRouter = Router();
 
+// Middleware: Always load from DB on ALL requests to guarantee strict multi-instance data persistence and synchronization.
+apiRouter.use(async (req, res, next) => {
+  await db.loadFromDatabase();
+  next();
+});
+
 // Helper to extract active user from Authorization header or query param
 function getAuthUser(req: Request): User {
   const authHeader = req.headers['authorization'];
@@ -575,15 +581,95 @@ apiRouter.post('/processes', (req: Request, res: Response) => {
   return res.status(201).json({ process: newProcess });
 });
 
+apiRouter.put('/processes/:id', (req: Request, res: Response) => {
+  const activeUser = getAuthUser(req);
+  const { id } = req.params;
+  const updates = req.body;
+  
+  const processIndex = db.processes.findIndex(p => p.id === id);
+  if (processIndex === -1) {
+    return res.status(404).json({ error: 'Processo não encontrado' });
+  }
+
+  const oldProcess = { ...db.processes[processIndex] };
+  const updatedProcess = {
+    ...oldProcess,
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+
+  db.processes[processIndex] = updatedProcess;
+  db.syncToSql("processes", updatedProcess.id, updatedProcess);
+
+  db.addAuditLog({
+    entidade: 'PROCESSO',
+    entidadeId: updatedProcess.id,
+    acao: 'EDICAO_PROCESSO',
+    descricao: `Processo ${updatedProcess.name} (${updatedProcess.code}) atualizado.`,
+    usuarioId: activeUser.id,
+    usuarioNome: activeUser.name,
+    usuarioEmail: activeUser.email,
+    usuarioCargo: activeUser.cargo,
+    usuarioArea: activeUser.area,
+    valoresAnteriores: oldProcess as unknown as Record<string, any>,
+    valoresPosteriores: updatedProcess as unknown as Record<string, any>,
+    ipAddress: req.ip || '127.0.0.1',
+    userAgent: req.headers['user-agent'] || 'WebClient',
+  });
+
+  return res.json({ process: updatedProcess });
+});
+
+apiRouter.delete('/processes/:id', (req: Request, res: Response) => {
+  const activeUser = getAuthUser(req);
+  const { id } = req.params;
+  
+  const processIndex = db.processes.findIndex(p => p.id === id);
+  if (processIndex === -1) {
+    return res.status(404).json({ error: 'Processo não encontrado' });
+  }
+
+  const oldProcess = db.processes[processIndex];
+  db.processes.splice(processIndex, 1);
+  db.deleteFromSql("processes", id);
+
+  db.addAuditLog({
+    entidade: 'PROCESSO',
+    entidadeId: id,
+    acao: 'REMOCAO_PROCESSO',
+    descricao: `Processo ${oldProcess.name} (${oldProcess.code}) removido.`,
+    usuarioId: activeUser.id,
+    usuarioNome: activeUser.name,
+    usuarioEmail: activeUser.email,
+    usuarioCargo: activeUser.cargo,
+    usuarioArea: activeUser.area,
+    valoresAnteriores: oldProcess as unknown as Record<string, any>,
+    ipAddress: req.ip || '127.0.0.1',
+    userAgent: req.headers['user-agent'] || 'WebClient',
+  });
+
+  return res.json({ success: true });
+});
+
 // -------------------------------------------------------------
-// 3. APPROVAL MATRIX MODULE (POL-DIR-01 Versioning & Rules)
+// 3. APPROVAL MATRIX MODULE (Versioning & Rules)
 // -------------------------------------------------------------
 
-apiRouter.get('/matrix/versions', (req: Request, res: Response) => {
+apiRouter.get('/matrix/versions', async (req: Request, res: Response) => {
+  try {
+    await db.syncMatricesFromSql();
+  } catch (err) {
+    console.warn('[API] Erro ao sincronizar matrizes do Supabase:', err);
+  }
   return res.json({ matrices: db.matrices });
 });
 
-apiRouter.get('/matrix/active', (req: Request, res: Response) => {
+apiRouter.get('/matrix/active', async (req: Request, res: Response) => {
+  try {
+    await db.syncMatricesFromSql();
+  } catch (err) {
+    console.warn('[API] Erro ao sincronizar matriz ativa do Supabase:', err);
+  }
   const activeMatrix = db.matrices.find((m) => m.status === 'VIGENTE') || db.matrices[0];
   return res.json({ matrix: activeMatrix });
 });
@@ -757,6 +843,105 @@ apiRouter.put('/matrix/:id/rules/:ruleId', async (req: Request, res: Response) =
   });
 
   return res.json({ rule, matrix });
+});
+
+apiRouter.put('/matrix/:id/rules-bulk', async (req: Request, res: Response) => {
+  const activeUser = getAuthUser(req);
+  const matrix = db.matrices.find((m) => m.id === req.params.id);
+  if (!matrix) return res.status(404).json({ error: 'Matriz não encontrada.' });
+
+  const { updates } = req.body;
+  if (!Array.isArray(updates)) {
+    return res.status(400).json({ error: 'Array "updates" é obrigatório.' });
+  }
+
+  for (const item of updates) {
+    const ruleId = item.ruleId || item.id;
+    const rule = matrix.regras.find((r) => r.id === ruleId);
+    if (rule) {
+      const data = item.data || item;
+      if (data.alcadasObrigatorias !== undefined) rule.alcadasObrigatorias = data.alcadasObrigatorias;
+      if (data.cargosHabilitados1 !== undefined) rule.cargosHabilitados1 = data.cargosHabilitados1;
+      if (data.cargosHabilitados2 !== undefined) rule.cargosHabilitados2 = data.cargosHabilitados2;
+      if (data.cargosHabilitados3 !== undefined) rule.cargosHabilitados3 = data.cargosHabilitados3;
+      if (data.cargosHabilitados4 !== undefined) rule.cargosHabilitados4 = data.cargosHabilitados4;
+      if (data.cargosHabilitadosSolicitante !== undefined) rule.cargosHabilitadosSolicitante = data.cargosHabilitadosSolicitante;
+      if (data.cargoHabilitadoDocumento !== undefined) rule.cargoHabilitadoDocumento = data.cargoHabilitadoDocumento;
+      if (data.alçadaPorEvento !== undefined) rule.alçadaPorEvento = Number(data.alçadaPorEvento);
+      if (data.tetoMensal !== undefined) rule.tetoMensal = Number(data.tetoMensal);
+      if (data.risco !== undefined) rule.risco = data.risco;
+      if (data.nivelMaximoRequerido !== undefined) rule.nivelMaximoRequerido = data.nivelMaximoRequerido;
+      if (data.observacoes !== undefined) rule.observacoes = data.observacoes;
+      if (data.ativo !== undefined) rule.ativo = data.ativo;
+
+      // Update corresponding process if exists
+      const proc = db.processes.find((p) => p.id === rule.processoId);
+      if (proc) {
+        if (rule.cargosHabilitadosSolicitante) proc.cargosHabilitadosSolicitante = rule.cargosHabilitadosSolicitante;
+        if (rule.cargoHabilitadoDocumento) proc.cargoHabilitadoDocumento = rule.cargoHabilitadoDocumento;
+        if (rule.risco) proc.riscoPadrao = rule.risco;
+      }
+    }
+  }
+
+  matrix.updatedAt = new Date().toISOString();
+  await db.syncToSql('matrices', matrix.id, matrix);
+  for (const proc of db.processes) {
+    await db.syncToSql('processes', proc.id, proc);
+  }
+  db.syncCostCentersFromMatrices();
+
+  db.addAuditLog({
+    entidade: 'MATRIZ_ALCADA',
+    entidadeId: matrix.id,
+    acao: 'ALTERACAO_LOTE_REGRAS_ALCADA',
+    descricao: `Atualização em lote de ${updates.length} regras na matriz ${matrix.versao} por ${activeUser.name}. Sincronizado no banco de dados Supabase.`,
+    usuarioId: activeUser.id,
+    usuarioNome: activeUser.name,
+    usuarioEmail: activeUser.email,
+    usuarioCargo: activeUser.cargo,
+    usuarioArea: activeUser.area,
+    ipAddress: req.ip || '127.0.0.1',
+    userAgent: req.headers['user-agent'] || 'WebClient',
+  });
+
+  return res.json({ matrix });
+});
+
+apiRouter.put('/matrix/:id', async (req: Request, res: Response) => {
+  const activeUser = getAuthUser(req);
+  const matrix = db.matrices.find((m) => m.id === req.params.id);
+  if (!matrix) return res.status(404).json({ error: 'Matriz não encontrada.' });
+
+  const { regras, titulo, status, vigenciaInicio, vigenciaFim, historicoAlteracoes } = req.body;
+  if (regras && Array.isArray(regras)) {
+    matrix.regras = regras;
+  }
+  if (titulo) matrix.titulo = titulo;
+  if (status) matrix.status = status;
+  if (vigenciaInicio) matrix.vigenciaInicio = vigenciaInicio;
+  if (vigenciaFim) matrix.vigenciaFim = vigenciaFim;
+  if (historicoAlteracoes) matrix.historicoAlteracoes = historicoAlteracoes;
+
+  matrix.updatedAt = new Date().toISOString();
+  await db.syncToSql('matrices', matrix.id, matrix);
+  db.syncCostCentersFromMatrices();
+
+  db.addAuditLog({
+    entidade: 'MATRIZ_ALCADA',
+    entidadeId: matrix.id,
+    acao: 'ATUALIZACAO_COMPLETA_MATRIZ',
+    descricao: `Matriz ${matrix.codigo} ${matrix.versao} salva e mantida no banco de dados Supabase por ${activeUser.name}. Total de regras: ${matrix.regras.length}.`,
+    usuarioId: activeUser.id,
+    usuarioNome: activeUser.name,
+    usuarioEmail: activeUser.email,
+    usuarioCargo: activeUser.cargo,
+    usuarioArea: activeUser.area,
+    ipAddress: req.ip || '127.0.0.1',
+    userAgent: req.headers['user-agent'] || 'WebClient',
+  });
+
+  return res.json({ matrix });
 });
 
 // -------------------------------------------------------------
@@ -1969,6 +2154,13 @@ apiRouter.delete('/cost-centers/:id', (req: Request, res: Response) => {
   const removed = db.costCenters.splice(index, 1)[0];
   db.deleteFromSql('costCenters', id);
 
+  if (!db.deletedCostCenterNames) {
+    db.deletedCostCenterNames = [];
+  }
+  if (!db.deletedCostCenterNames.includes(removed.nome)) {
+    db.deletedCostCenterNames.push(removed.nome);
+  }
+
   // Update any users associated with this deleted cost center
   db.users.forEach((u) => {
     let modified = false;
@@ -2023,4 +2215,261 @@ apiRouter.post('/cost-centers/sync-from-matrix', (req: Request, res: Response) =
     costCenters: db.costCenters,
     message: `${added} novos centros de custo foram extraídos e assimilados a partir dos cargos da Matriz de Alçadas.`,
   });
+});
+
+// ==============================================================================
+// SUPABASE DATABASE & SCHEMA MANAGEMENT
+// ==============================================================================
+
+// Endpoint to inspect Supabase database connection and tables status
+apiRouter.get('/database/status', async (req: Request, res: Response) => {
+  const { pool } = await import('../db/index.ts');
+  const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL;
+  const isConfigured = Boolean(dbUrl);
+
+  if (!isConfigured) {
+    return res.json({
+      connected: false,
+      configured: false,
+      message: 'DATABASE_URL não configurada no ambiente. Conecte sua instância Supabase PostgreSQL nas variáveis de ambiente.',
+      tables: [],
+    });
+  }
+
+  try {
+    const client = await pool.connect();
+    try {
+      const result = await client.query(`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        ORDER BY table_name;
+      `);
+      const tables = result.rows.map((r: any) => r.table_name);
+      return res.json({
+        connected: true,
+        configured: true,
+        tablesCount: tables.length,
+        tables,
+        hasAppData: tables.includes('app_data'),
+        hasRelationalTables: tables.includes('solicitacoes') && tables.includes('regras_alcada'),
+        message: 'Conectado com sucesso ao Supabase PostgreSQL.',
+      });
+    } finally {
+      client.release();
+    }
+  } catch (err: any) {
+    return res.json({
+      connected: false,
+      configured: true,
+      error: err?.message || 'Erro ao conectar ao Supabase',
+      tables: [],
+    });
+  }
+});
+
+// Endpoint to get the complete Supabase SQL schema script
+apiRouter.get('/database/schema-sql', async (req: Request, res: Response) => {
+  const fs = await import('fs');
+  const path = await import('path');
+  const sqlPath = path.join(process.cwd(), 'supabase_schema.sql');
+
+  if (!fs.existsSync(sqlPath)) {
+    return res.status(404).json({ error: 'Arquivo supabase_schema.sql não encontrado.' });
+  }
+
+  const sqlContent = fs.readFileSync(sqlPath, 'utf-8');
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  return res.send(sqlContent);
+});
+
+// Endpoint to automatically execute the full schema migration in Supabase
+apiRouter.post('/database/migrate-supabase', async (req: Request, res: Response) => {
+  const activeUser = getAuthUser(req);
+  if (!activeUser || !activeUser.roles.includes('ADMINISTRADOR')) {
+    return res.status(403).json({ error: 'Acesso negado: Somente administradores podem executar migrações de banco.' });
+  }
+
+  const { pool } = await import('../db/index.ts');
+  const fs = await import('fs');
+  const path = await import('path');
+  const sqlPath = path.join(process.cwd(), 'supabase_schema.sql');
+
+  if (!fs.existsSync(sqlPath)) {
+    return res.status(404).json({ error: 'Arquivo supabase_schema.sql não encontrado.' });
+  }
+
+  const sqlContent = fs.readFileSync(sqlPath, 'utf-8');
+
+  try {
+    const client = await pool.connect();
+    try {
+      await client.query(sqlContent);
+      // Auto-populate all data into the newly created database tables
+      await db.persistAllToSql();
+      return res.json({
+        success: true,
+        message: 'Script DDL executado com sucesso no Supabase! Todas as tabelas, colunas, chaves primárias compostas, índices e políticas de RLS foram criados, e os dados foram sincronizados.',
+      });
+    } finally {
+      client.release();
+    }
+  } catch (err: any) {
+    console.error('[Supabase Migration] Erro ao executar script DDL:', err);
+    return res.status(500).json({
+      success: false,
+      error: err?.message || 'Falha ao executar migração no Supabase.',
+      hint: 'Você também pode copiar o conteúdo de supabase_schema.sql e executar diretamente no SQL Editor do painel do Supabase.',
+    });
+  }
+});
+
+// Endpoint para sincronizar todos os dados da aplicação para o Supabase
+apiRouter.post('/database/sync-all', async (req: Request, res: Response) => {
+  try {
+    const count = await db.persistAllToSql();
+    return res.json({
+      success: true,
+      message: `${count} registros sincronizados com sucesso no Supabase.`,
+      count,
+    });
+  } catch (err: any) {
+    console.error('[Supabase Sync] Erro ao sincronizar dados:', err);
+    return res.status(500).json({
+      success: false,
+      error: err?.message || 'Falha ao sincronizar dados no Supabase.',
+    });
+  }
+});
+
+// Endpoint to list all Supabase tables, triggers, and relationships (introspection)
+apiRouter.get('/supabase/introspection', async (req: Request, res: Response) => {
+  const { pool } = await import('../db/index.ts');
+  try {
+    const client = await pool.connect();
+    try {
+      // 1. Tables & Columns
+      const tablesRes = await client.query(`
+        SELECT 
+          t.table_name,
+          c.column_name,
+          c.data_type,
+          c.is_nullable,
+          c.column_default
+        FROM information_schema.tables t
+        JOIN information_schema.columns c ON t.table_name = c.table_name AND t.table_schema = c.table_schema
+        WHERE t.table_schema = 'public'
+        ORDER BY t.table_name, c.ordinal_position;
+      `);
+
+      // 2. Triggers
+      const triggersRes = await client.query(`
+        SELECT 
+          trigger_name,
+          event_manipulation,
+          event_object_table,
+          action_statement,
+          action_timing
+        FROM information_schema.triggers
+        WHERE trigger_schema = 'public'
+        ORDER BY event_object_table, trigger_name;
+      `);
+
+      // 3. Relationships / Foreign Keys
+      const fkRes = await client.query(`
+        SELECT
+          tc.constraint_name,
+          kcu.table_name,
+          kcu.column_name,
+          ccu.table_name AS foreign_table_name,
+          ccu.column_name AS foreign_column_name
+        FROM information_schema.table_constraints AS tc
+        JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+          AND tc.table_schema = kcu.table_schema
+        JOIN information_schema.constraint_column_usage AS ccu
+          ON ccu.constraint_name = tc.constraint_name
+          AND ccu.table_schema = tc.table_schema
+        WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = 'public';
+      `);
+
+      // Group columns by table
+      const tablesMap: Record<string, any[]> = {};
+      for (const row of tablesRes.rows) {
+        if (!tablesMap[row.table_name]) {
+          tablesMap[row.table_name] = [];
+        }
+        tablesMap[row.table_name].push({
+          column: row.column_name,
+          type: row.data_type,
+          nullable: row.is_nullable === 'YES',
+          default: row.column_default,
+        });
+      }
+
+      const tablesList = Object.keys(tablesMap).map(tableName => ({
+        tableName,
+        columns: tablesMap[tableName],
+      }));
+
+      return res.json({
+        success: true,
+        connected: true,
+        database: 'Supabase PostgreSQL',
+        tablesCount: tablesList.length,
+        tables: tablesList,
+        triggers: triggersRes.rows,
+        relationships: fkRes.rows,
+      });
+    } finally {
+      client.release();
+    }
+  } catch (err: any) {
+    return res.json({
+      success: true,
+      connected: false,
+      note: 'Retornado a partir da especificação oficial do Supabase PostgreSQL (supabase_schema.sql)',
+      tablesCount: 14,
+      tables: [
+        { tableName: 'app_data', description: 'Armazenamento universal no Supabase' },
+        { tableName: 'centros_custo', description: 'Centros de custo e plano operacional' },
+        { tableName: 'usuarios', description: 'Usuários corporativos e controle RBAC' },
+        { tableName: 'processos', description: 'Catálogo de processos corporativos' },
+        { tableName: 'matrizes_alcada', description: 'Cabeçalho das Matrizes de Alçadas' },
+        { tableName: 'regras_alcada', description: 'Regras de alçada por processo' },
+        { tableName: 'solicitacoes', description: 'Solicitações de pagamento e prestação de contas' },
+        { tableName: 'etapas_aprovacao', description: 'Etapas da cadeia de aprovação (1 a 4)' },
+        { tableName: 'conferencias_financeiras', description: 'Conferência fiscal e retenções' },
+        { tableName: 'registros_pagamento', description: 'Registros de baixa em tesouraria' },
+        { tableName: 'solicitacao_documentos', description: 'Documentos e evidências (ISO 9001)' },
+        { tableName: 'auditoria_logs', description: 'Trilha de auditoria imutável' },
+        { tableName: 'notificacoes_sistema', description: 'Notificações e alertas de SLA' },
+        { tableName: 'configuracoes_sistema', description: 'Parâmetros e configurações globais' },
+      ],
+      triggers: [
+        { trigger_name: 'trg_processos_updated_at', table: 'processos', event: 'BEFORE UPDATE' },
+        { trigger_name: 'trg_matrizes_updated_at', table: 'matrizes_alcada', event: 'BEFORE UPDATE' },
+        { trigger_name: 'trg_regras_updated_at', table: 'regras_alcada', event: 'BEFORE UPDATE' },
+        { trigger_name: 'trg_solicitacoes_updated_at', table: 'solicitacoes', event: 'BEFORE UPDATE' },
+        { function: 'fn_atualizar_timestamp_updated_at()', language: 'plpgsql' }
+      ],
+      relationships: [
+        { from: 'regras_alcada(matriz_id)', to: 'matrizes_alcada(id)' },
+        { from: 'regras_alcada(processo_id)', to: 'processos(id)' },
+        { from: 'solicitacoes(solicitante_id)', to: 'usuarios(id)' },
+        { from: 'solicitacoes(processo_id)', to: 'processos(id)' },
+        { from: 'etapas_aprovacao(solicitacao_id)', to: 'solicitacoes(id)' },
+        { from: 'etapas_aprovacao(aprovador_designado_id)', to: 'usuarios(id)' },
+        { from: 'etapas_aprovacao(aprovador_real_id)', to: 'usuarios(id)' },
+        { from: 'conferencias_financeiras(solicitacao_id)', to: 'solicitacoes(id)' },
+        { from: 'conferencias_financeiras(responsavel_id)', to: 'usuarios(id)' },
+        { from: 'registros_pagamento(solicitacao_id)', to: 'solicitacoes(id)' },
+        { from: 'registros_pagamento(responsavel_tesouraria_id)', to: 'usuarios(id)' },
+        { from: 'solicitacao_documentos(solicitacao_id)', to: 'solicitacoes(id)' },
+        { from: 'solicitacao_documentos(uploaded_by_id)', to: 'usuarios(id)' },
+        { from: 'auditoria_logs(usuario_id)', to: 'usuarios(id)' },
+      ],
+      error: err?.message,
+    });
+  }
 });

@@ -3,35 +3,33 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const sqlHost = process.env.SQL_HOST;
-const sqlDbName = process.env.SQL_DB_NAME;
-const user = process.env.SQL_ADMIN_USER;
-const password = process.env.SQL_ADMIN_PASSWORD;
+const connectionString =
+  process.env.DATABASE_URL ||
+  process.env.SUPABASE_DB_URL ||
+  process.env.POSTGRES_URL;
 
-if (!sqlHost) {
-  throw new Error("SQL_HOST must be set in environment variables.");
-}
-if (!sqlDbName) {
-  throw new Error("SQL_DB_NAME must be set in environment variables.");
-}
-if (!user) {
-  throw new Error("SQL_ADMIN_USER must be set in environment variables.");
-}
-if (!password) {
-  throw new Error("SQL_ADMIN_PASSWORD must be set in environment variables.");
-}
+const sqlHost = process.env.SUPABASE_DB_HOST || process.env.PGHOST || process.env.SQL_HOST || "localhost";
+const sqlDbName = process.env.SUPABASE_DB_NAME || process.env.PGDATABASE || process.env.SQL_DB_NAME || "postgres";
+const user = process.env.SUPABASE_DB_USER || process.env.PGUSER || process.env.SQL_USER || process.env.SQL_ADMIN_USER || "postgres";
+const password = process.env.SUPABASE_DB_PASSWORD || process.env.PGPASSWORD || process.env.SQL_PASSWORD || process.env.SQL_ADMIN_PASSWORD || "";
 
 export default defineConfig({
   schema: "./src/db/schema.ts",
   out: "./drizzle",
   dialect: "postgresql",
   schemaFilter: ["public"],
-  dbCredentials: {
-    host: sqlHost,
-    user: user,
-    password: password,
-    database: sqlDbName,
-    ssl: false,
-  },
+  dbCredentials: connectionString
+    ? {
+        url: connectionString,
+        ssl: connectionString.includes("localhost") ? false : { rejectUnauthorized: false },
+      }
+    : {
+        host: sqlHost,
+        user: user,
+        password: password,
+        database: sqlDbName,
+        ssl: sqlHost === "localhost" ? false : { rejectUnauthorized: false },
+      },
   verbose: true,
 });
+
