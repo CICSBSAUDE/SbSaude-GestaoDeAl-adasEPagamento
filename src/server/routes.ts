@@ -824,7 +824,7 @@ apiRouter.put('/matrix/:id/rules/:ruleId', async (req: Request, res: Response) =
   }
 
   // Automatically update and extract any new cargo positions into Cost Centers
-  db.syncCostCentersFromMatrices();
+  // db.syncCostCentersFromMatrices();
 
   db.addAuditLog({
     entidade: 'MATRIZ_ALCADA',
@@ -889,7 +889,7 @@ apiRouter.put('/matrix/:id/rules-bulk', async (req: Request, res: Response) => {
   for (const proc of db.processes) {
     await db.syncToSql('processes', proc.id, proc);
   }
-  db.syncCostCentersFromMatrices();
+  // db.syncCostCentersFromMatrices();
 
   db.addAuditLog({
     entidade: 'MATRIZ_ALCADA',
@@ -925,7 +925,7 @@ apiRouter.put('/matrix/:id', async (req: Request, res: Response) => {
 
   matrix.updatedAt = new Date().toISOString();
   await db.syncToSql('matrices', matrix.id, matrix);
-  db.syncCostCentersFromMatrices();
+  // db.syncCostCentersFromMatrices();
 
   db.addAuditLog({
     entidade: 'MATRIZ_ALCADA',

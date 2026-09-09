@@ -11,11 +11,17 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
 import { LogoSBSaude } from './LogoSBSaude';
 
 export const LoginView: React.FC = () => {
   const { login, loginWithGoogle, isLoading, sessionExpiredReason, requiresPasswordChange, completePasswordChange, logout } = useAuth();
+  const { setTheme } = useTheme();
+
+  React.useEffect(() => {
+    setTheme('light');
+  }, [setTheme]);
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');

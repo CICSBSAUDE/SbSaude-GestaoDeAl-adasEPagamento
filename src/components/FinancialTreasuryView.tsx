@@ -303,35 +303,35 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
       {/* ======================================================== */}
       {/* 1. UNIFIED MODULE HEADER & KPI COUNTERS */}
       {/* ======================================================== */}
-      <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-6">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-md shadow-slate-900/10">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center shadow-md shadow-slate-900/10">
               <Landmark className="w-6 h-6 text-red-500" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
                   Financeiro & Tesouraria
                 </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                   FOR-FIN-01 Item 7
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5 max-w-2xl">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 max-w-2xl">
                 Conferência fiscal, retenções tributárias e liquidação bancária de pagamentos com estrita segregação de funções e quatro olhos.
               </p>
             </div>
           </div>
 
           {/* Sub-Tab Navigation Segment */}
-          <div className="flex items-center p-1.5 rounded-xl bg-slate-100 border border-slate-200 self-start md:self-auto">
+          <div className="flex items-center p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 self-start md:self-auto">
             <button
               onClick={() => setActiveSubTab('CONFERENCE')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 activeSubTab === 'CONFERENCE'
-                  ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm ring-1 ring-slate-200 dark:ring-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
               }`}
             >
               <ClipboardCheck className={`w-4 h-4 ${activeSubTab === 'CONFERENCE' ? 'text-amber-500' : 'text-slate-400'}`} />
@@ -347,8 +347,8 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
               onClick={() => setActiveSubTab('TREASURY')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 activeSubTab === 'TREASURY'
-                  ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm ring-1 ring-slate-200 dark:ring-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
               }`}
             >
               <Landmark className={`w-4 h-4 ${activeSubTab === 'TREASURY' ? 'text-emerald-500' : 'text-slate-400'}`} />
@@ -363,19 +363,19 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
         </div>
 
         {/* Quick Operational Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-100">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
           <div
             onClick={() => { setActiveSubTab('CONFERENCE'); setConfFilterStatus('PENDING'); }}
             className={`p-3 rounded-xl border transition cursor-pointer ${
               activeSubTab === 'CONFERENCE' && confFilterStatus === 'PENDING'
-                ? 'bg-amber-50/60 border-amber-300 ring-1 ring-amber-300/50'
-                : 'bg-slate-50/70 border-slate-200/80 hover:bg-amber-50/30'
+                ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700 ring-1 ring-amber-300/50 dark:ring-amber-700/50'
+                : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-700/60 hover:bg-amber-50/30 dark:hover:bg-amber-950/20'
             }`}
           >
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">Pendente Conferência</span>
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">Pendente Conferência</span>
             <div className="flex items-baseline space-x-2 mt-1">
-              <span className="text-lg font-black text-amber-600">{pendingConferenceCount}</span>
-              <span className="text-[10px] text-slate-400">solicitações</span>
+              <span className="text-lg font-black text-amber-600 dark:text-amber-400">{pendingConferenceCount}</span>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500">solicitações</span>
             </div>
           </div>
 
@@ -383,14 +383,14 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
             onClick={() => { setActiveSubTab('TREASURY'); setTreasuryFilterStatus('RELEASED'); }}
             className={`p-3 rounded-xl border transition cursor-pointer ${
               activeSubTab === 'TREASURY' && treasuryFilterStatus === 'RELEASED'
-                ? 'bg-emerald-50/60 border-emerald-300 ring-1 ring-emerald-300/50'
-                : 'bg-slate-50/70 border-slate-200/80 hover:bg-emerald-50/30'
+                ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 ring-1 ring-emerald-300/50 dark:ring-emerald-700/50'
+                : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-700/60 hover:bg-emerald-50/30 dark:hover:bg-emerald-950/20'
             }`}
           >
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">Prontas p/ Pagamento</span>
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">Prontas p/ Pagamento</span>
             <div className="flex items-baseline space-x-2 mt-1">
-              <span className="text-lg font-black text-emerald-600">{pendingTreasuryCount}</span>
-              <span className="text-[10px] text-slate-400">liberadas</span>
+              <span className="text-lg font-black text-emerald-600 dark:text-emerald-400">{pendingTreasuryCount}</span>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500">liberadas</span>
             </div>
           </div>
 
@@ -398,21 +398,21 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
             onClick={() => { setActiveSubTab('TREASURY'); setTreasuryFilterStatus('PAID'); }}
             className={`p-3 rounded-xl border transition cursor-pointer ${
               activeSubTab === 'TREASURY' && treasuryFilterStatus === 'PAID'
-                ? 'bg-blue-50/60 border-blue-300 ring-1 ring-blue-300/50'
-                : 'bg-slate-50/70 border-slate-200/80 hover:bg-blue-50/30'
+                ? 'bg-blue-50/60 dark:bg-blue-950/30 border-blue-300 dark:border-blue-700 ring-1 ring-blue-300/50 dark:ring-blue-700/50'
+                : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-700/60 hover:bg-blue-50/30 dark:hover:bg-blue-950/20'
             }`}
           >
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">Pagamentos Efetuados</span>
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">Pagamentos Efetuados</span>
             <div className="flex items-baseline space-x-2 mt-1">
-              <span className="text-lg font-black text-blue-600">{paidCount}</span>
-              <span className="text-[10px] text-slate-400">liquidados</span>
+              <span className="text-lg font-black text-blue-600 dark:text-blue-400">{paidCount}</span>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500">liquidados</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl border bg-slate-50/70 border-slate-200/80">
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">Volume Liquidado</span>
+          <div className="p-3 rounded-xl border bg-slate-50/70 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-700/60">
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">Volume Liquidado</span>
             <div className="flex items-baseline space-x-1 mt-1">
-              <span className="text-xs font-mono font-bold text-slate-800 truncate">
+              <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 truncate">
                 {formatCurrency(totalPaidAmount)}
               </span>
             </div>
@@ -426,12 +426,12 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
       {activeSubTab === 'CONFERENCE' && (
         <div className="space-y-6">
           {confMessage && (
-            <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-xs flex items-center justify-between shadow-sm">
+            <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 text-blue-800 dark:text-blue-200 text-xs flex items-center justify-between shadow-sm">
               <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span>{confMessage}</span>
               </div>
-              <button onClick={() => setConfMessage(null)} className="underline text-xs font-bold text-blue-900 cursor-pointer">
+              <button onClick={() => setConfMessage(null)} className="underline text-xs font-bold text-blue-900 dark:text-blue-300 cursor-pointer">
                 Fechar
               </button>
             </div>
@@ -443,14 +443,16 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
             {/* Left Column: Requests in Finance Queue (5 cols) */}
             <div className="lg:col-span-5 space-y-3">
               <div className="flex items-center justify-between px-1">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                   Fila de Conferência ({filteredConferenceList.length})
                 </h3>
                 <div className="flex items-center space-x-1 text-[11px]">
                   <button
                     onClick={() => setConfFilterStatus('ALL')}
                     className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
-                      confFilterStatus === 'ALL' ? 'bg-slate-800 text-white font-bold' : 'text-slate-500 hover:text-slate-800'
+                      confFilterStatus === 'ALL'
+                        ? 'bg-slate-800 dark:bg-slate-700 text-white font-bold'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                     }`}
                   >
                     Todas
@@ -458,7 +460,9 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                   <button
                     onClick={() => setConfFilterStatus('PENDING')}
                     className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
-                      confFilterStatus === 'PENDING' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+                      confFilterStatus === 'PENDING'
+                        ? 'bg-amber-500 text-slate-950 font-bold'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                     }`}
                   >
                     Pendentes
@@ -466,7 +470,9 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                   <button
                     onClick={() => setConfFilterStatus('RELEASED')}
                     className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
-                      confFilterStatus === 'RELEASED' ? 'bg-emerald-600 text-white font-bold' : 'text-slate-500 hover:text-slate-800'
+                      confFilterStatus === 'RELEASED'
+                        ? 'bg-emerald-600 text-white font-bold'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                     }`}
                   >
                     Liberadas
@@ -476,19 +482,19 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
 
               {/* Search filter */}
               <div className="relative">
-                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                 <input
                   type="text"
                   placeholder="Filtrar por número, favorecido ou CC..."
                   value={confSearch}
                   onChange={(e) => setConfSearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 shadow-sm"
+                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 shadow-sm"
                 />
               </div>
 
               <div className="space-y-2.5 max-h-[620px] overflow-y-auto pr-1">
                 {filteredConferenceList.length === 0 ? (
-                  <div className="p-8 rounded-xl bg-white border border-slate-200 text-center text-xs text-slate-500 shadow-sm">
+                  <div className="p-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 shadow-sm">
                     Nenhuma solicitação encontrada na fila de conferência com os filtros atuais.
                   </div>
                 ) : (
@@ -501,27 +507,29 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                         onClick={() => handleSelectConfReq(r)}
                         className={`p-4 rounded-xl border text-xs cursor-pointer transition shadow-sm ${
                           isSelected
-                            ? 'bg-blue-50/80 border-blue-500 ring-2 ring-blue-500/20'
+                            ? 'bg-blue-50/80 dark:bg-blue-950/30 border-blue-500 dark:border-blue-500 ring-2 ring-blue-500/20'
                             : isLiberada
-                            ? 'bg-white border-slate-200 opacity-80 hover:opacity-100 hover:border-slate-300'
-                            : 'bg-white border-slate-200 hover:border-blue-300 hover:bg-slate-50/50'
+                            ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 opacity-80 hover:opacity-100 hover:border-slate-300 dark:hover:border-slate-700'
+                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-slate-50/50 dark:hover:bg-slate-800/50'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-mono font-bold text-blue-600">{r.numero}</span>
+                          <span className="font-mono font-bold text-blue-600 dark:text-blue-400">{r.numero}</span>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            isLiberada ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
+                            isLiberada
+                              ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
+                              : 'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800'
                           }`}>
                             {isLiberada ? 'LIBERADA' : 'AGUARDANDO CONFERÊNCIA'}
                           </span>
                         </div>
-                        <p className="font-bold text-slate-800 mt-1 truncate">{r.fornecedorFavorecido}</p>
-                        <p className="text-[11px] text-slate-500 truncate">{r.objetoDespesa}</p>
-                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 text-[11px]">
-                          <span className="font-mono font-bold text-slate-900">
+                        <p className="font-bold text-slate-800 dark:text-slate-200 mt-1 truncate">{r.fornecedorFavorecido}</p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{r.objetoDespesa}</p>
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
+                          <span className="font-mono font-bold text-slate-900 dark:text-slate-100">
                             {formatCurrency(r.valorTotal)}
                           </span>
-                          <span className="text-slate-500">
+                          <span className="text-slate-500 dark:text-slate-400">
                             Venc: {new Date(r.dataVencimento).toLocaleDateString('pt-BR')}
                           </span>
                         </div>
@@ -535,19 +543,19 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
             {/* Right Column: Conference Checklist Station (7 cols) */}
             <div className="lg:col-span-7">
               {selectedConfReq ? (
-                <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-5">
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900 flex items-center space-x-2">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center space-x-2">
                         <span>Conferência de Documentos & Retenções — {selectedConfReq.numero}</span>
                       </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Favorecido: <strong className="text-slate-800">{selectedConfReq.fornecedorFavorecido}</strong> ({selectedConfReq.cpfCnpj || '—'})
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        Favorecido: <strong className="text-slate-800 dark:text-slate-200">{selectedConfReq.fornecedorFavorecido}</strong> ({selectedConfReq.cpfCnpj || '—'})
                       </p>
                     </div>
                     <button
                       onClick={() => onOpenRequest(selectedConfReq)}
-                      className="text-xs text-blue-600 hover:text-blue-800 font-bold underline cursor-pointer"
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold underline cursor-pointer"
                     >
                       Ver FOR-FIN-01 Completo
                     </button>
@@ -555,20 +563,20 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
 
                   {/* 5-point Checklist */}
                   <div className="space-y-3 text-xs">
-                    <p className="font-bold text-slate-800 flex items-center space-x-1.5">
-                      <ShieldCheck className="w-4 h-4 text-blue-600" />
+                    <p className="font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
+                      <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       <span>1. Checklist de Documentação Obrigatória (Item 7.1)</span>
                     </p>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700/60">
                       <label className="flex items-center space-x-2 cursor-pointer select-none">
                         <input
                           type="checkbox"
                           checked={nfFaturaConferida}
                           onChange={(e) => setNfFaturaConferida(e.target.checked)}
-                          className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 rounded border-slate-300 dark:border-slate-600 focus:ring-blue-500"
                         />
-                        <span className="text-slate-700 font-medium">Nota Fiscal / Fatura / Recibo</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-medium">Nota Fiscal / Fatura / Recibo</span>
                       </label>
 
                       <label className="flex items-center space-x-2 cursor-pointer select-none">
@@ -576,9 +584,9 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                           type="checkbox"
                           checked={contratoConferido}
                           onChange={(e) => setContratoConferido(e.target.checked)}
-                          className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 rounded border-slate-300 dark:border-slate-600 focus:ring-blue-500"
                         />
-                        <span className="text-slate-700 font-medium">Contrato / Aditivo Vinculado</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-medium">Contrato / Aditivo Vinculado</span>
                       </label>
 
                       <label className="flex items-center space-x-2 cursor-pointer select-none">
@@ -586,9 +594,9 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                           type="checkbox"
                           checked={cotacoesConferidas}
                           onChange={(e) => setCotacoesConferidas(e.target.checked)}
-                          className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 rounded border-slate-300 dark:border-slate-600 focus:ring-blue-500"
                         />
-                        <span className="text-slate-700 font-medium">3 Cotações de Mercado (se aplicável)</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-medium">3 Cotações de Mercado (se aplicável)</span>
                       </label>
 
                       <label className="flex items-center space-x-2 cursor-pointer select-none">
@@ -596,9 +604,9 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                           type="checkbox"
                           checked={boletoConferido}
                           onChange={(e) => setBoletoConferido(e.target.checked)}
-                          className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 rounded border-slate-300 dark:border-slate-600 focus:ring-blue-500"
                         />
-                        <span className="text-slate-700 font-medium">Boleto / Chave PIX Conferida</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-medium">Boleto / Chave PIX Conferida</span>
                       </label>
 
                       <label className="flex items-center space-x-2 cursor-pointer select-none sm:col-span-2">
@@ -606,21 +614,21 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                           type="checkbox"
                           checked={certidoesConferidas}
                           onChange={(e) => setCertidoesConferidas(e.target.checked)}
-                          className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 rounded border-slate-300 dark:border-slate-600 focus:ring-blue-500"
                         />
-                        <span className="text-slate-700 font-medium">Certidões Negativas Fiscais / Regularidade</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-medium">Certidões Negativas Fiscais / Regularidade</span>
                       </label>
                     </div>
                   </div>
 
                   {/* Withholding section */}
                   <div className="space-y-3 text-xs">
-                    <p className="font-bold text-slate-800 flex items-center space-x-1.5">
-                      <DollarSign className="w-4 h-4 text-amber-600" />
+                    <p className="font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
+                      <DollarSign className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                       <span>2. Retenções Tributárias na Fonte (Item 7.1)</span>
                     </p>
 
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                    <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-3">
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         <label className="flex items-center space-x-1.5 cursor-pointer">
                           <input
@@ -632,7 +640,7 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                             }}
                             className="w-3.5 h-3.5 text-blue-600 rounded"
                           />
-                          <span className="text-slate-700">ISS</span>
+                          <span className="text-slate-700 dark:text-slate-300">ISS</span>
                         </label>
 
                         <label className="flex items-center space-x-1.5 cursor-pointer">
@@ -645,7 +653,7 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                             }}
                             className="w-3.5 h-3.5 text-blue-600 rounded"
                           />
-                          <span className="text-slate-700">INSS</span>
+                          <span className="text-slate-700 dark:text-slate-300">INSS</span>
                         </label>
 
                         <label className="flex items-center space-x-1.5 cursor-pointer">
@@ -658,7 +666,7 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                             }}
                             className="w-3.5 h-3.5 text-blue-600 rounded"
                           />
-                          <span className="text-slate-700">IRRF</span>
+                          <span className="text-slate-700 dark:text-slate-300">IRRF</span>
                         </label>
 
                         <label className="flex items-center space-x-1.5 cursor-pointer">
@@ -671,11 +679,11 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                             }}
                             className="w-3.5 h-3.5 text-blue-600 rounded"
                           />
-                          <span className="text-slate-700">PIS/COFINS/CSLL</span>
+                          <span className="text-slate-700 dark:text-slate-300">PIS/COFINS/CSLL</span>
                         </label>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2 border-t border-slate-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2 border-t border-slate-200 dark:border-slate-700">
                         <label className="flex items-center space-x-2 cursor-pointer">
                           <input
                             type="checkbox"
@@ -692,34 +700,34 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                             }}
                             className="w-3.5 h-3.5 text-blue-600 rounded"
                           />
-                          <span className="text-slate-600 font-medium">Não se aplicam retenções (Simples / Isenção)</span>
+                          <span className="text-slate-600 dark:text-slate-400 font-medium">Não se aplicam retenções (Simples / Isenção)</span>
                         </label>
 
                         <div className="flex items-center space-x-2">
-                          <span className="text-slate-600 font-semibold">Valor Retenções (R$):</span>
+                          <span className="text-slate-600 dark:text-slate-400 font-semibold">Valor Retenções (R$):</span>
                           <input
                             type="number"
                             step="0.01"
                             disabled={retencaoNaoAplicavel}
                             value={valorRetencoes}
                             onChange={(e) => setValorRetencoes(e.target.value)}
-                            className="w-28 px-2.5 py-1 text-xs rounded-lg border border-slate-300 bg-white font-mono text-right focus:outline-none focus:border-blue-500"
+                            className="w-28 px-2.5 py-1 text-xs rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-mono text-right focus:outline-none focus:border-blue-500"
                           />
                         </div>
                       </div>
 
                       {/* Calculation Preview */}
-                      <div className="p-3 rounded-lg bg-blue-50/60 border border-blue-100 flex items-center justify-between text-xs">
-                        <span className="text-slate-600">Valor Bruto: <strong>{formatCurrency(selectedConfReq.valorTotal)}</strong></span>
-                        <span className="text-amber-700">Retenções: <strong>-{formatCurrency(Number(valorRetencoes || 0))}</strong></span>
-                        <span className="text-blue-900 font-bold">Líquido a Pagar: {formatCurrency(selectedConfReq.valorTotal - Number(valorRetencoes || 0))}</span>
+                      <div className="p-3 rounded-lg bg-blue-50/60 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40 flex items-center justify-between text-xs">
+                        <span className="text-slate-600 dark:text-slate-400">Valor Bruto: <strong>{formatCurrency(selectedConfReq.valorTotal)}</strong></span>
+                        <span className="text-amber-700 dark:text-amber-400">Retenções: <strong>-{formatCurrency(Number(valorRetencoes || 0))}</strong></span>
+                        <span className="text-blue-900 dark:text-blue-300 font-bold">Líquido a Pagar: {formatCurrency(selectedConfReq.valorTotal - Number(valorRetencoes || 0))}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Observations */}
                   <div className="space-y-1.5 text-xs">
-                    <label className="font-bold text-slate-700">
+                    <label className="font-bold text-slate-700 dark:text-slate-300">
                       Observações / Justificativa de Pendências:
                     </label>
                     <textarea
@@ -727,17 +735,17 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                       placeholder="Detalhes ou pendências para a área solicitante..."
                       value={pendenciasObservacoes}
                       onChange={(e) => setPendenciasObservacoes(e.target.value)}
-                      className="w-full p-3 rounded-xl border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                      className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   {/* Decision Actions */}
-                  <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
+                  <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                     <button
                       type="button"
                       disabled={confSubmitting}
                       onClick={() => handleProcessConference('DEVOLVIDO_AREA')}
-                      className="px-4 py-2.5 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold transition cursor-pointer flex items-center space-x-1.5"
+                      className="px-4 py-2.5 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-700 dark:text-red-300 text-xs font-bold transition cursor-pointer flex items-center space-x-1.5"
                     >
                       <XCircle className="w-4 h-4" />
                       <span>Devolver com Pendências</span>
@@ -747,7 +755,7 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                       type="button"
                       disabled={confSubmitting}
                       onClick={() => handleProcessConference('LIBERADO_PAGAMENTO')}
-                      className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-sm shadow-blue-200 cursor-pointer flex items-center space-x-1.5"
+                      className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-sm shadow-blue-200 dark:shadow-none cursor-pointer flex items-center space-x-1.5"
                     >
                       <Check className="w-4 h-4" />
                       <span>Conferir e Liberar para Tesouraria</span>
@@ -756,10 +764,10 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
 
                 </div>
               ) : (
-                <div className="p-12 rounded-2xl bg-white border border-slate-200 text-center text-slate-400 text-xs flex flex-col items-center justify-center min-h-[360px] shadow-sm">
-                  <ClipboardCheck className="w-12 h-12 text-slate-300 mb-2" />
-                  <p className="font-bold text-slate-700">Nenhuma solicitação selecionada</p>
-                  <p className="text-[11px] text-slate-500 mt-1 max-w-sm">
+                <div className="p-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-slate-400 dark:text-slate-500 text-xs flex flex-col items-center justify-center min-h-[360px] shadow-sm">
+                  <ClipboardCheck className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-2" />
+                  <p className="font-bold text-slate-700 dark:text-slate-300">Nenhuma solicitação selecionada</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 max-w-sm">
                     Selecione uma solicitação da fila à esquerda para realizar o checklist fiscal, cálculo de retenções e liberação para a Tesouraria.
                   </p>
                 </div>
@@ -776,12 +784,12 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
       {activeSubTab === 'TREASURY' && (
         <div className="space-y-6">
           {treasurySuccessMessage && (
-            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center justify-between shadow-sm">
+            <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-200 text-xs flex items-center justify-between shadow-sm">
               <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <span>{treasurySuccessMessage}</span>
               </div>
-              <button onClick={() => setTreasurySuccessMessage(null)} className="underline text-xs font-bold text-emerald-900 cursor-pointer">
+              <button onClick={() => setTreasurySuccessMessage(null)} className="underline text-xs font-bold text-emerald-900 dark:text-emerald-300 cursor-pointer">
                 Fechar
               </button>
             </div>
@@ -793,14 +801,16 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
             {/* Left Column: Treasury Queue (5 cols) */}
             <div className="lg:col-span-5 space-y-3">
               <div className="flex items-center justify-between px-1">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                   Fila da Tesouraria ({filteredTreasuryList.length})
                 </h3>
                 <div className="flex items-center space-x-1 text-[11px]">
                   <button
                     onClick={() => setTreasuryFilterStatus('ALL')}
                     className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
-                      treasuryFilterStatus === 'ALL' ? 'bg-slate-800 text-white font-bold' : 'text-slate-500 hover:text-slate-800'
+                      treasuryFilterStatus === 'ALL'
+                        ? 'bg-slate-800 dark:bg-slate-700 text-white font-bold'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                     }`}
                   >
                     Todas
@@ -808,7 +818,9 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                   <button
                     onClick={() => setTreasuryFilterStatus('RELEASED')}
                     className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
-                      treasuryFilterStatus === 'RELEASED' ? 'bg-emerald-600 text-white font-bold' : 'text-slate-500 hover:text-slate-800'
+                      treasuryFilterStatus === 'RELEASED'
+                        ? 'bg-emerald-600 text-white font-bold'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                     }`}
                   >
                     A Pagar
@@ -816,7 +828,9 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                   <button
                     onClick={() => setTreasuryFilterStatus('PAID')}
                     className={`px-2 py-0.5 rounded font-medium cursor-pointer ${
-                      treasuryFilterStatus === 'PAID' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:text-slate-800'
+                      treasuryFilterStatus === 'PAID'
+                        ? 'bg-blue-600 text-white font-bold'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                     }`}
                   >
                     Pagas
@@ -826,19 +840,19 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
 
               {/* Search filter */}
               <div className="relative">
-                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                 <input
                   type="text"
                   placeholder="Filtrar por número, favorecido ou comprovante..."
                   value={treasurySearch}
                   onChange={(e) => setTreasurySearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 shadow-sm"
+                  className="w-full pl-8 pr-3 py-2 text-xs rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 shadow-sm"
                 />
               </div>
 
               <div className="space-y-2.5 max-h-[620px] overflow-y-auto pr-1">
                 {filteredTreasuryList.length === 0 ? (
-                  <div className="p-8 rounded-xl bg-white border border-slate-200 text-center text-xs text-slate-500 shadow-sm">
+                  <div className="p-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 shadow-sm">
                     Nenhuma solicitação encontrada na fila da Tesouraria com os filtros atuais.
                   </div>
                 ) : (
@@ -851,27 +865,29 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                         onClick={() => handleSelectTreasuryReq(r)}
                         className={`p-4 rounded-xl border text-xs cursor-pointer transition shadow-sm ${
                           isSelected
-                            ? 'bg-blue-50/80 border-blue-500 ring-2 ring-blue-500/20'
+                            ? 'bg-blue-50/80 dark:bg-blue-950/30 border-blue-500 dark:border-blue-500 ring-2 ring-blue-500/20'
                             : isPago
-                            ? 'bg-white border-slate-200 opacity-80 hover:opacity-100 hover:border-slate-300'
-                            : 'bg-white border-slate-200 hover:border-blue-300 hover:bg-slate-50/50'
+                            ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 opacity-80 hover:opacity-100 hover:border-slate-300 dark:hover:border-slate-700'
+                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-slate-50/50 dark:hover:bg-slate-800/50'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-mono font-bold text-blue-600">{r.numero}</span>
+                          <span className="font-mono font-bold text-blue-600 dark:text-blue-400">{r.numero}</span>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            isPago ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-blue-50 text-blue-700 border border-blue-200'
+                            isPago
+                              ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
+                              : 'bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800'
                           }`}>
                             {isPago ? 'LIQUIDADO / PAGO' : 'LIBERADA P/ PAGAMENTO'}
                           </span>
                         </div>
-                        <p className="font-bold text-slate-800 mt-1 truncate">{r.fornecedorFavorecido}</p>
-                        <p className="text-[11px] text-slate-500 truncate">{r.objetoDespesa}</p>
-                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 text-[11px]">
-                          <span className="font-mono font-bold text-slate-900">
+                        <p className="font-bold text-slate-800 dark:text-slate-200 mt-1 truncate">{r.fornecedorFavorecido}</p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{r.objetoDespesa}</p>
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
+                          <span className="font-mono font-bold text-slate-900 dark:text-slate-100">
                             Líquido: {formatCurrency(r.conferenciaFinanceira?.valorLiquido || r.valorTotal)}
                           </span>
-                          <span className="text-slate-500">
+                          <span className="text-slate-500 dark:text-slate-400">
                             Venc: {new Date(r.dataVencimento).toLocaleDateString('pt-BR')}
                           </span>
                         </div>
@@ -885,91 +901,91 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
             {/* Right Column: Execution Form (7 cols) */}
             <div className="lg:col-span-7">
               {selectedTreasuryReq ? (
-                <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-5">
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900 flex items-center space-x-2">
-                        <Building className="w-4 h-4 text-blue-600" />
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                        <Building className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                         <span>Registro de Liquidação Bancária — {selectedTreasuryReq.numero}</span>
                       </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Favorecido: <strong className="text-slate-800">{selectedTreasuryReq.fornecedorFavorecido}</strong>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        Favorecido: <strong className="text-slate-800 dark:text-slate-200">{selectedTreasuryReq.fornecedorFavorecido}</strong>
                       </p>
                     </div>
                     <button
                       onClick={() => onOpenRequest(selectedTreasuryReq)}
-                      className="text-xs text-blue-600 hover:text-blue-800 font-bold underline cursor-pointer"
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold underline cursor-pointer"
                     >
                       Ver FOR-FIN-01
                     </button>
                   </div>
 
                   {treasuryErrorMessage && (
-                    <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center space-x-2 shadow-sm">
-                      <ShieldAlert className="w-5 h-5 shrink-0 text-red-600" />
+                    <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-300 text-xs flex items-center space-x-2 shadow-sm">
+                      <ShieldAlert className="w-5 h-5 shrink-0 text-red-600 dark:text-red-400" />
                       <span>{treasuryErrorMessage}</span>
                     </div>
                   )}
 
                   {/* Settlement summary */}
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                     <div>
-                      <span className="text-slate-500 block text-[10px] uppercase font-bold">Valor Bruto:</span>
-                      <span className="font-mono text-slate-800 font-bold">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Valor Bruto:</span>
+                      <span className="font-mono text-slate-800 dark:text-slate-200 font-bold">
                         {formatCurrency(selectedTreasuryReq.valorTotal)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block text-[10px] uppercase font-bold">Retenções Tributárias:</span>
-                      <span className="font-mono text-amber-700 font-bold">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Retenções Tributárias:</span>
+                      <span className="font-mono text-amber-700 dark:text-amber-400 font-bold">
                         {formatCurrency(selectedTreasuryReq.conferenciaFinanceira?.valorRetencoes || 0)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-500 block text-[10px] uppercase font-bold">Valor Líquido Desembolsado:</span>
-                      <span className="font-mono text-blue-600 font-bold text-sm">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Valor Líquido Desembolsado:</span>
+                      <span className="font-mono text-blue-600 dark:text-blue-400 font-bold text-sm">
                         {formatCurrency(selectedTreasuryReq.conferenciaFinanceira?.valorLiquido || selectedTreasuryReq.valorTotal)}
                       </span>
                     </div>
                   </div>
 
                   {selectedTreasuryReq.status === 'PAGAMENTO_EFETUADO' ? (
-                    <div className="p-5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 space-y-2.5">
-                      <p className="font-bold text-emerald-800 flex items-center space-x-2 text-sm">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                    <div className="p-5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-xs text-emerald-900 dark:text-emerald-200 space-y-2.5">
+                      <p className="font-bold text-emerald-800 dark:text-emerald-300 flex items-center space-x-2 text-sm">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                         <span>Pagamento Liquidado e Comprovante Arquivado</span>
                       </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-emerald-200/60 text-xs">
-                        <p>Autenticação / Comprovante: <strong className="font-mono text-slate-900">{selectedTreasuryReq.registroPagamento?.numeroComprovante}</strong></p>
-                        <p>Data do Pagamento: <strong className="text-slate-900">{selectedTreasuryReq.registroPagamento?.dataPagamento}</strong></p>
-                        <p>Forma Efetiva: <strong className="text-slate-900">{selectedTreasuryReq.registroPagamento?.formaEfetivaPagamento}</strong></p>
-                        <p>Responsável Tesouraria: <strong className="text-slate-900">{selectedTreasuryReq.registroPagamento?.responsavelTesourariaNome}</strong></p>
-                        <p className="sm:col-span-2">Banco/Conta: <strong className="text-slate-900">{selectedTreasuryReq.registroPagamento?.bancoUtilizado} - Conta: {selectedTreasuryReq.registroPagamento?.contaUtilizada}</strong></p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-emerald-200/60 dark:border-emerald-800/50 text-xs">
+                        <p>Autenticação / Comprovante: <strong className="font-mono text-slate-900 dark:text-slate-100">{selectedTreasuryReq.registroPagamento?.numeroComprovante}</strong></p>
+                        <p>Data do Pagamento: <strong className="text-slate-900 dark:text-slate-100">{selectedTreasuryReq.registroPagamento?.dataPagamento}</strong></p>
+                        <p>Forma Efetiva: <strong className="text-slate-900 dark:text-slate-100">{selectedTreasuryReq.registroPagamento?.formaEfetivaPagamento}</strong></p>
+                        <p>Responsável Tesouraria: <strong className="text-slate-900 dark:text-slate-100">{selectedTreasuryReq.registroPagamento?.responsavelTesourariaNome}</strong></p>
+                        <p className="sm:col-span-2">Banco/Conta: <strong className="text-slate-900 dark:text-slate-100">{selectedTreasuryReq.registroPagamento?.bancoUtilizado} - Conta: {selectedTreasuryReq.registroPagamento?.contaUtilizada}</strong></p>
                       </div>
                     </div>
                   ) : (
                     <div className="space-y-4 text-xs">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block font-semibold text-slate-700 mb-1">
+                          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                             Data do Pagamento Efetivo *
                           </label>
                           <input
                             type="date"
                             value={dataPagamento}
                             onChange={(e) => setDataPagamento(e.target.value)}
-                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-900"
                           />
                         </div>
 
                         <div>
-                          <label className="block font-semibold text-slate-700 mb-1">
+                          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                             Forma Efetiva de Pagamento
                           </label>
                           <select
                             value={formaEfetivaPagamento}
                             onChange={(e) => setFormaEfetivaPagamento(e.target.value)}
-                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-900"
                           >
                             <option value="BOLETO">Boleto Bancário</option>
                             <option value="PIX">PIX</option>
@@ -982,19 +998,19 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block font-semibold text-slate-700 mb-1">
+                          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                             Banco e Conta de Origem (SB Saúde)
                           </label>
                           <input
                             type="text"
                             value={bancoUtilizado}
                             onChange={(e) => setBancoUtilizado(e.target.value)}
-                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-900"
                           />
                         </div>
 
                         <div>
-                          <label className="block font-semibold text-slate-700 mb-1">
+                          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                             Autenticação Bancária / Número do Comprovante *
                           </label>
                           <input
@@ -1003,13 +1019,13 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                             value={numeroComprovante}
                             onChange={(e) => setNumeroComprovante(e.target.value)}
                             required
-                            className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-mono focus:outline-none focus:border-blue-600 focus:bg-white"
+                            className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-mono focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-900"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block font-semibold text-slate-700 mb-1">
+                        <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                           Observações da Liquidação
                         </label>
                         <textarea
@@ -1017,7 +1033,7 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                           placeholder="Observações complementares da tesouraria..."
                           value={observacoes}
                           onChange={(e) => setObservacoes(e.target.value)}
-                          className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white"
+                          className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-900"
                         />
                       </div>
 
@@ -1026,7 +1042,7 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
                           type="button"
                           disabled={treasurySubmitting}
                           onClick={handleExecutePayment}
-                          className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200 transition flex items-center space-x-2 cursor-pointer"
+                          className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200 dark:shadow-none transition flex items-center space-x-2 cursor-pointer"
                         >
                           <CheckCircle2 className="w-4 h-4" />
                           <span>Confirmar Liquidação e Concluir Pagamento</span>
@@ -1037,10 +1053,10 @@ export const FinancialTreasuryView: React.FC<FinancialTreasuryViewProps> = ({
 
                 </div>
               ) : (
-                <div className="p-12 rounded-2xl bg-white border border-slate-200 text-center text-slate-400 text-xs flex flex-col items-center justify-center min-h-[360px] shadow-sm">
-                  <Landmark className="w-12 h-12 text-slate-300 mb-2" />
-                  <p className="font-bold text-slate-700">Nenhuma solicitação selecionada</p>
-                  <p className="text-[11px] text-slate-500 mt-1 max-w-sm">
+                <div className="p-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-slate-400 dark:text-slate-500 text-xs flex flex-col items-center justify-center min-h-[360px] shadow-sm">
+                  <Landmark className="w-12 h-12 text-slate-300 dark:text-slate-600 mb-2" />
+                  <p className="font-bold text-slate-700 dark:text-slate-300">Nenhuma solicitação selecionada</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 max-w-sm">
                     Selecione uma solicitação liberada ao lado para efetuar a liquidação financeira, registro de autenticação bancária e baixa contábil.
                   </p>
                 </div>

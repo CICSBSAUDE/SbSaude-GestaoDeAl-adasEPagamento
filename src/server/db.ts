@@ -140,7 +140,16 @@ class Database {
       await this.persistAllToSql();
     }
 
-    this.syncCostCentersFromMatrices();
+    // Deduplicate cost centers to prevent any duplicate entries (e.g. Acolhimento a Gestantes)
+    if (this.costCenters && this.costCenters.length > 0) {
+      const seenNames = new Set<string>();
+      this.costCenters = this.costCenters.filter((cc) => {
+        const key = (cc.nome || '').toLowerCase().trim();
+        if (seenNames.has(key)) return false;
+        seenNames.add(key);
+        return true;
+      });
+    }
   }
 
   public async persistAllToSql(): Promise<number> {
@@ -1565,9 +1574,6 @@ class Database {
 
     // 6. Start with empty notifications for production
     this.notifications = [];
-
-    // Automatically synchronize and populate all cost centers from active matrix rules
-    this.syncCostCentersFromMatrices();
   }
 
   // --- Cost Center Synchronization from Approval Matrices ---

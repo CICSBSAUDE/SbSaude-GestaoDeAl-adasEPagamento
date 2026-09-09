@@ -62,8 +62,8 @@ export const LogoSBSaude: React.FC<LogoSBSaudeProps> = ({
       {renderSymbol()}
       <div className="flex flex-col leading-tight select-none">
         <span
-          className={`font-black tracking-tight ${dimensions.fontSize} ${
-            isWhite ? 'text-white' : 'text-slate-900'
+          className={`font-black tracking-tight transition-colors duration-200 ${dimensions.fontSize} ${
+            isWhite ? 'text-white' : 'text-slate-900 dark:text-white'
           }`}
           style={{ fontFamily: 'system-ui, -apple-system, sans-serif', letterSpacing: '-0.03em' }}
         >
@@ -71,8 +71,8 @@ export const LogoSBSaude: React.FC<LogoSBSaudeProps> = ({
         </span>
         {showTagline && (
           <span
-            className={`font-medium tracking-normal ${dimensions.subFontSize} ${
-              isWhite ? 'text-slate-300' : 'text-slate-800'
+            className={`font-medium tracking-normal transition-colors duration-200 ${dimensions.subFontSize} ${
+              isWhite ? 'text-slate-300' : 'text-slate-700 dark:text-slate-300'
             }`}
             style={{ marginTop: '-2px' }}
           >

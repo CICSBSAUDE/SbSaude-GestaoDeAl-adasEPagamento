@@ -224,11 +224,11 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
       {/* Top Header & Action Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-sm font-bold text-slate-800 flex items-center space-x-2">
-            <FileSpreadsheet className="w-4 h-4 text-red-600" />
+          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
+            <FileSpreadsheet className="w-4 h-4 text-red-600 dark:text-red-500" />
             <span>Registro de Solicitações</span>
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Consulta consolidada de autorizações de pagamento, trilha de assinaturas e alçadas.
           </p>
         </div>
@@ -236,28 +236,28 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
         <div className="flex items-center gap-2.5">
           <button
             onClick={handleExportCSV}
-            className="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold border border-slate-200 shadow-sm transition flex items-center space-x-1.5"
+            className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-800 shadow-sm transition flex items-center space-x-1.5"
             title="Exportar listagem filtrada para planilha (.csv)"
           >
-            <Download className="w-3.5 h-3.5 text-red-600" />
+            <Download className="w-3.5 h-3.5 text-red-600 dark:text-red-500" />
             <span>Exportar Relatório CSV</span>
           </button>
         </div>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+      <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           
           {/* Search Box */}
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Buscar por número, fornecedor..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-red-600 focus:bg-white transition"
+              className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-red-600 focus:bg-white dark:focus:bg-slate-800 transition"
             />
           </div>
 
@@ -266,7 +266,7 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-red-600 focus:bg-white transition"
+              className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-red-600 focus:bg-white dark:focus:bg-slate-800 transition"
             >
               <option value="TODOS">Todos os Status</option>
               <option value="AGUARDANDO_1_ALCADA">Aguardando 1ª Alçada</option>
@@ -286,7 +286,7 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
             <select
               value={selectedArea}
               onChange={(e) => setSelectedArea(e.target.value)}
-              className="w-full px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+              className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
             >
               <option value="TODAS">Todas as Áreas Solicitantes</option>
               {areas.map((a) => (
@@ -302,7 +302,7 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
             <select
               value={selectedRisk}
               onChange={(e) => setSelectedRisk(e.target.value)}
-              className="w-full px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+              className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
             >
               <option value="TODOS">Todos os Níveis de Risco</option>
               <option value="BAIXO">Risco Baixo</option>
@@ -314,9 +314,9 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
         </div>
 
         {/* Results summary tag */}
-        <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+        <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <span>
-            Exibindo <strong className="text-blue-600">{filtered.length}</strong> de{' '}
+            Exibindo <strong className="text-blue-600 dark:text-blue-400">{filtered.length}</strong> de{' '}
             {requests.length} solicitação(ões)
           </span>
           {(selectedStatus !== 'TODOS' || selectedArea !== 'TODAS' || selectedRisk !== 'TODOS' || searchTerm) && (
@@ -327,7 +327,7 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
                 setSelectedRisk('TODOS');
                 setSearchTerm('');
               }}
-              className="text-xs text-blue-600 hover:underline font-semibold"
+              className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold"
             >
               Limpar filtros
             </button>
@@ -336,15 +336,15 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
       </div>
 
       {/* Requests Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
         {filtered.length === 0 ? (
-          <div className="py-12 text-center text-slate-400 text-xs p-6">
+          <div className="py-12 text-center text-slate-400 dark:text-slate-500 text-xs p-6">
             Nenhuma solicitação encontrada para os filtros selecionados.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
-              <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100">
+              <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-100 dark:border-slate-800">
                 <tr>
                   <th className="py-2 px-2">ID da Solicitação</th>
                   <th className="py-2 px-2">Processo & Objeto</th>
@@ -358,33 +358,33 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
                   <th className="py-2 px-2 text-right">Ação</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filtered.map((r) => (
-                  <tr key={r.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-2.5 px-2 font-mono font-bold text-blue-600 whitespace-nowrap">
+                  <tr key={r.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
+                    <td className="py-2.5 px-2 font-mono font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap">
                       {r.numero}
-                      <span className="block text-[9px] text-slate-400 font-sans font-normal">
+                      <span className="block text-[9px] text-slate-400 dark:text-slate-500 font-sans font-normal">
                         {r.dataSolicitacao}
                       </span>
                     </td>
                     <td className="py-2.5 px-2">
-                      <p className="font-semibold text-slate-800 truncate max-w-[12rem]">{r.processoNome}</p>
-                      <p className="text-[10px] text-slate-500 truncate max-w-[12rem]">{r.objetoDespesa}</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[12rem]">{r.processoNome}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[12rem]">{r.objetoDespesa}</p>
                     </td>
                     <td className="py-2.5 px-2">
-                      <p className="font-medium text-slate-800 truncate max-w-[10rem]">{r.solicitanteNome}</p>
-                      <p className="text-[10px] text-slate-400 truncate max-w-[10rem]">{r.areaSolicitante}</p>
+                      <p className="font-medium text-slate-800 dark:text-slate-200 truncate max-w-[10rem]">{r.solicitanteNome}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-[10rem]">{r.areaSolicitante}</p>
                     </td>
                     <td className="py-2.5 px-2">
-                      <p className="font-medium text-slate-800 truncate max-w-[10rem]">{r.fornecedorFavorecido}</p>
-                      <p className="text-[10px] text-slate-400 font-mono truncate max-w-[10rem]">{r.cpfCnpj || '—'}</p>
+                      <p className="font-medium text-slate-800 dark:text-slate-200 truncate max-w-[10rem]">{r.fornecedorFavorecido}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-mono truncate max-w-[10rem]">{r.cpfCnpj || '—'}</p>
                     </td>
                     <td className="py-2.5 px-2 text-right whitespace-nowrap">
-                      <p className="font-bold text-slate-800 font-mono">
+                      <p className="font-bold text-slate-800 dark:text-slate-100 font-mono">
                         {formatCurrency(r.valorTotal)}
                       </p>
                       {r.parcelamento && r.quantidadeParcelas && (
-                        <p className="text-[10px] text-slate-400 font-medium">
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
                           {r.quantidadeParcelas}x de {formatCurrency(r.valorTotal / r.quantidadeParcelas)}
                         </p>
                       )}
@@ -392,26 +392,26 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
                     <td className="py-2.5 px-2 text-center whitespace-nowrap">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                         r.nivelRisco === 'ALTO'
-                          ? 'bg-red-50 text-red-600 border border-red-200'
+                          ? 'bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/50'
                           : r.nivelRisco === 'MEDIO'
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : 'bg-blue-50 text-blue-600 border border-blue-200'
+                          ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50'
+                          : 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50'
                       }`}>
                         {r.nivelRisco}
                       </span>
                     </td>
                     <td className="py-2.5 px-2 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-semibold">
+                      <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[10px] font-semibold">
                         {r.alcadaAplicavelMaxima}ª Alçada
                       </span>
                     </td>
                     <td className="py-2.5 px-2 whitespace-nowrap">
                       <div className="flex items-center space-x-1.5">
-                        <span className="font-mono text-slate-700">
+                        <span className="font-mono text-slate-700 dark:text-slate-300">
                           {new Date(r.dataVencimento).toLocaleDateString('pt-BR')}
                         </span>
                         {r.alertaVencimentoProximo && (
-                          <span className="px-1.5 py-0.5 rounded bg-red-50 text-red-600 text-[9px] font-bold border border-red-200">
+                          <span className="px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-[9px] font-bold border border-red-200 dark:border-red-800/50">
                             {r.diasUteisAteVencimento}d
                           </span>
                         )}
@@ -420,12 +420,12 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
                     <td className="py-2.5 px-2 whitespace-nowrap">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                         r.status.startsWith('AGUARDANDO_')
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50'
                           : r.status === 'LIBERADA_PAGAMENTO'
-                          ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                          ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50'
                           : r.status === 'PAGAMENTO_EFETUADO'
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : 'bg-red-50 text-red-600 border border-red-200'
+                          ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50'
+                          : 'bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/50'
                       }`}>
                         {r.status.replace(/_/g, ' ')}
                       </span>
@@ -433,7 +433,7 @@ export const RequestsListView: React.FC<RequestsListViewProps> = ({
                     <td className="py-2.5 px-2 text-right whitespace-nowrap">
                       <button
                         onClick={() => onOpenRequest(r)}
-                        className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-600 text-slate-700 hover:text-white font-bold text-xs border border-slate-200 hover:border-blue-600 transition flex items-center space-x-1 ml-auto"
+                        className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 dark:hover:bg-blue-600 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-white font-bold text-xs border border-slate-200 dark:border-slate-700 hover:border-blue-600 dark:hover:border-blue-600 transition flex items-center space-x-1 ml-auto"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Abrir</span>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Header } from './components/Header';
 import { Navigation } from './components/Navigation';
 import { DashboardView } from './components/DashboardView';
@@ -191,9 +192,9 @@ const MainApp: React.FC = () => {
   const isAdmin = currentUser.roles.includes('ADMINISTRADOR');
 
   return (
-    <div className="flex flex-col h-screen w-full font-sans bg-slate-50 text-slate-900 overflow-hidden">
+    <div className="flex flex-col h-screen w-full font-sans bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden transition-colors duration-200">
       
-      {/* Sleek White Top Header */}
+      {/* Sleek Top Header */}
       <Header
         onOpenNewRequest={() => setActiveTab('NEW_REQUEST')}
         onNewRequestClick={() => setActiveTab('NEW_REQUEST')}
@@ -216,7 +217,7 @@ const MainApp: React.FC = () => {
         />
 
         {/* Dynamic Viewport Container */}
-        <main className="flex-1 p-4 sm:p-6 flex flex-col gap-6 overflow-y-auto bg-slate-50">
+        <main className="flex-1 p-4 sm:p-6 flex flex-col gap-6 overflow-y-auto bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
           
           {/* Global Toast Notification */}
           {toastMessage && (
@@ -262,15 +263,15 @@ const MainApp: React.FC = () => {
                   onOpenExportModal={() => showToast('Relatório consolidado pronto para impressão/exportação.')}
                 />
               ) : (
-                <div className="bg-white rounded-2xl border border-amber-200 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4">
-                  <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto border border-amber-100 shadow-sm">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-amber-200 dark:border-amber-900/50 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4 transition-colors">
+                  <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto border border-amber-100 dark:border-amber-900/50 shadow-sm">
                     <ShieldAlert className="w-7 h-7" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-800">
+                    <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">
                       Acesso Restrito ao Setor Financeiro
                     </h3>
-                    <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                       A visualização consolidada de todas as solicitações da instituição é restrita aos colaboradores do Financeiro, Controladoria, Tesouraria e Administradores.
                     </p>
                   </div>
@@ -298,15 +299,15 @@ const MainApp: React.FC = () => {
               isAdmin ? (
                 <MatrixManagementView />
               ) : (
-                <div className="bg-white rounded-2xl border border-red-200 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4">
-                  <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto border border-red-100 shadow-sm">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-red-200 dark:border-red-900/50 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4 transition-colors">
+                  <div className="w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto border border-red-100 dark:border-red-900/50 shadow-sm">
                     <ShieldAlert className="w-7 h-7" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-800">
+                    <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">
                       Acesso Restrito ao Administrador
                     </h3>
-                    <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                       A visualização e edição da <strong>Matriz de Alçadas</strong> é restrita aos administradores do sistema conforme os padrões de governança corporativa.
                     </p>
                   </div>
@@ -331,15 +332,15 @@ const MainApp: React.FC = () => {
                   initialSubTab={activeTab === 'TREASURY' || activeTab === 'TESOURARIA' ? 'TREASURY' : 'CONFERENCE'}
                 />
               ) : (
-                <div className="bg-white rounded-2xl border border-red-200 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4">
-                  <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto border border-red-100 shadow-sm">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-red-200 dark:border-red-900/50 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4 transition-colors">
+                  <div className="w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto border border-red-100 dark:border-red-900/50 shadow-sm">
                     <ShieldAlert className="w-7 h-7" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-800">
+                    <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">
                       Acesso Restrito ao Financeiro e Tesouraria
                     </h3>
-                    <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                       O módulo de <strong>Conferência Fiscal, Retenções e Liquidação Bancária</strong> é restrito aos colaboradores das áreas de Financeiro, Tesouraria, Contas a Pagar e Administradores.
                     </p>
                   </div>
@@ -367,15 +368,15 @@ const MainApp: React.FC = () => {
               isAdmin ? (
                 <UsersManagementView />
               ) : (
-                <div className="bg-white rounded-2xl border border-red-200 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4">
-                  <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto border border-red-100 shadow-sm">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-red-200 dark:border-red-900/50 p-8 text-center max-w-xl mx-auto shadow-sm my-12 space-y-4 transition-colors">
+                  <div className="w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto border border-red-100 dark:border-red-900/50 shadow-sm">
                     <ShieldAlert className="w-7 h-7" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-800">
+                    <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">
                       Acesso Restrito ao Administrador
                     </h3>
-                    <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                       De acordo com a política corporativa e as normas de governança e segregação de funções SGQ (ISO 9001:2015), o gerenciamento de contas, papéis e permissões é restrito a administradores.
                     </p>
                   </div>
@@ -395,7 +396,7 @@ const MainApp: React.FC = () => {
         </main>
       </div>
 
-      {/* Modal: Interactive FOR-FIN-01 Detail & Decision Station */}
+      {/* Modal: Interactive Detail & Decision Station */}
       {selectedRequest && (
         <RequestDetailModal
           request={selectedRequest}
@@ -410,9 +411,11 @@ const MainApp: React.FC = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <MainApp />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

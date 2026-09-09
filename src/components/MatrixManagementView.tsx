@@ -682,7 +682,7 @@ export const MatrixManagementView: React.FC = () => {
       )}
 
       {/* Header & Versioning Bar */}
-      <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm">
+      <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <div className="flex items-center space-x-2.5">
@@ -690,10 +690,10 @@ export const MatrixManagementView: React.FC = () => {
                 <TableProperties className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-slate-800">
+                <h2 className="text-base font-bold text-slate-800 dark:text-white">
                   Matriz de Alçadas e Delegação de Autoridade
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Configure as alçadas responsáveis (N1 a N4) e defina os cargos habilitados para a cadeia sequencial de cada processo.
                 </p>
               </div>
@@ -702,30 +702,30 @@ export const MatrixManagementView: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-2.5">
             {/* Supabase Status Badge */}
-            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 text-[11px] font-medium">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 text-[11px] font-medium">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <Database className="w-3.5 h-3.5 text-emerald-600" />
+              <Database className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span>Supabase Sincronizado</span>
-              <span className="text-[10px] text-emerald-600/70 font-mono">({lastSyncTime})</span>
+              <span className="text-[10px] text-emerald-600/70 dark:text-emerald-400/70 font-mono">({lastSyncTime})</span>
             </div>
 
             {/* Process Catalog Button */}
             <button
               onClick={() => setShowProcessModal(true)}
-              className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-xs font-semibold border border-indigo-200 transition flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+              className="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-800 dark:text-indigo-200 text-xs font-semibold border border-indigo-200 dark:border-indigo-800 transition flex items-center space-x-1.5 cursor-pointer shadow-2xs"
               title="Gerenciar catálogo de processos e objetos padronizados"
             >
-              <FileCheck className="w-3.5 h-3.5 text-indigo-600" />
+              <FileCheck className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
               <span>Catálogo de Processos</span>
             </button>
 
             {/* Supabase Architecture & Schema Button */}
             <button
               onClick={handleOpenSupabaseModal}
-              className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold border border-blue-200 transition flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+              className="px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-800 dark:text-blue-200 text-xs font-semibold border border-blue-200 dark:border-blue-800 transition flex items-center space-x-1.5 cursor-pointer shadow-2xs"
               title="Visualizar arquitetura do Supabase, chaves compostas, índices de busca e políticas RLS"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
               <span>Esquema Supabase (RLS)</span>
             </button>
 
@@ -733,10 +733,10 @@ export const MatrixManagementView: React.FC = () => {
             <button
               onClick={handleReloadFromSql}
               disabled={loading}
-              className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition flex items-center space-x-1.5"
+              className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition flex items-center space-x-1.5"
               title="Recarregar dados diretamente do banco de dados Supabase"
             >
-              <RotateCcw className={`w-3.5 h-3.5 text-slate-600 ${loading ? 'animate-spin' : ''}`} />
+              <RotateCcw className={`w-3.5 h-3.5 text-slate-600 dark:text-slate-400 ${loading ? 'animate-spin' : ''}`} />
               <span>Recarregar do BD</span>
             </button>
 
@@ -745,7 +745,7 @@ export const MatrixManagementView: React.FC = () => {
               <button
                 onClick={handleSaveFullMatrixToSql}
                 disabled={isSavingFullMatrix || loading}
-                className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-200 transition flex items-center space-x-1.5 disabled:opacity-50"
+                className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm shadow-emerald-200 dark:shadow-none transition flex items-center space-x-1.5 disabled:opacity-50"
                 title="Garantir persistência completa de todas as alçadas no Supabase"
               >
                 {isSavingFullMatrix ? (
@@ -763,15 +763,15 @@ export const MatrixManagementView: React.FC = () => {
             )}
 
             {/* Version Selector */}
-            <div className="flex items-center space-x-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-              <span className="text-xs font-bold text-slate-600">Versão:</span>
+            <div className="flex items-center space-x-2 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+              <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Versão:</span>
               <select
                 value={selectedMatrixId}
                 onChange={(e) => setSelectedMatrixId(e.target.value)}
-                className="bg-transparent text-xs text-blue-600 font-bold focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs text-blue-600 dark:text-blue-400 font-bold focus:outline-none cursor-pointer"
               >
                 {matrices.map((m) => (
-                  <option key={m.id} value={m.id} className="bg-white text-slate-800">
+                  <option key={m.id} value={m.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
                     {m.codigo} — {m.versao} ({m.status})
                   </option>
                 ))}
@@ -782,9 +782,9 @@ export const MatrixManagementView: React.FC = () => {
             {currentUser?.roles.includes('ADMINISTRADOR') && (
               <button
                 onClick={() => setShowNewVersionModal(true)}
-                className="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition flex items-center space-x-1.5"
+                className="px-3.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition flex items-center space-x-1.5"
               >
-                <Plus className="w-3.5 h-3.5 text-blue-600" />
+                <Plus className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                 <span>Nova Revisão</span>
               </button>
             )}
@@ -793,7 +793,7 @@ export const MatrixManagementView: React.FC = () => {
             {selectedMatrix?.status === 'RASCUNHO' && currentUser?.roles.includes('ADMINISTRADOR') && (
               <button
                 onClick={() => handlePublish(selectedMatrix.id)}
-                className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200 transition flex items-center space-x-1.5"
+                className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200 dark:shadow-none transition flex items-center space-x-1.5"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Publicar como VIGENTE</span>
@@ -804,30 +804,30 @@ export const MatrixManagementView: React.FC = () => {
 
         {/* Selected Matrix Metadata Pill */}
         {selectedMatrix && (
-          <div className="mt-4 p-3.5 rounded-lg bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+          <div className="mt-4 p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
             <div>
-              <span className="text-slate-500 block text-[10px] uppercase font-bold">Status:</span>
+              <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Status:</span>
               <span
                 className={`font-bold ${
-                  selectedMatrix.status === 'VIGENTE' ? 'text-emerald-600' : 'text-amber-600'
+                  selectedMatrix.status === 'VIGENTE' ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
                 }`}
               >
                 {selectedMatrix.status}
               </span>
             </div>
             <div>
-              <span className="text-slate-500 block text-[10px] uppercase font-bold">Período de Vigência:</span>
-              <span className="text-slate-800">
+              <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Período de Vigência:</span>
+              <span className="text-slate-800 dark:text-slate-200">
                 {selectedMatrix.vigenciaInicio} a {selectedMatrix.vigenciaFim}
               </span>
             </div>
             <div>
-              <span className="text-slate-500 block text-[10px] uppercase font-bold">Aprovação Formal:</span>
-              <span className="text-slate-800">{selectedMatrix.aprovacao}</span>
+              <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Aprovação Formal:</span>
+              <span className="text-slate-800 dark:text-slate-200">{selectedMatrix.aprovacao}</span>
             </div>
             <div>
-              <span className="text-slate-500 block text-[10px] uppercase font-bold">Total de Processos:</span>
-              <span className="font-mono font-bold text-blue-600">
+              <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Total de Processos:</span>
+              <span className="font-mono font-bold text-blue-600 dark:text-blue-400">
                 {selectedMatrix.regras?.length || 0} processos cadastrados
               </span>
             </div>
@@ -836,61 +836,61 @@ export const MatrixManagementView: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Filtrar por processo, código ou cargo habilitado..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+            className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:bg-white dark:focus:bg-slate-800 transition"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Risk Filter */}
           <div className="flex items-center space-x-1.5 text-xs">
-            <span className="text-slate-500 font-semibold text-[11px]">Risco:</span>
+            <span className="text-slate-500 dark:text-slate-400 font-semibold text-[11px]">Risco:</span>
             <select
               value={selectedRisk}
               onChange={(e) => setSelectedRisk(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+              className="px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:bg-white dark:focus:bg-slate-800 transition"
             >
-              <option value="TODOS">Todos os Riscos</option>
-              <option value="BAIXO">Baixo</option>
-              <option value="MEDIO">Médio</option>
-              <option value="ALTO">Alto</option>
+              <option value="TODOS" className="bg-white dark:bg-slate-900">Todos os Riscos</option>
+              <option value="BAIXO" className="bg-white dark:bg-slate-900">Baixo</option>
+              <option value="MEDIO" className="bg-white dark:bg-slate-900">Médio</option>
+              <option value="ALTO" className="bg-white dark:bg-slate-900">Alto</option>
             </select>
           </div>
 
           {/* Tier Filter */}
           <div className="flex items-center space-x-1.5 text-xs">
-            <span className="text-slate-500 font-semibold text-[11px]">Alçada:</span>
+            <span className="text-slate-500 dark:text-slate-400 font-semibold text-[11px]">Alçada:</span>
             <select
               value={selectedTierFilter}
               onChange={(e) => setSelectedTierFilter(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+              className="px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:bg-white dark:focus:bg-slate-800 transition"
             >
-              <option value="TODOS">Todas as Alçadas</option>
-              <option value="1">Requer 1ª Alçada (N1)</option>
-              <option value="2">Requer 2ª Alçada (N2)</option>
-              <option value="3">Requer 3ª Alçada (N3)</option>
-              <option value="4">Requer 4ª Alçada (N4)</option>
+              <option value="TODOS" className="bg-white dark:bg-slate-900">Todas as Alçadas</option>
+              <option value="1" className="bg-white dark:bg-slate-900">Requer 1ª Alçada (N1)</option>
+              <option value="2" className="bg-white dark:bg-slate-900">Requer 2ª Alçada (N2)</option>
+              <option value="3" className="bg-white dark:bg-slate-900">Requer 3ª Alçada (N3)</option>
+              <option value="4" className="bg-white dark:bg-slate-900">Requer 4ª Alçada (N4)</option>
             </select>
           </div>
 
-          <span className="text-xs text-slate-500 font-medium pl-1">
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium pl-1">
             {filteredRules.length} de {selectedMatrix?.regras?.length || 0} processos
           </span>
         </div>
       </div>
 
       {/* Matrix Rules Table */}
-      <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm">
+      <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-700">
-            <thead className="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+          <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
+            <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-700">
               <tr>
                 <th className="py-3.5 px-4 rounded-l-lg">Nº / PROCESSO</th>
                 <th className="py-3.5 px-4">RISCO</th>
@@ -989,17 +989,17 @@ export const MatrixManagementView: React.FC = () => {
                 return (
                   <tr
                     key={regra.id || idx}
-                    className="hover:bg-blue-50/30 transition group"
+                    className="hover:bg-blue-50/30 dark:hover:bg-slate-800/50 transition group"
                   >
                     {/* Process / Number */}
                     <td className="py-4 px-4 align-top">
-                      <span className="font-mono text-blue-600 font-bold text-xs">
+                      <span className="font-mono text-blue-600 dark:text-blue-400 font-bold text-xs">
                         {String(idx + 1).padStart(2, '0')}
                       </span>
-                      <p className="font-bold text-slate-900 mt-0.5 text-xs leading-snug">
+                      <p className="font-bold text-slate-900 dark:text-slate-100 mt-0.5 text-xs leading-snug">
                         {regra.processoNome}
                       </p>
-                      <span className="text-[10px] text-slate-500 font-mono inline-block mt-0.5">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono inline-block mt-0.5">
                         {regra.processoId}
                       </span>
                     </td>
@@ -1009,10 +1009,10 @@ export const MatrixManagementView: React.FC = () => {
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${
                           regra.risco === 'ALTO'
-                            ? 'bg-red-50 text-red-700 border-red-200'
+                            ? 'bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800/50'
                             : regra.risco === 'MEDIO'
-                            ? 'bg-amber-50 text-amber-700 border-amber-200'
-                            : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/50'
+                            : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50'
                         }`}
                       >
                         {regra.risco}
@@ -1020,27 +1020,27 @@ export const MatrixManagementView: React.FC = () => {
                     </td>
 
                     {/* Alçada por evento */}
-                    <td className="py-4 px-4 align-top font-mono font-bold text-slate-900 whitespace-nowrap">
+                    <td className="py-4 px-4 align-top font-mono font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap">
                       {formatCurrency(regra.alçadaPorEvento)}
                     </td>
 
                     {/* Teto mensal */}
-                    <td className="py-4 px-4 align-top font-mono text-slate-700 whitespace-nowrap">
+                    <td className="py-4 px-4 align-top font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap">
                       {formatCurrency(regra.tetoMensal)}
                     </td>
 
                     {/* Cargos Habilitados (Quem pode fazer a solicitação) */}
                     <td className="py-4 px-4 align-top">
                       <div className="space-y-1 max-w-xs">
-                        <div className="flex items-center space-x-1.5 text-indigo-900 font-semibold text-[11px]">
-                          <UserPlus className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                        <div className="flex items-center space-x-1.5 text-indigo-900 dark:text-indigo-300 font-semibold text-[11px]">
+                          <UserPlus className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
                           <span>Quem pode solicitar:</span>
                         </div>
                         <div className="flex flex-wrap gap-1 pt-0.5">
                           {solicitantesList.map((solic, sIdx) => (
                             <span
                               key={sIdx}
-                              className="inline-block px-2 py-0.5 rounded-md bg-indigo-50/80 text-indigo-800 border border-indigo-200/80 text-[11px] font-medium leading-tight"
+                              className="inline-block px-2 py-0.5 rounded-md bg-indigo-50/80 dark:bg-indigo-950/50 text-indigo-800 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/80 text-[11px] font-medium leading-tight"
                             >
                               {solic}
                             </span>
@@ -1056,16 +1056,16 @@ export const MatrixManagementView: React.FC = () => {
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                           <div className="flex items-center space-x-1">
                             {alcadas.length === 0 ? (
-                              <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-500 font-mono text-[10px] font-semibold">
+                              <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-mono text-[10px] font-semibold border border-slate-200 dark:border-slate-700">
                                 Isento de Alçada
                               </span>
                             ) : (
-                              <div className="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 font-mono text-[10px] font-bold space-x-1 shadow-2xs">
+                              <div className="inline-flex items-center px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-mono text-[10px] font-bold space-x-1 shadow-2xs">
                                 {alcadas.map((tier, tIdx) => (
                                   <React.Fragment key={tier}>
                                     <span>N{tier}</span>
                                     {tIdx < alcadas.length - 1 && (
-                                      <span className="text-blue-400 font-normal">➔</span>
+                                      <span className="text-blue-400 dark:text-blue-400 font-normal">➔</span>
                                     )}
                                   </React.Fragment>
                                 ))}
@@ -1078,10 +1078,10 @@ export const MatrixManagementView: React.FC = () => {
                             <span
                               className={`text-[10px] font-medium flex items-center space-x-1 shrink-0 ${
                                 rowSavingStatus[regra.id] === 'saving'
-                                  ? 'text-amber-600 animate-pulse'
+                                  ? 'text-amber-600 dark:text-amber-400 animate-pulse'
                                   : rowSavingStatus[regra.id] === 'saved'
-                                  ? 'text-emerald-700 font-bold'
-                                  : 'text-red-600 font-bold'
+                                  ? 'text-emerald-700 dark:text-emerald-400 font-bold'
+                                  : 'text-red-600 dark:text-red-400 font-bold'
                               }`}
                             >
                               {rowSavingStatus[regra.id] === 'saving' && (
@@ -1092,13 +1092,13 @@ export const MatrixManagementView: React.FC = () => {
                               )}
                               {rowSavingStatus[regra.id] === 'saved' && (
                                 <>
-                                  <Check className="w-3 h-3 text-emerald-600 stroke-[3]" />
+                                  <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400 stroke-[3]" />
                                   <span>Salvo no Supabase</span>
                                 </>
                               )}
                               {rowSavingStatus[regra.id] === 'error' && (
                                 <>
-                                  <AlertCircle className="w-3 h-3 text-red-600" />
+                                  <AlertCircle className="w-3 h-3 text-red-600 dark:text-red-400" />
                                   <span>Erro ao salvar</span>
                                 </>
                               )}
@@ -1108,7 +1108,7 @@ export const MatrixManagementView: React.FC = () => {
 
                         {/* Botões Rápidos Interativos [N1] [N2] [N3] [N4] */}
                         <div className="flex items-center space-x-1.5 pt-0.5">
-                          <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mr-0.5">
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider mr-0.5">
                             Alçadas:
                           </span>
                           {([1, 2, 3, 4] as const).map((tier) => {
@@ -1121,7 +1121,7 @@ export const MatrixManagementView: React.FC = () => {
                                 className={`px-2 py-0.5 rounded text-xs font-mono font-bold transition-all flex items-center space-x-1 shadow-2xs cursor-pointer ${
                                   isToggled
                                     ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm border border-blue-600'
-                                    : 'bg-white text-slate-500 hover:text-blue-700 hover:bg-blue-50 border border-slate-200'
+                                    : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                                 }`}
                                 title={`Clique para ${
                                   isToggled ? 'remover' : 'ativar'
@@ -1136,7 +1136,7 @@ export const MatrixManagementView: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleOpenEditRule(regra)}
-                            className="p-1 rounded text-slate-400 hover:text-blue-700 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition ml-1 cursor-pointer"
+                            className="p-1 rounded text-slate-400 dark:text-slate-500 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700 border border-transparent hover:border-blue-200 dark:hover:border-slate-600 transition ml-1 cursor-pointer"
                             title="Configurar Cargos Habilitados e Detalhes da Alçada"
                           >
                             <Sliders className="w-3.5 h-3.5" />
@@ -1167,10 +1167,10 @@ export const MatrixManagementView: React.FC = () => {
 
                             return (
                               <div key={tier} className="leading-snug text-[10.5px] flex items-baseline">
-                                <span className="font-bold text-slate-700 mr-1 font-mono shrink-0">
+                                <span className="font-bold text-slate-700 dark:text-slate-300 mr-1 font-mono shrink-0">
                                   N{tier}:
                                 </span>
-                                <span className="text-slate-600 truncate max-w-[260px]" title={cargosText}>
+                                <span className="text-slate-600 dark:text-slate-400 truncate max-w-[260px]" title={cargosText}>
                                   {cargosText}
                                 </span>
                               </div>
@@ -1190,36 +1190,36 @@ export const MatrixManagementView: React.FC = () => {
       {/* Modal: Configurar Regra (Alçadas Responsáveis & Cargos Habilitados) */}
       {editingRule && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-5 my-8 max-h-[90vh] overflow-y-auto text-slate-900 dark:text-slate-100">
             {/* Header */}
-            <div className="flex items-start justify-between border-b border-slate-100 pb-4">
+            <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-mono text-xs font-bold">
+                  <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 font-mono text-xs font-bold border border-blue-200 dark:border-blue-800/50">
                     {editingRule.processoId}
                   </span>
                   <span
-                    className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
                       editingRule.risco === 'ALTO'
-                        ? 'bg-red-50 text-red-700'
+                        ? 'bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800/50'
                         : editingRule.risco === 'MEDIO'
-                        ? 'bg-amber-50 text-amber-700'
-                        : 'bg-emerald-50 text-emerald-700'
+                        ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/50'
+                        : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50'
                     }`}
                   >
                     Risco {editingRule.risco}
                   </span>
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mt-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">
                   {editingRule.processoNome}
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Defina os níveis de alçada exigidos e os cargos habilitados para aprovação deste processo.
                 </p>
               </div>
               <button
                 onClick={() => setEditingRule(null)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1269,8 +1269,8 @@ export const MatrixManagementView: React.FC = () => {
                       onClick={() => handleToggleAlcada(tier)}
                       className={`p-3 rounded-xl border text-left transition relative flex flex-col justify-between ${
                         isSelected
-                          ? 'bg-blue-50/80 border-blue-500 text-blue-900 shadow-sm'
-                          : 'bg-slate-50/70 hover:bg-slate-100 border-slate-200 text-slate-600'
+                          ? 'bg-blue-50/80 dark:bg-blue-950/60 border-blue-500 dark:border-blue-600 text-blue-900 dark:text-blue-200 shadow-sm'
+                          : 'bg-slate-50/70 dark:bg-slate-800/70 hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -1279,25 +1279,25 @@ export const MatrixManagementView: React.FC = () => {
                           className={`w-4 h-4 rounded flex items-center justify-center text-[10px] font-bold ${
                             isSelected
                               ? 'bg-blue-600 text-white'
-                              : 'border border-slate-300 bg-white'
+                              : 'border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'
                           }`}
                         >
                           {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
                         </div>
                       </div>
-                      <span className="text-[10px] text-slate-500 mt-1 leading-tight">{sub}</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-tight">{sub}</span>
                     </button>
                   );
                 })}
               </div>
 
               {/* Sequential Flow Live Preview */}
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center space-x-2 text-xs">
-                <span className="text-slate-500 font-semibold text-[11px] shrink-0">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center space-x-2 text-xs">
+                <span className="text-slate-500 dark:text-slate-400 font-semibold text-[11px] shrink-0">
                   Cadeia Sequencial Resultante:
                 </span>
                 {editAlcadas.length === 0 ? (
-                  <span className="text-amber-700 font-semibold text-xs">
+                  <span className="text-amber-700 dark:text-amber-400 font-semibold text-xs">
                     Isento de Aprovação Hierárquica (direto para Conferência Financeira)
                   </span>
                 ) : (
@@ -1308,7 +1308,7 @@ export const MatrixManagementView: React.FC = () => {
                           {idx + 1}ª Etapa: N{tier}
                         </span>
                         {idx < editAlcadas.length - 1 && (
-                          <ArrowRight className="w-3.5 h-3.5 text-blue-400" />
+                          <ArrowRight className="w-3.5 h-3.5 text-blue-400 dark:text-blue-500" />
                         )}
                       </React.Fragment>
                     ))}
@@ -1320,40 +1320,40 @@ export const MatrixManagementView: React.FC = () => {
             {/* SEÇÃO 2: CARGOS HABILITADOS (SOLICITANTE) E CADEIA DE APROVAÇÃO (SUPERIOR A ALÇADA) */}
             <div className="space-y-5 pt-2">
               {/* 2.A: QUEM PODE FAZER A SOLICITAÇÃO */}
-              <div className="p-4 rounded-xl border border-indigo-200 bg-indigo-50/40 space-y-3 shadow-2xs">
+              <div className="p-4 rounded-xl border border-indigo-200 dark:border-indigo-900/60 bg-indigo-50/40 dark:bg-indigo-950/25 space-y-3 shadow-2xs">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-indigo-950 uppercase tracking-wide flex items-center space-x-1.5">
-                    <UserPlus className="w-4 h-4 text-indigo-600" />
+                  <label className="text-xs font-bold text-indigo-950 dark:text-indigo-300 uppercase tracking-wide flex items-center space-x-1.5">
+                    <UserPlus className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     <span>Cargos Habilitados = Quem pode fazer a solicitação</span>
                   </label>
-                  <span className="text-[10px] font-semibold text-indigo-700 bg-indigo-100/70 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-950/60 px-2 py-0.5 rounded-full">
                     {editCargosSolicitante.length === 0
                       ? 'Todos os Colaboradores'
                       : `${editCargosSolicitante.length} cargo(s) selecionado(s)`}
                   </span>
                 </div>
 
-                <p className="text-[11px] text-slate-600 leading-relaxed">
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
                   Defina os cargos autorizados a abrir solicitações para este processo/natureza. Se nenhum for especificado, qualquer colaborador com acesso poderá solicitar.
                 </p>
 
                 {/* Active Solicitantes Tags */}
                 <div className="flex flex-wrap gap-1.5 min-h-7 items-center">
                   {editCargosSolicitante.length === 0 ? (
-                    <span className="text-[11px] text-indigo-700/80 font-medium bg-white px-2.5 py-1 rounded-md border border-indigo-200 shadow-2xs">
+                    <span className="text-[11px] text-indigo-700/80 dark:text-indigo-300 font-medium bg-white dark:bg-slate-800 px-2.5 py-1 rounded-md border border-indigo-200 dark:border-indigo-900 shadow-2xs">
                       Todos os Colaboradores (Sem restrição de cargo de origem)
                     </span>
                   ) : (
                     editCargosSolicitante.map((c) => (
                       <span
                         key={c}
-                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white text-indigo-900 border border-indigo-300 text-xs font-semibold shadow-2xs"
+                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-indigo-900 dark:text-indigo-200 border border-indigo-300 dark:border-indigo-800 text-xs font-semibold shadow-2xs"
                       >
                         <span>{c}</span>
                         <button
                           type="button"
                           onClick={() => handleRemoveCargo(0, c)}
-                          className="text-indigo-400 hover:text-red-600 ml-1 transition"
+                          className="text-indigo-400 hover:text-red-600 dark:hover:text-red-400 ml-1 transition"
                           title="Remover cargo"
                         >
                           <X className="w-3 h-3" />
@@ -1376,12 +1376,12 @@ export const MatrixManagementView: React.FC = () => {
                         handleAddCargo(0, inputCargoSolicitante);
                       }
                     }}
-                    className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-indigo-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-500"
+                    className="flex-1 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-900 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-500"
                   />
                   <button
                     type="button"
                     onClick={() => handleAddCargo(0, inputCargoSolicitante)}
-                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-2xs"
+                    className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-2xs cursor-pointer"
                   >
                     Adicionar
                   </button>
@@ -1389,7 +1389,7 @@ export const MatrixManagementView: React.FC = () => {
 
                 {/* Quick suggestions for Solicitante */}
                 <div className="flex items-center space-x-1.5 flex-wrap pt-1 text-[10px]">
-                  <span className="text-slate-500 font-semibold">Sugestões rápidas:</span>
+                  <span className="text-slate-500 dark:text-slate-400 font-semibold">Sugestões rápidas:</span>
                   {standardSolicitanteSuggestions.map((s) => (
                     <button
                       key={s}
@@ -1398,8 +1398,8 @@ export const MatrixManagementView: React.FC = () => {
                       disabled={editCargosSolicitante.includes(s)}
                       className={`px-2 py-0.5 rounded border transition ${
                         editCargosSolicitante.includes(s)
-                          ? 'bg-indigo-100/50 text-indigo-400 border-indigo-200 cursor-not-allowed'
-                          : 'bg-white text-slate-600 hover:text-indigo-700 border-slate-200 hover:border-indigo-300'
+                          ? 'bg-indigo-100/50 dark:bg-indigo-950/60 text-indigo-400 dark:text-indigo-500 border-indigo-200 dark:border-indigo-900 cursor-not-allowed'
+                          : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 cursor-pointer'
                       }`}
                     >
                       + {s}
@@ -1416,8 +1416,8 @@ export const MatrixManagementView: React.FC = () => {
                         disabled={editCargosSolicitante.includes(c)}
                         className={`px-2 py-0.5 rounded border transition ${
                           editCargosSolicitante.includes(c)
-                            ? 'bg-indigo-100/50 text-indigo-400 border-indigo-200 cursor-not-allowed'
-                            : 'bg-white text-slate-600 hover:text-indigo-700 border-slate-200 hover:border-indigo-300'
+                            ? 'bg-indigo-100/50 dark:bg-indigo-950/60 text-indigo-400 dark:text-indigo-500 border-indigo-200 dark:border-indigo-900 cursor-not-allowed'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 cursor-pointer'
                         }`}
                       >
                         + {c}
@@ -1427,25 +1427,25 @@ export const MatrixManagementView: React.FC = () => {
               </div>
 
               {/* 2.B: QUEM PRECISARÁ FAZER A APROVAÇÃO (CADEIA / VALOR SUPERIOR A ALÇADA) */}
-              <div className="space-y-4 pt-1 border-t border-slate-100">
+              <div className="space-y-4 pt-1 border-t border-slate-100 dark:border-slate-800">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center space-x-1.5">
-                    <UserCheck className="w-4 h-4 text-blue-600" />
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide flex items-center space-x-1.5">
+                    <UserCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     <span>Cadeia de Aprovação = Quem precisará aprovar a solicitação</span>
                   </label>
-                  <span className="text-[10px] text-slate-500 font-medium">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                     Configurado por nível hierárquico (N1 ao N4)
                   </span>
                 </div>
 
               {/* N1 Cargos */}
               {editAlcadas.includes(1) && (
-                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
+                <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-blue-800 font-mono">
+                    <span className="font-bold text-xs text-blue-800 dark:text-blue-300 font-mono">
                       1ª Alçada (N1) — Cargos Habilitados:
                     </span>
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">
                       {editCargos1.length} cargo(s) associado(s)
                     </span>
                   </div>
@@ -1453,20 +1453,20 @@ export const MatrixManagementView: React.FC = () => {
                   {/* Active Cargos Tags */}
                   <div className="flex flex-wrap gap-1.5 min-h-7 items-center">
                     {editCargos1.length === 0 ? (
-                      <span className="text-[11px] text-slate-400 italic">
+                      <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
                         Nenhum cargo específico (utilizará o padrão da área/natureza)
                       </span>
                     ) : (
                       editCargos1.map((c) => (
                         <span
                           key={c}
-                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white text-slate-800 border border-slate-300 text-xs font-medium shadow-2xs"
+                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs font-medium shadow-2xs"
                         >
                           <span>{c}</span>
                           <button
                             type="button"
                             onClick={() => handleRemoveCargo(1, c)}
-                            className="text-slate-400 hover:text-red-600 ml-1"
+                            className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 ml-1 cursor-pointer"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -1488,12 +1488,12 @@ export const MatrixManagementView: React.FC = () => {
                           handleAddCargo(1, inputCargo1);
                         }
                       }}
-                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600"
+                      className="flex-1 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600"
                     />
                     <button
                       type="button"
                       onClick={() => handleAddCargo(1, inputCargo1)}
-                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition"
+                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition cursor-pointer"
                     >
                       Adicionar
                     </button>
@@ -1501,7 +1501,7 @@ export const MatrixManagementView: React.FC = () => {
 
                   {/* Quick Suggestions Chips */}
                   <div className="flex items-center space-x-1.5 flex-wrap pt-1 text-[10px]">
-                    <span className="text-slate-400 font-semibold">Sugestões:</span>
+                    <span className="text-slate-400 dark:text-slate-500 font-semibold">Sugestões:</span>
                     {standardSuggestions[1].map((s) => (
                       <button
                         key={s}
@@ -1510,8 +1510,8 @@ export const MatrixManagementView: React.FC = () => {
                         disabled={editCargos1.includes(s)}
                         className={`px-2 py-0.5 rounded border transition ${
                           editCargos1.includes(s)
-                            ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
-                            : 'bg-white text-slate-600 hover:text-blue-600 border-slate-200 hover:border-blue-300'
+                            ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-700 cursor-not-allowed'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 cursor-pointer'
                         }`}
                       >
                         + {s}
@@ -1523,12 +1523,12 @@ export const MatrixManagementView: React.FC = () => {
 
               {/* N2 Cargos */}
               {editAlcadas.includes(2) && (
-                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
+                <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-blue-800 font-mono">
+                    <span className="font-bold text-xs text-blue-800 dark:text-blue-300 font-mono">
                       2ª Alçada (N2) — Cargos Habilitados:
                     </span>
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">
                       {editCargos2.length} cargo(s) associado(s)
                     </span>
                   </div>
@@ -1536,20 +1536,20 @@ export const MatrixManagementView: React.FC = () => {
                   {/* Active Cargos Tags */}
                   <div className="flex flex-wrap gap-1.5 min-h-7 items-center">
                     {editCargos2.length === 0 ? (
-                      <span className="text-[11px] text-slate-400 italic">
+                      <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
                         Nenhum cargo específico (utilizará o padrão de Gerência da área)
                       </span>
                     ) : (
                       editCargos2.map((c) => (
                         <span
                           key={c}
-                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white text-slate-800 border border-slate-300 text-xs font-medium shadow-2xs"
+                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs font-medium shadow-2xs"
                         >
                           <span>{c}</span>
                           <button
                             type="button"
                             onClick={() => handleRemoveCargo(2, c)}
-                            className="text-slate-400 hover:text-red-600 ml-1"
+                            className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 ml-1 cursor-pointer"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -1571,12 +1571,12 @@ export const MatrixManagementView: React.FC = () => {
                           handleAddCargo(2, inputCargo2);
                         }
                       }}
-                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600"
+                      className="flex-1 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600"
                     />
                     <button
                       type="button"
                       onClick={() => handleAddCargo(2, inputCargo2)}
-                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition"
+                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition cursor-pointer"
                     >
                       Adicionar
                     </button>
@@ -1584,7 +1584,7 @@ export const MatrixManagementView: React.FC = () => {
 
                   {/* Quick Suggestions Chips */}
                   <div className="flex items-center space-x-1.5 flex-wrap pt-1 text-[10px]">
-                    <span className="text-slate-400 font-semibold">Sugestões:</span>
+                    <span className="text-slate-400 dark:text-slate-500 font-semibold">Sugestões:</span>
                     {standardSuggestions[2].map((s) => (
                       <button
                         key={s}
@@ -1593,8 +1593,8 @@ export const MatrixManagementView: React.FC = () => {
                         disabled={editCargos2.includes(s)}
                         className={`px-2 py-0.5 rounded border transition ${
                           editCargos2.includes(s)
-                            ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
-                            : 'bg-white text-slate-600 hover:text-blue-600 border-slate-200 hover:border-blue-300'
+                            ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-700 cursor-not-allowed'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 cursor-pointer'
                         }`}
                       >
                         + {s}
@@ -1606,12 +1606,12 @@ export const MatrixManagementView: React.FC = () => {
 
               {/* N3 Cargos */}
               {editAlcadas.includes(3) && (
-                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
+                <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-blue-800 font-mono">
+                    <span className="font-bold text-xs text-blue-800 dark:text-blue-300 font-mono">
                       3ª Alçada (N3) — Cargos Habilitados:
                     </span>
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">
                       {editCargos3.length} cargo(s) associado(s)
                     </span>
                   </div>
@@ -1619,20 +1619,20 @@ export const MatrixManagementView: React.FC = () => {
                   {/* Active Cargos Tags */}
                   <div className="flex flex-wrap gap-1.5 min-h-7 items-center">
                     {editCargos3.length === 0 ? (
-                      <span className="text-[11px] text-slate-400 italic">
+                      <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
                         Nenhum cargo específico (utilizará Diretoria de Operações / Financeira)
                       </span>
                     ) : (
                       editCargos3.map((c) => (
                         <span
                           key={c}
-                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white text-slate-800 border border-slate-300 text-xs font-medium shadow-2xs"
+                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs font-medium shadow-2xs"
                         >
                           <span>{c}</span>
                           <button
                             type="button"
                             onClick={() => handleRemoveCargo(3, c)}
-                            className="text-slate-400 hover:text-red-600 ml-1"
+                            className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 ml-1 cursor-pointer"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -1654,12 +1654,12 @@ export const MatrixManagementView: React.FC = () => {
                           handleAddCargo(3, inputCargo3);
                         }
                       }}
-                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600"
+                      className="flex-1 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600"
                     />
                     <button
                       type="button"
                       onClick={() => handleAddCargo(3, inputCargo3)}
-                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition"
+                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition cursor-pointer"
                     >
                       Adicionar
                     </button>
@@ -1667,7 +1667,7 @@ export const MatrixManagementView: React.FC = () => {
 
                   {/* Quick Suggestions Chips */}
                   <div className="flex items-center space-x-1.5 flex-wrap pt-1 text-[10px]">
-                    <span className="text-slate-400 font-semibold">Sugestões:</span>
+                    <span className="text-slate-400 dark:text-slate-500 font-semibold">Sugestões:</span>
                     {standardSuggestions[3].map((s) => (
                       <button
                         key={s}
@@ -1676,8 +1676,8 @@ export const MatrixManagementView: React.FC = () => {
                         disabled={editCargos3.includes(s)}
                         className={`px-2 py-0.5 rounded border transition ${
                           editCargos3.includes(s)
-                            ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
-                            : 'bg-white text-slate-600 hover:text-blue-600 border-slate-200 hover:border-blue-300'
+                            ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-700 cursor-not-allowed'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 cursor-pointer'
                         }`}
                       >
                         + {s}
@@ -1689,12 +1689,12 @@ export const MatrixManagementView: React.FC = () => {
 
               {/* N4 Cargos */}
               {editAlcadas.includes(4) && (
-                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
+                <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-blue-800 font-mono">
+                    <span className="font-bold text-xs text-blue-800 dark:text-blue-300 font-mono">
                       4ª Alçada (N4) — Cargos Habilitados:
                     </span>
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">
                       {editCargos4.length} cargo(s) associado(s)
                     </span>
                   </div>
@@ -1702,20 +1702,20 @@ export const MatrixManagementView: React.FC = () => {
                   {/* Active Cargos Tags */}
                   <div className="flex flex-wrap gap-1.5 min-h-7 items-center">
                     {editCargos4.length === 0 ? (
-                      <span className="text-[11px] text-slate-400 italic">
+                      <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
                         Nenhum cargo específico (utilizará Diretoria Executiva / Conselho)
                       </span>
                     ) : (
                       editCargos4.map((c) => (
                         <span
                           key={c}
-                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white text-slate-800 border border-slate-300 text-xs font-medium shadow-2xs"
+                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs font-medium shadow-2xs"
                         >
                           <span>{c}</span>
                           <button
                             type="button"
                             onClick={() => handleRemoveCargo(4, c)}
-                            className="text-slate-400 hover:text-red-600 ml-1"
+                            className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 ml-1 cursor-pointer"
                           >
                             <X className="w-3 h-3" />
                           </button>
@@ -1737,12 +1737,12 @@ export const MatrixManagementView: React.FC = () => {
                           handleAddCargo(4, inputCargo4);
                         }
                       }}
-                      className="flex-1 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600"
+                      className="flex-1 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600"
                     />
                     <button
                       type="button"
                       onClick={() => handleAddCargo(4, inputCargo4)}
-                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition"
+                      className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition cursor-pointer"
                     >
                       Adicionar
                     </button>
@@ -1750,7 +1750,7 @@ export const MatrixManagementView: React.FC = () => {
 
                   {/* Quick Suggestions Chips */}
                   <div className="flex items-center space-x-1.5 flex-wrap pt-1 text-[10px]">
-                    <span className="text-slate-400 font-semibold">Sugestões:</span>
+                    <span className="text-slate-400 dark:text-slate-500 font-semibold">Sugestões:</span>
                     {standardSuggestions[4].map((s) => (
                       <button
                         key={s}
@@ -1759,8 +1759,8 @@ export const MatrixManagementView: React.FC = () => {
                         disabled={editCargos4.includes(s)}
                         className={`px-2 py-0.5 rounded border transition ${
                           editCargos4.includes(s)
-                            ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
-                            : 'bg-white text-slate-600 hover:text-blue-600 border-slate-200 hover:border-blue-300'
+                            ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-700 cursor-not-allowed'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 cursor-pointer'
                         }`}
                       >
                         + {s}
@@ -1773,47 +1773,47 @@ export const MatrixManagementView: React.FC = () => {
             </div>
 
             {/* SEÇÃO 3: LIMITES FINANCEIROS & RISCO */}
-            <div className="pt-2 border-t border-slate-100 space-y-3">
-              <label className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center space-x-1.5">
-                <Shield className="w-4 h-4 text-blue-600" />
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-3">
+              <label className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide flex items-center space-x-1.5">
+                <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <span>3. Limites Financeiros e Nível de Risco</span>
               </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
                     Alçada por Evento (R$)
                   </label>
                   <input
                     type="number"
                     value={editAlcadaPorEvento}
                     onChange={(e) => setEditAlcadaPorEvento(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-mono font-bold focus:outline-none focus:border-blue-600 focus:bg-white"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-mono font-bold focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800"
                   />
-                  <span className="text-[10px] text-slate-400 block mt-0.5">0 = Conforme alçada máxima</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 block mt-0.5">0 = Conforme alçada máxima</span>
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
                     Teto Mensal (R$)
                   </label>
                   <input
                     type="number"
                     value={editTetoMensal}
                     onChange={(e) => setEditTetoMensal(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-mono font-bold focus:outline-none focus:border-blue-600 focus:bg-white"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-mono font-bold focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800"
                   />
-                  <span className="text-[10px] text-slate-400 block mt-0.5">0 = Conforme alçada máxima</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 block mt-0.5">0 = Conforme alçada máxima</span>
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
                     Nível de Risco *
                   </label>
                   <select
                     value={editRisco}
                     onChange={(e) => setEditRisco(e.target.value as RiskLevel)}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 font-bold focus:outline-none focus:border-blue-600 focus:bg-white"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-bold focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800"
                   >
                     <option value="BAIXO">BAIXO</option>
                     <option value="MEDIO">MÉDIO</option>
@@ -1823,7 +1823,7 @@ export const MatrixManagementView: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1 text-xs">
+                <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1 text-xs">
                   Observações de Governança / Requisitos ISO 9001
                 </label>
                 <textarea
@@ -1831,17 +1831,17 @@ export const MatrixManagementView: React.FC = () => {
                   value={editObservacoes}
                   onChange={(e) => setEditObservacoes(e.target.value)}
                   placeholder="Ex: Exige parecer jurídico prévio para rescisões ou compras de alto impacto..."
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800"
                 />
               </div>
             </div>
 
             {/* Modal Footer Buttons */}
-            <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+            <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
               <button
                 type="button"
                 onClick={() => setEditingRule(null)}
-                className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition"
+                className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition cursor-pointer"
               >
                 Cancelar
               </button>
@@ -1872,45 +1872,45 @@ export const MatrixManagementView: React.FC = () => {
       {/* Modal: Nova Versão da Matriz */}
       {showNewVersionModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-xl max-w-lg w-full p-6 shadow-xl space-y-4">
-            <h3 className="text-base font-bold text-slate-800 flex items-center space-x-2">
-              <Sparkles className="w-5 h-5 text-blue-600" />
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl max-w-lg w-full p-6 shadow-xl space-y-4 text-slate-900 dark:text-slate-100">
+            <h3 className="text-base font-bold text-slate-800 dark:text-white flex items-center space-x-2">
+              <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               <span>Criar Nova Revisão da Matriz POL-DIR-01</span>
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Isso criará uma versão em Rascunho clonando todas as regras vigentes. As solicitações antigas continuarão vinculadas à versão em que foram submetidas para auditoria.
             </p>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Código da Versão *</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Código da Versão *</label>
                 <input
                   type="text"
                   value={novaVersao}
                   onChange={(e) => setNovaVersao(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Título Descritivo *</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Título Descritivo *</label>
                 <input
                   type="text"
                   value={novoTitulo}
                   onChange={(e) => setNovoTitulo(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
                   Histórico de Alterações / Motivação
                 </label>
                 <textarea
                   rows={3}
                   value={historicoAlteracoes}
                   onChange={(e) => setHistoricoAlteracoes(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800"
                 />
               </div>
             </div>
@@ -1918,13 +1918,13 @@ export const MatrixManagementView: React.FC = () => {
             <div className="flex justify-end space-x-3 pt-2">
               <button
                 onClick={() => setShowNewVersionModal(false)}
-                className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold"
+                className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleCreateVersion}
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200"
+                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-200 cursor-pointer"
               >
                 Criar Rascunho de Versão
               </button>
@@ -1941,39 +1941,39 @@ export const MatrixManagementView: React.FC = () => {
       {/* Modal: Arquitetura e Esquema Supabase (Chaves Compostas, Índices, RLS) */}
       {showSupabaseModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-4xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-4xl w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto text-slate-900 dark:text-slate-100">
             {/* Header */}
-            <div className="flex items-start justify-between pb-3 border-b border-slate-100">
+            <div className="flex items-start justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm shadow-emerald-200">
                   <Database className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-800 flex items-center space-x-2">
+                  <h3 className="text-base font-bold text-slate-800 dark:text-white flex items-center space-x-2">
                     <span>Arquitetura de Dados Supabase (PostgreSQL)</span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
                       POL-DIR-01 / ISO 9001
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                     Esquema relacional estrito com chaves primárias compostas, índices GIN trgm e políticas de acesso RLS.
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowSupabaseModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Status Card */}
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
               <div className="flex items-center space-x-3">
                 <div className={`w-3 h-3 rounded-full ${dbStatus?.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
                 <div>
-                  <div className="font-bold text-slate-800">
+                  <div className="font-bold text-slate-800 dark:text-slate-100">
                     {loadingDbStatus ? (
                       'Verificando conexão com o Supabase...'
                     ) : dbStatus?.connected ? (
@@ -1984,7 +1984,7 @@ export const MatrixManagementView: React.FC = () => {
                       'Supabase Backend Exclusivo (Configure DATABASE_URL no .env)'
                     )}
                   </div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
                     {dbStatus?.message || 'Pronto para execução e sincronização bidirecional.'}
                   </div>
                 </div>
@@ -1992,11 +1992,11 @@ export const MatrixManagementView: React.FC = () => {
 
               {dbStatus?.tablesCount !== undefined && (
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-bold text-slate-700">
+                  <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-bold text-slate-700 dark:text-slate-200">
                     {dbStatus.tablesCount} Tabelas no Schema
                   </span>
                   {dbStatus.hasRelationalTables && (
-                    <span className="px-2.5 py-1 rounded-lg bg-emerald-100 border border-emerald-300 font-bold text-emerald-800">
+                    <span className="px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 font-bold text-emerald-800 dark:text-emerald-300">
                       Relacional Ativo
                     </span>
                   )}
@@ -2028,75 +2028,75 @@ export const MatrixManagementView: React.FC = () => {
             {/* Grid with 4 Main Pillars */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               {/* 1. Chaves Compostas & Tabelas */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5">
-                <div className="flex items-center space-x-2 text-slate-800 font-bold pb-2 border-b border-slate-100">
-                  <Layers className="w-4 h-4 text-blue-600" />
+              <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs space-y-2.5">
+                <div className="flex items-center space-x-2 text-slate-800 dark:text-slate-100 font-bold pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   <span>14 Tabelas & Chaves Primárias Compostas</span>
                 </div>
-                <ul className="space-y-1.5 text-slate-600 text-[11px]">
-                  <li className="flex items-start justify-between bg-blue-50/50 p-1.5 rounded border border-blue-100">
-                    <span className="font-mono font-bold text-blue-900">regras_alcada</span>
-                    <span className="font-semibold text-blue-700">PK: (matriz_id, processo_id)</span>
+                <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 text-[11px]">
+                  <li className="flex items-start justify-between bg-blue-50/50 dark:bg-blue-950/20 p-1.5 rounded border border-blue-100 dark:border-blue-900">
+                    <span className="font-mono font-bold text-blue-900 dark:text-blue-300">regras_alcada</span>
+                    <span className="font-semibold text-blue-700 dark:text-blue-400">PK: (matriz_id, processo_id)</span>
                   </li>
-                  <li className="flex items-start justify-between bg-blue-50/50 p-1.5 rounded border border-blue-100">
-                    <span className="font-mono font-bold text-blue-900">etapas_aprovacao</span>
-                    <span className="font-semibold text-blue-700">PK: (solicitacao_id, nivel)</span>
+                  <li className="flex items-start justify-between bg-blue-50/50 dark:bg-blue-950/20 p-1.5 rounded border border-blue-100 dark:border-blue-900">
+                    <span className="font-mono font-bold text-blue-900 dark:text-blue-300">etapas_aprovacao</span>
+                    <span className="font-semibold text-blue-700 dark:text-blue-400">PK: (solicitacao_id, nivel)</span>
                   </li>
-                  <li className="flex items-start justify-between bg-blue-50/50 p-1.5 rounded border border-blue-100">
-                    <span className="font-mono font-bold text-blue-900">app_data</span>
-                    <span className="font-semibold text-blue-700">PK: (collection, id)</span>
+                  <li className="flex items-start justify-between bg-blue-50/50 dark:bg-blue-950/20 p-1.5 rounded border border-blue-100 dark:border-blue-900">
+                    <span className="font-mono font-bold text-blue-900 dark:text-blue-300">app_data</span>
+                    <span className="font-semibold text-blue-700 dark:text-blue-400">PK: (collection, id)</span>
                   </li>
-                  <li className="text-slate-500 pt-1">
-                    <strong>Tabelas Mestras:</strong> <span className="font-mono">usuarios, centros_custo, processos, matrizes_alcada, solicitacoes, conferencias_financeiras, registros_pagamento, solicitacao_documentos, auditoria_logs, notificacoes_sistema, configuracoes_sistema</span>.
+                  <li className="text-slate-500 dark:text-slate-400 pt-1">
+                    <strong className="text-slate-700 dark:text-slate-300">Tabelas Mestras:</strong> <span className="font-mono">usuarios, centros_custo, processos, matrizes_alcada, solicitacoes, conferencias_financeiras, registros_pagamento, solicitacao_documentos, auditoria_logs, notificacoes_sistema, configuracoes_sistema</span>.
                   </li>
                 </ul>
               </div>
 
               {/* 2. Índices de Busca e Performance */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5">
-                <div className="flex items-center space-x-2 text-slate-800 font-bold pb-2 border-b border-slate-100">
-                  <Search className="w-4 h-4 text-emerald-600" />
+              <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs space-y-2.5">
+                <div className="flex items-center space-x-2 text-slate-800 dark:text-slate-100 font-bold pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <Search className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span>Índices de Busca e Alta Performance</span>
                 </div>
-                <ul className="space-y-1.5 text-slate-600 text-[11px]">
+                <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 text-[11px]">
                   <li>
-                    <strong className="text-slate-800">Trigram Text Search (pg_trgm):</strong> Índices GIN em <span className="font-mono text-emerald-700">fornecedor_favorecido, objeto_despesa, usuarios.name, processos.name</span> para busca instantânea.
+                    <strong className="text-slate-800 dark:text-slate-200">Trigram Text Search (pg_trgm):</strong> Índices GIN em <span className="font-mono text-emerald-700 dark:text-emerald-400">fornecedor_favorecido, objeto_despesa, usuarios.name, processos.name</span> para busca instantânea.
                   </li>
                   <li>
-                    <strong className="text-slate-800">Índices Compostos B-Tree:</strong> <span className="font-mono text-slate-700">(status, data_vencimento), (centro_custo, status), (solicitante_id, created_at DESC)</span>.
+                    <strong className="text-slate-800 dark:text-slate-200">Índices Compostos B-Tree:</strong> <span className="font-mono text-slate-700 dark:text-slate-400">(status, data_vencimento), (centro_custo, status), (solicitante_id, created_at DESC)</span>.
                   </li>
                   <li>
-                    <strong className="text-slate-800">Índices GIN JSONB:</strong> Consulta ultra-rápida em campos semi-estruturados como dados bancários, risco e justificativas técnicas.
+                    <strong className="text-slate-800 dark:text-slate-200">Índices GIN JSONB:</strong> Consulta ultra-rápida em campos semi-estruturados como dados bancários, risco e justificativas técnicas.
                   </li>
                 </ul>
               </div>
 
               {/* 3. Políticas de Acesso RLS */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5">
-                <div className="flex items-center space-x-2 text-slate-800 font-bold pb-2 border-b border-slate-100">
-                  <ShieldCheck className="w-4 h-4 text-purple-600" />
+              <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs space-y-2.5">
+                <div className="flex items-center space-x-2 text-slate-800 dark:text-slate-100 font-bold pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                   <span>Políticas de Acesso (Row Level Security - RLS)</span>
                 </div>
-                <ul className="space-y-1.5 text-slate-600 text-[11px]">
+                <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 text-[11px]">
                   <li>
-                    <strong className="text-slate-800">Service Role:</strong> Acesso irrestrito de backend para transações de orquestração segura.
+                    <strong className="text-slate-800 dark:text-slate-200">Service Role:</strong> Acesso irrestrito de backend para transações de orquestração segura.
                   </li>
                   <li>
-                    <strong className="text-slate-800">Solicitantes:</strong> Leitura e edição estrita apenas das próprias solicitações em rascunho/abertas.
+                    <strong className="text-slate-800 dark:text-slate-200">Solicitantes:</strong> Leitura e edição estrita apenas das próprias solicitações em rascunho/abertas.
                   </li>
                   <li>
-                    <strong className="text-slate-800">Aprovadores (N1 a N4):</strong> Visibilidade e ação autorizada nas etapas sob sua responsabilidade designada.
+                    <strong className="text-slate-800 dark:text-slate-200">Aprovadores (N1 a N4):</strong> Visibilidade e ação autorizada nas etapas sob sua responsabilidade designada.
                   </li>
                   <li>
-                    <strong className="text-slate-800">Trilha de Auditoria:</strong> Tabela <span className="font-mono text-purple-700">auditoria_logs</span> imutável (append-only) para conformidade ISO 9001:2015.
+                    <strong className="text-slate-800 dark:text-slate-200">Trilha de Auditoria:</strong> Tabela <span className="font-mono text-purple-700 dark:text-purple-400">auditoria_logs</span> imutável (append-only) para conformidade ISO 9001:2015.
                   </li>
                 </ul>
               </div>
 
               {/* 4. Views Analíticas & Governança */}
-              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2.5">
-                <div className="flex items-center space-x-2 text-slate-800 font-bold pb-2 border-b border-slate-100">
-                  <TableProperties className="w-4 h-4 text-amber-600" />
+              <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs space-y-2.5">
+                <div className="flex items-center space-x-2 text-slate-800 dark:text-slate-100 font-bold pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <TableProperties className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                   <span>Views Analíticas & Triggers Automáticos</span>
                 </div>
                 <ul className="space-y-1.5 text-slate-600 text-[11px]">

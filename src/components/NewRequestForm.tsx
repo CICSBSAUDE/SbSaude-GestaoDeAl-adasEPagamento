@@ -428,53 +428,53 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
     <div className="space-y-6 max-w-5xl mx-auto">
       
       {/* Form Title & Standard Header */}
-      <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 gap-2">
+      <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 dark:border-slate-800 gap-2">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-sm shadow-blue-200">
+            <div className="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-sm shadow-blue-200 dark:shadow-none">
               <FilePlus2 className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-800">
+              <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100">
                 Formulário de Registro de Alçada e Aprovação para Pagamento
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Instruído conforme a Política de Alçada e Delegação de Autoridade
               </p>
             </div>
           </div>
           <div className="text-right">
-            <span className="text-[11px] font-mono text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 font-bold">
+            <span className="text-[11px] font-mono text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 rounded border border-blue-100 dark:border-blue-900/50 font-bold">
               Rev. 0 • ISO 9001:2015
             </span>
           </div>
         </div>
 
         {/* User Identity Snapshot */}
-        <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <div className="mt-4 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div>
-            <span className="text-slate-500 block text-[10px] uppercase font-bold">Solicitante:</span>
-            <span className="font-bold text-slate-800">{currentUser?.name}</span>
+            <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Solicitante:</span>
+            <span className="font-bold text-slate-800 dark:text-slate-100">{currentUser?.name}</span>
           </div>
           <div>
-            <span className="text-slate-500 block text-[10px] uppercase font-bold">Cargo & Área:</span>
-            <span className="text-blue-600 font-medium">{currentUser?.cargo} ({currentUser?.area})</span>
+            <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Cargo & Área:</span>
+            <span className="text-blue-600 dark:text-blue-400 font-medium">{currentUser?.cargo} ({currentUser?.area})</span>
           </div>
           <div>
-            <span className="text-slate-500 block text-[10px] uppercase font-bold mb-1">Centro de Custo:</span>
+            <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold mb-1">Centro de Custo:</span>
             <input
               type="text"
               disabled
               value={centroCusto || currentUser?.centroCusto || 'CC-3030 - Finanças'}
-              className="w-full font-mono bg-slate-100 border border-slate-200 rounded px-2 py-1 text-xs text-slate-700 cursor-not-allowed"
+              className="w-full font-mono bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-2 py-1 text-xs text-slate-700 dark:text-slate-300 cursor-not-allowed"
             />
           </div>
         </div>
       </div>
 
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center space-x-2.5">
-          <AlertTriangle className="w-5 h-5 shrink-0 text-red-600" />
+        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-300 text-xs flex items-center space-x-2.5">
+          <AlertTriangle className="w-5 h-5 shrink-0 text-red-600 dark:text-red-400" />
           <span>{errorMessage}</span>
         </div>
       )}
@@ -482,24 +482,24 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         
         {/* Section 1: Process Selection & Value */}
-        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100">
-            <Layers className="w-4 h-4 text-blue-600" />
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
               1. Enquadramento no Processo
             </h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Processo / Objeto Padronizado da Matriz *
               </label>
 
               <select
                 value={processoId}
                 onChange={(e) => handleProcessChange(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
               >
                 {loadingProcesses ? (
                   <option>Carregando processos da matriz...</option>
@@ -513,19 +513,19 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
               </select>
 
               {selectedProcess && (
-                <div className="mt-2 text-[11px] text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
-                  <p className="font-semibold text-slate-800">{selectedProcess.description}</p>
+                <div className="mt-2 text-[11px] text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/70 p-3 rounded-lg border border-slate-200 dark:border-slate-700 space-y-2">
+                  <p className="font-semibold text-slate-800 dark:text-slate-100">{selectedProcess.description}</p>
                   
-                  <div className="flex flex-wrap items-center gap-3 pt-1 border-t border-slate-200/60 text-[10px]">
-                    <span className="text-slate-500">
-                      Natureza: <strong className="text-blue-700 font-bold">{selectedProcess.natureza}</strong>
+                  <div className="flex flex-wrap items-center gap-3 pt-1 border-t border-slate-200/60 dark:border-slate-700 text-[10px]">
+                    <span className="text-slate-500 dark:text-slate-400">
+                      Natureza: <strong className="text-blue-700 dark:text-blue-400 font-bold">{selectedProcess.natureza}</strong>
                     </span>
-                    <span className="text-slate-500">
-                      Risco Base: <strong className="text-slate-700 font-bold">{selectedProcess.riscoPadrao}</strong>
+                    <span className="text-slate-500 dark:text-slate-400">
+                      Risco Base: <strong className="text-slate-700 dark:text-slate-300 font-bold">{selectedProcess.riscoPadrao}</strong>
                     </span>
-                    <span className="text-slate-500">
+                    <span className="text-slate-500 dark:text-slate-400">
                       Cargo Habilitado (POL-DIR-01):{' '}
-                      <strong className="text-indigo-700 font-bold">
+                      <strong className="text-indigo-700 dark:text-indigo-400 font-bold">
                         {selectedProcess.cargoHabilitadoDocumento || 'Diretoria Responsável'}
                       </strong>
                     </span>
@@ -533,15 +533,15 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
                   {/* Authorization Status Indicator */}
                   {isProcessAuthorized(selectedProcess, currentUser) ? (
-                    <div className="flex items-center space-x-2 text-[10px] text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded border border-emerald-200">
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
+                    <div className="flex items-center space-x-2 text-[10px] text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1.5 rounded border border-emerald-200 dark:border-emerald-800/60">
+                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
                       <span>
                         <strong>Perfil Habilitado:</strong> Seu cargo/setor (<strong>{currentUser?.cargo || 'Colaborador'}</strong>) possui legitimidade formal para submeter este processo.
                       </span>
                     </div>
                   ) : (
-                    <div className="flex items-center space-x-2 text-[10px] text-amber-800 bg-amber-50 px-2.5 py-1.5 rounded border border-amber-300">
-                      <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-600" />
+                    <div className="flex items-center space-x-2 text-[10px] text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1.5 rounded border border-amber-300 dark:border-amber-800/60">
+                      <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
                       <span>
                         <strong>Atenção (Alçada Restrita):</strong> Conforme a POL-DIR-01, este processo é restrito ao cargo <strong>[{selectedProcess.cargoHabilitadoDocumento}]</strong>.
                         {currentUser?.roles?.includes('ADMINISTRADOR')
@@ -555,7 +555,7 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Número do Contrato / Processo Vinculado (Opcional)
               </label>
               <input
@@ -563,9 +563,9 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 placeholder="Ex: CT-PREST-2026/042 ou PA-2026/110"
                 value={processoContratoNumero}
                 onChange={(e) => setProcessoContratoNumero(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
               />
-              <p className="text-[10px] text-slate-400 mt-1">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
                 Vincule ao número do contrato ou processo prévio caso aplicável.
               </p>
             </div>
@@ -573,17 +573,17 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
         </div>
 
         {/* Section 2: Expense & Financial Data */}
-        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100">
-            <DollarSign className="w-4 h-4 text-blue-600" />
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <DollarSign className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
               2. Dados do Favorecido e Especificação Financeira
             </h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Fornecedor / Favorecido *
               </label>
               <input
@@ -592,12 +592,12 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 value={fornecedorFavorecido}
                 onChange={(e) => setFornecedorFavorecido(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 CPF / CNPJ do Favorecido
               </label>
               <input
@@ -605,12 +605,12 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 placeholder="00.000.000/0000-00"
                 value={cpfCnpj}
                 onChange={(e) => setCpfCnpj(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Valor Total (R$) *
               </label>
               <input
@@ -621,13 +621,13 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 value={valorTotal}
                 onChange={(e) => setValorTotal(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 font-mono font-bold text-sm focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               Objeto da Despesa / Discriminação Detalhada *
             </label>
             <textarea
@@ -636,19 +636,19 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
               value={objetoDespesa}
               onChange={(e) => setObjetoDespesa(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+              className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
             />
           </div>
 
           <div className={`grid grid-cols-1 gap-4 pt-2 ${natureza === 'CONTINUA' ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Forma de Pagamento
               </label>
               <select
                 value={formaPagamento}
                 onChange={(e) => setFormaPagamento(e.target.value as PaymentMethod)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
               >
                 <option value="BOLETO">Boleto Bancário</option>
                 <option value="PIX">PIX</option>
@@ -660,7 +660,7 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Data de Vencimento *
               </label>
               <input
@@ -668,15 +668,15 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 value={dataVencimento}
                 onChange={(e) => setDataVencimento(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
               />
-              <p className="text-[10px] text-slate-400 mt-1">
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
                 Mínimo de 5 dias úteis de antecedência do vencimento para conferência financeira.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Natureza da Despesa
               </label>
               <select
@@ -690,7 +690,7 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                     setQuantidadeParcelas(1);
                   }
                 }}
-                className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
               >
                 <option value="EVENTUAL">Eventual / Não Recorrente</option>
                 <option value="CONTINUA">Contínua / Mensal Recorrente</option>
@@ -699,7 +699,7 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             {natureza === 'CONTINUA' && (
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Número de Parcelas
                 </label>
                 <input
@@ -709,42 +709,42 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                   value={quantidadeParcelas}
                   onChange={(e) => setQuantidadeParcelas(Number(e.target.value))}
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
                 />
               </div>
             )}
           </div>
 
           {/* Bank Info Fields */}
-          <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-[11px] font-medium text-slate-600 mb-1">Banco Favorecido</label>
+              <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">Banco Favorecido</label>
               <input
                 type="text"
                 placeholder="Ex: 001 - Banco do Brasil / 341 - Itaú"
                 value={banco}
                 onChange={(e) => setBanco(e.target.value)}
-                className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400"
+                className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-medium text-slate-600 mb-1">Agência</label>
+              <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">Agência</label>
               <input
                 type="text"
                 placeholder="Ex: 1234-5"
                 value={agencia}
                 onChange={(e) => setAgencia(e.target.value)}
-                className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400"
+                className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-medium text-slate-600 mb-1">Conta Corrente / Chave PIX</label>
+              <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">Conta Corrente / Chave PIX</label>
               <input
                 type="text"
                 placeholder="Ex: 98765-4 ou CNPJ"
                 value={contaCorrente}
                 onChange={(e) => setContaCorrente(e.target.value)}
-                className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400"
+                className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
               />
             </div>
           </div>
@@ -752,50 +752,50 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
         {/* Section 3: REAL-TIME ENQUADRAMENTO PREVIEW CARD */}
         {enquadramento && (
-          <div className="p-5 rounded-xl bg-blue-50/50 border border-blue-200 shadow-sm space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-blue-100">
+          <div className="p-5 rounded-xl bg-blue-50/50 dark:bg-slate-900 border border-blue-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+            <div className="flex items-center justify-between pb-3 border-b border-blue-100 dark:border-slate-800">
               <div className="flex items-center space-x-2">
-                <Sparkles className="w-4 h-4 text-blue-600" />
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                   Motor de Alçadas — Enquadramento Automático em Tempo Real
                 </h3>
               </div>
-              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 font-bold border border-blue-200">
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold border border-blue-200 dark:border-blue-900/50">
                 {enquadramento.matrizAlcadaCodigo} {enquadramento.matrizAlcadaVersao}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 rounded-lg bg-white border border-slate-200 shadow-sm">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Nível de Risco:</span>
+              <div className="p-3 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm">
+                <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Nível de Risco:</span>
                 <span className={`font-bold text-sm ${
                   enquadramento.nivelRisco === 'ALTO'
-                    ? 'text-red-600'
+                    ? 'text-red-600 dark:text-red-400'
                     : enquadramento.nivelRisco === 'MEDIO'
-                    ? 'text-amber-600'
-                    : 'text-blue-600'
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-blue-600 dark:text-blue-400'
                 }`}>
                   {enquadramento.nivelRisco}
                 </span>
               </div>
 
-              <div className="p-3 rounded-lg bg-white border border-slate-200 shadow-sm">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Alçada Requerida:</span>
-                <span className="font-bold text-blue-600 text-sm">{enquadramento.alcadaAplicavelLabel}</span>
+              <div className="p-3 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm">
+                <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Alçada Requerida:</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400 text-sm">{enquadramento.alcadaAplicavelLabel}</span>
               </div>
 
-              <div className="p-3 rounded-lg bg-white border border-slate-200 shadow-sm">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Limite Mensal:</span>
-                <span className="font-mono text-slate-700">
+              <div className="p-3 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm">
+                <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Limite Mensal:</span>
+                <span className="font-mono text-slate-700 dark:text-slate-200">
                   {enquadramento.tetoMensalProcesso > 0
                     ? `R$ ${enquadramento.tetoMensalProcesso.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
                     : 'Sem limite mensal'}
                 </span>
               </div>
 
-              <div className="p-3 rounded-lg bg-white border border-slate-200 shadow-sm">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Limite Semanal/Evento:</span>
-                <span className="font-mono text-slate-700">
+              <div className="p-3 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm">
+                <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">Limite Semanal/Evento:</span>
+                <span className="font-mono text-slate-700 dark:text-slate-200">
                   {enquadramento.tetoSemanalProcesso > 0
                     ? `R$ ${enquadramento.tetoSemanalProcesso.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
                     : 'Sem limite semanal'}
@@ -805,13 +805,13 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             {/* Isento Aprovação Hierárquica Alert */}
             {enquadramento.isentoAprovacaoHierarquica && (
-              <div className="p-3.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start space-x-3">
-                <Sparkles className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-xs flex items-start space-x-3">
+                <Sparkles className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-bold text-emerald-900">
+                  <p className="font-bold text-emerald-900 dark:text-emerald-200">
                     Isento de Aprovação Hierárquica (Direto ao Financeiro)
                   </p>
-                  <p className="text-[11px] mt-0.5 text-emerald-800">
+                  <p className="text-[11px] mt-0.5 text-emerald-800 dark:text-emerald-300">
                     O valor total está dentro do limite semanal/por evento permitido para este processo. A solicitação será encaminhada diretamente para a fila do Financeiro.
                   </p>
                 </div>
@@ -820,13 +820,13 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             {/* Originator Authorization Alert from Backend Enquadramento */}
             {enquadramento.autorizacaoSolicitante && !enquadramento.autorizacaoSolicitante.autorizado && (
-              <div className="p-3.5 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 text-xs flex items-start space-x-3">
-                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 text-amber-900 dark:text-amber-300 text-xs flex items-start space-x-3">
+                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-bold text-amber-950">
+                  <p className="font-bold text-amber-950 dark:text-amber-200">
                     Restrição de Cargo Solicitante (POL-DIR-01)
                   </p>
-                  <p className="text-[11px] mt-0.5 text-amber-800">
+                  <p className="text-[11px] mt-0.5 text-amber-800 dark:text-amber-300">
                     {enquadramento.autorizacaoSolicitante.motivo}
                   </p>
                 </div>
@@ -835,13 +835,13 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             {/* Split Warning Alert if any */}
             {enquadramento.analiseFracionamento?.possivelFracionamentoIdentificado && (
-              <div className="p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start space-x-3">
-                <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-300 text-xs flex items-start space-x-3">
+                <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-bold text-red-800">
+                  <p className="font-bold text-red-800 dark:text-red-200">
                     Alerta de Fracionamento de Despesa Detectado!
                   </p>
-                  <p className="text-[11px] mt-0.5 text-red-700">
+                  <p className="text-[11px] mt-0.5 text-red-700 dark:text-red-300">
                     {enquadramento.analiseFracionamento.observacao}
                   </p>
                 </div>
@@ -850,16 +850,16 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             {/* Monthly Ceiling Exceeded Warning */}
             {enquadramento.tetoMensalEstourado && (
-              <div className="p-4 rounded-xl bg-amber-50 border-2 border-amber-300 text-amber-900 text-xs flex items-start space-x-3 shadow-sm">
-                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-800/60 text-amber-900 dark:text-amber-300 text-xs flex items-start space-x-3 shadow-sm">
+                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="font-bold text-amber-950 text-xs uppercase tracking-wide">
+                  <p className="font-bold text-amber-950 dark:text-amber-200 text-xs uppercase tracking-wide">
                     ⚠️ Teto Mensal Excedido — Liberação Exclusiva da Diretoria Executiva (POL-DIR-01)
                   </p>
-                  <p className="text-[11px] text-amber-900 leading-relaxed">
-                    O valor acumulado neste mês atinge <strong className="font-mono">R$ {(enquadramento.tetoMensalAcumuladoAtual + Number(valorTotal)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>, superando o teto mensal de <strong className="font-mono">R$ {enquadramento.tetoMensalProcesso.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>.
+                  <p className="text-[11px] text-amber-900 dark:text-amber-300 leading-relaxed">
+                    O valor acumulado neste mês atinge <strong className="font-mono text-amber-950 dark:text-amber-100">R$ {(enquadramento.tetoMensalAcumuladoAtual + Number(valorTotal)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>, superando o teto mensal de <strong className="font-mono text-amber-950 dark:text-amber-100">R$ {enquadramento.tetoMensalProcesso.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>.
                   </p>
-                  <p className="text-[11px] font-semibold text-amber-950 bg-amber-100/80 p-2 rounded-lg border border-amber-200">
+                  <p className="text-[11px] font-semibold text-amber-950 dark:text-amber-200 bg-amber-100/80 dark:bg-amber-900/40 p-2 rounded-lg border border-amber-200 dark:border-amber-800/60">
                     🏛️ <strong>Regra de Governança:</strong> Esta solicitação incluirá obrigatoriamente a <strong>4ª Alçada (Diretoria Executiva / Conselho)</strong> e só poderá ser liberada por usuário com o Centro de Custo <strong>'Diretoria Executiva'</strong> ou <strong>'Diretoria Executiva / Conselho'</strong>.
                   </p>
                 </div>
@@ -868,22 +868,22 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             {/* Approvers Missing Alert Banner */}
             {enquadramento.alertasAprovadores && enquadramento.alertasAprovadores.length > 0 && (
-              <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs space-y-2.5">
+              <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 text-amber-900 dark:text-amber-300 text-xs space-y-2.5">
                 <div className="flex items-start space-x-2.5">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                   <div className="flex-1">
-                    <p className="font-bold text-amber-950 text-xs uppercase tracking-wide">
+                    <p className="font-bold text-amber-950 dark:text-amber-200 text-xs uppercase tracking-wide">
                       ⚠️ Alerta de Alçada: Usuário Aprovador Não Cadastrado para a Natureza/Alçada
                     </p>
                     <div className="mt-2 space-y-1.5">
                       {enquadramento.alertasAprovadores.map((alerta: any, idx: number) => (
-                        <div key={idx} className="p-2.5 rounded-lg bg-amber-100/80 border border-amber-200 text-amber-950">
-                          <p className="font-bold text-[11px] text-amber-900">{alerta.nivelLabel}:</p>
+                        <div key={idx} className="p-2.5 rounded-lg bg-amber-100/80 dark:bg-amber-900/40 border border-amber-200 dark:border-amber-800/60 text-amber-950 dark:text-amber-200">
+                          <p className="font-bold text-[11px] text-amber-900 dark:text-amber-300">{alerta.nivelLabel}:</p>
                           <p className="text-[11px] mt-0.5">{alerta.mensagem}</p>
                         </div>
                       ))}
                     </div>
-                    <p className="text-[10px] text-amber-800 mt-2">
+                    <p className="text-[10px] text-amber-800 dark:text-amber-400 mt-2">
                       💡 <strong>Aviso aos Gestores:</strong> A solicitação poderá ser registrada, mas os aprovadores para esta natureza e centro de custo precisam ser cadastrados no menu <strong>Gestão de Usuários</strong> para que a aprovação possa ser concluída.
                     </p>
                   </div>
@@ -893,19 +893,19 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
             {/* Approvers Workflow Chain Preview */}
             {!enquadramento.isentoAprovacaoHierarquica && (
-              <div className="pt-3 border-t border-slate-200/80">
+              <div className="pt-3 border-t border-slate-200/80 dark:border-slate-800">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                   <div>
-                    <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center space-x-1.5">
-                      <Lock className="w-4 h-4 text-blue-600" />
+                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide flex items-center space-x-1.5">
+                      <Lock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       <span>Cadeia Sequencial de Aprovação Obrigatória (Segregação & Quatro Olhos)</span>
                     </h4>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
-                      Aprovação sequencial parametrizada pelos <strong>Cargos Habilitados</strong> na Matriz para a natureza <span className="font-semibold text-blue-600">{selectedProcess?.natureza || 'Geral'}</span>.
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      Aprovação sequencial parametrizada pelos <strong>Cargos Habilitados</strong> na Matriz para a natureza <span className="font-semibold text-blue-600 dark:text-blue-400">{selectedProcess?.natureza || 'Geral'}</span>.
                     </p>
                   </div>
-                  <span className="self-start sm:self-auto px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 border border-blue-200 text-blue-700 flex items-center space-x-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+                  <span className="self-start sm:self-auto px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 text-blue-700 dark:text-blue-300 flex items-center space-x-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                     <span>{enquadramento.cadeiaAprovacao.length} {enquadramento.cadeiaAprovacao.length === 1 ? 'Etapa Obrigatória' : 'Etapas Sequenciais'}</span>
                   </span>
                 </div>
@@ -918,12 +918,12 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                     const isN4 = etapa.nivel === 4;
 
                     const levelBadgeColor = isN1
-                      ? 'bg-blue-100 text-blue-800 border-blue-200'
+                      ? 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800/60'
                       : isN2
-                      ? 'bg-indigo-100 text-indigo-800 border-indigo-200'
+                      ? 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/60'
                       : isN3
-                      ? 'bg-purple-100 text-purple-800 border-purple-200'
-                      : 'bg-rose-100 text-rose-800 border-rose-200';
+                      ? 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800/60'
+                      : 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800/60';
 
                     const cargosList = etapa.cargosHabilitados && etapa.cargosHabilitados.length > 0
                       ? etapa.cargosHabilitados
@@ -934,18 +934,18 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                         key={idx}
                         className={`p-3.5 rounded-xl border transition relative flex flex-col justify-between ${
                           etapa.semAprovadorCadastrado
-                            ? 'bg-amber-50/60 border-amber-300 shadow-sm'
-                            : 'bg-white border-slate-200 shadow-sm hover:border-blue-300'
+                            ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800/60 shadow-sm'
+                            : 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 shadow-sm hover:border-blue-300 dark:hover:border-blue-600'
                         }`}
                       >
                         {/* Header: Step and Level Badge */}
                         <div>
-                          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700/60">
                             <div className="flex items-center space-x-1.5">
-                              <span className="w-5 h-5 rounded-full bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center">
+                              <span className="w-5 h-5 rounded-full bg-slate-800 dark:bg-slate-700 text-white text-[10px] font-bold flex items-center justify-center">
                                 {idx + 1}
                               </span>
-                              <span className="text-[10px] uppercase font-bold text-slate-600">
+                              <span className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300">
                                 {idx + 1}ª Etapa
                               </span>
                             </div>
@@ -956,15 +956,15 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
 
                           {/* Cargo Habilitado / Cadeia da Matriz */}
                           <div className="mt-2.5">
-                            <div className="flex items-center space-x-1 text-[10px] uppercase font-bold text-slate-500 mb-1">
-                              <Briefcase className="w-3 h-3 text-slate-400" />
+                            <div className="flex items-center space-x-1 text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 mb-1">
+                              <Briefcase className="w-3 h-3 text-slate-400 dark:text-slate-500" />
                               <span>Cargos Habilitados na Matriz:</span>
                             </div>
                             <div className="flex flex-wrap gap-1">
                               {cargosList.map((cargo: string, cIdx: number) => (
                                 <span
                                   key={cIdx}
-                                  className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200 leading-tight"
+                                  className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 dark:bg-slate-700/80 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 leading-tight"
                                 >
                                   {cargo}
                                 </span>
@@ -974,37 +974,37 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                         </div>
 
                         {/* Designated Approver / Colaborador Vinculado */}
-                        <div className="mt-3 pt-2.5 border-t border-slate-100">
-                          <span className="text-[9px] uppercase font-bold text-slate-400 block mb-1">
+                        <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
+                          <span className="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-500 block mb-1">
                             Aprovador Designado:
                           </span>
 
                           {etapa.semAprovadorCadastrado ? (
-                            <div className="p-2 rounded-lg bg-amber-100/70 border border-amber-200 text-amber-900 space-y-1">
-                              <div className="flex items-center space-x-1 text-[11px] font-bold text-amber-800">
-                                <UserX className="w-3.5 h-3.5 shrink-0 text-amber-700" />
+                            <div className="p-2 rounded-lg bg-amber-100/70 dark:bg-amber-900/40 border border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 space-y-1">
+                              <div className="flex items-center space-x-1 text-[11px] font-bold text-amber-800 dark:text-amber-300">
+                                <UserX className="w-3.5 h-3.5 shrink-0 text-amber-700 dark:text-amber-400" />
                                 <span>Sem colaborador cadastrado</span>
                               </div>
-                              <p className="text-[9px] text-amber-800 leading-tight">
+                              <p className="text-[9px] text-amber-800 dark:text-amber-300 leading-tight">
                                 Requer colaborador com perfil de <strong>{etapa.nivel}ª Alçada</strong> e cargo habilitado para <strong>{selectedProcess?.natureza || etapa.natureza || 'a Área'}</strong>.
                               </p>
                             </div>
                           ) : (
-                            <div className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 space-y-1">
+                            <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 space-y-1">
                               <div className="flex items-center justify-between">
-                                <span className="font-bold text-slate-800 text-[11px] truncate flex items-center space-x-1">
-                                  <UserCheck className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                                <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] truncate flex items-center space-x-1">
+                                  <UserCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
                                   <span className="truncate">{etapa.aprovadorDesignadoNome}</span>
                                 </span>
-                                <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">
+                                <span className="text-[9px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-1.5 py-0.2 rounded border border-blue-100 dark:border-blue-900/50">
                                   Vinculado
                                 </span>
                               </div>
-                              <p className="text-[10px] text-blue-700 font-medium truncate">
+                              <p className="text-[10px] text-blue-700 dark:text-blue-400 font-medium truncate">
                                 {etapa.aprovadorDesignadoCargo || etapa.cargoExigido}
                               </p>
                               {(etapa.aprovadorDesignadoCentroCusto || etapa.aprovadorDesignadoArea) && (
-                                <p className="text-[9px] text-slate-400 truncate">
+                                <p className="text-[9px] text-slate-400 dark:text-slate-500 truncate">
                                   {etapa.aprovadorDesignadoCentroCusto || etapa.aprovadorDesignadoArea}
                                 </p>
                               )}
@@ -1016,8 +1016,8 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                   })}
                 </div>
 
-                <div className="mt-2 p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-[10px] text-slate-600 flex items-start space-x-2">
-                  <Info className="w-3.5 h-3.5 text-blue-600 shrink-0 mt-0.5" />
+                <div className="mt-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-[10px] text-slate-600 dark:text-slate-300 flex items-start space-x-2">
+                  <Info className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
                   <p>
                     <strong>Princípio da Segregação de Funções & Regra dos Quatro Olhos:</strong> O solicitante não pode aprovar a própria despesa. Cada etapa é atribuída exclusivamente a colaboradores habilitados com alçadas e cargos independentes conforme a norma <strong>POL-DIR-01</strong>.
                   </p>
@@ -1028,16 +1028,16 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
         )}
 
         {/* Section 4: Qualitative Risk Checklist */}
-        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
               3. Checklist de Risco Assistencial e Regulatório
             </h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100/80 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={criterioAssistencial}
@@ -1045,14 +1045,14 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
               <div>
-                <span className="font-semibold text-slate-800 block">Impacto Assistencial Direto</span>
-                <span className="text-[11px] text-slate-500">
+                <span className="font-semibold text-slate-800 dark:text-slate-100 block">Impacto Assistencial Direto</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">
                   Envolve fornecimento de OPME, procedimentos cirúrgicos ou liminares judiciais.
                 </span>
               </div>
             </label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100/80 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={criterioAns}
@@ -1060,14 +1060,14 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
               <div>
-                <span className="font-semibold text-slate-800 block">Exigência Regulatória ANS / Fiscal</span>
-                <span className="text-[11px] text-slate-500">
+                <span className="font-semibold text-slate-800 dark:text-slate-100 block">Exigência Regulatória ANS / Fiscal</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">
                   Relacionado a exigências da RN ANS nº 518/2022 ou ativos garantidores.
                 </span>
               </div>
             </label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100/80 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={criterioFinanceiro}
@@ -1075,14 +1075,14 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
               <div>
-                <span className="font-semibold text-slate-800 block">Impacto Financeiro Relevante</span>
-                <span className="text-[11px] text-slate-500">
+                <span className="font-semibold text-slate-800 dark:text-slate-100 block">Impacto Financeiro Relevante</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">
                   Despesa extraordinária ou acima da média histórica do centro de custo.
                 </span>
               </div>
             </label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100/80 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={criterioReputacional}
@@ -1090,8 +1090,8 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
               <div>
-                <span className="font-semibold text-slate-800 block">Risco de Imagem / Reputacional</span>
-                <span className="text-[11px] text-slate-500">
+                <span className="font-semibold text-slate-800 dark:text-slate-100 block">Risco de Imagem / Reputacional</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">
                   Potencial repercussão externa, reclamações no Procon ou órgãos de defesa.
                 </span>
               </div>
@@ -1100,10 +1100,10 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
         </div>
 
         {/* Section 5: Technical Justification */}
-        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100">
-            <FileText className="w-4 h-4 text-blue-600" />
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
               4. Justificativa Técnica e Operacional *
             </h3>
           </div>
@@ -1115,26 +1115,25 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
               value={justificativaTecnica}
               onChange={(e) => setJustificativaTecnica(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
+              className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition"
             />
           </div>
         </div>
 
         {/* Section 6: Document Attachments with SHA-256 */}
-        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center space-x-2">
-              <Upload className="w-4 h-4 text-blue-600" />
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              <Upload className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                 5. Anexos Comprobatórios (ISO 9001:2015 7.5)
               </h3>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
               Integridade Criptográfica SHA-256
             </span>
           </div>
 
-          
           <div className="flex flex-wrap gap-2">
             <input 
               type="file" 
@@ -1147,28 +1146,28 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
             <button
               type="button"
               onClick={() => triggerFileUpload('NOTA_FISCAL')}
-              className="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition"
+              className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition"
             >
               + Anexar Nota Fiscal / Fatura
             </button>
             <button
               type="button"
               onClick={() => triggerFileUpload('COTACAO_PRECOS')}
-              className="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition"
+              className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition"
             >
               + Anexar 3 Cotações de Preços
             </button>
             <button
               type="button"
               onClick={() => triggerFileUpload('CONTRATO')}
-              className="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition"
+              className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition"
             >
               + Anexar Contrato Assinado
             </button>
             <button
               type="button"
               onClick={() => triggerFileUpload('BOLETO_BANCARIO')}
-              className="px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition"
+              className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition"
             >
               + Anexar Boleto Bancário
             </button>
@@ -1179,21 +1178,21 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
               {documentos.map((doc, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-xs"
+                  className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs"
                 >
                   <div>
-                    <span className="font-bold text-slate-800">{doc.nomeArquivo}</span>
-                    <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-mono border border-blue-100">
+                    <span className="font-bold text-slate-800 dark:text-slate-100">{doc.nomeArquivo}</span>
+                    <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-mono border border-blue-100 dark:border-blue-900/50">
                       {doc.tipo}
                     </span>
-                    <p className="text-[10px] font-mono text-slate-400 mt-0.5 truncate max-w-lg">
+                    <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500 mt-0.5 truncate max-w-lg">
                       Hash SHA-256: {doc.hashSha256}
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setDocumentos((prev) => prev.filter((_, i) => i !== idx))}
-                    className="text-red-600 hover:text-red-700 text-xs underline font-semibold"
+                    className="text-red-600 dark:text-red-400 hover:text-red-700 text-xs underline font-semibold"
                   >
                     Remover
                   </button>
@@ -1204,77 +1203,77 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
         </div>
 
         {/* Section 7: MANDATORY 5 GOVERNANCE DECLARATIONS */}
-        <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center space-x-2 pb-3 border-b border-slate-200">
-            <Lock className="w-4 h-4 text-blue-600" />
+        <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+          <div className="flex items-center space-x-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <Lock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             <div>
-              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                 6. Declarações Obrigatórias de Governança e Alçadas (POL-DIR-01)
               </h3>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 Assinale as 5 declarações para registrar sua concordância e gerar a assinatura digital no SGQ.
               </p>
             </div>
           </div>
 
           <div className="space-y-2.5 text-xs">
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={decSegregacao}
                 onChange={(e) => setDecSegregacao(e.target.checked)}
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-slate-700">
-                <strong className="text-slate-900">1. Segregação Estrita de Funções:</strong> Declaro que não participarei como aprovador da presente solicitação, respeitando a separação entre solicitação, autorização e desembolso.
+              <span className="text-slate-700 dark:text-slate-300">
+                <strong className="text-slate-900 dark:text-slate-100">1. Segregação Estrita de Funções:</strong> Declaro que não participarei como aprovador da presente solicitação, respeitando a separação entre solicitação, autorização e desembolso.
               </span>
             </label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={decQuatroOlhos}
                 onChange={(e) => setDecQuatroOlhos(e.target.checked)}
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-slate-700">
-                <strong className="text-slate-900">2. Regra dos Quatro Olhos:</strong> Tenho ciência de que solicitações de 2ª, 3ª e 4ª alçadas requerem a aprovação cumulativa e independente de diferentes autoridades.
+              <span className="text-slate-700 dark:text-slate-300">
+                <strong className="text-slate-900 dark:text-slate-100">2. Regra dos Quatro Olhos:</strong> Tenho ciência de que solicitações de 2ª, 3ª e 4ª alçadas requerem a aprovação cumulativa e independente de diferentes autoridades.
               </span>
             </label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={decFracionamento}
                 onChange={(e) => setDecFracionamento(e.target.checked)}
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-slate-700">
-                <strong className="text-slate-900">3. Proibição Expressa de Fracionamento:</strong> Declaro sob responsabilidade funcional que esta despesa não decorre de fracionamento artificial de compra ou contrato visando contornar os limites da POL-DIR-01.
+              <span className="text-slate-700 dark:text-slate-300">
+                <strong className="text-slate-900 dark:text-slate-100">3. Proibição Expressa de Fracionamento:</strong> Declaro sob responsabilidade funcional que esta despesa não decorre de fracionamento artificial de compra ou contrato visando contornar os limites da POL-DIR-01.
               </span>
             </label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={decConflito}
                 onChange={(e) => setDecConflito(e.target.checked)}
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-slate-700">
-                <strong className="text-slate-900">4. Ausência de Conflito de Interesses:</strong> Declaro não possuir qualquer vínculo societário, familiar ou de parentesco direto com o fornecedor favorecido indicado.
+              <span className="text-slate-700 dark:text-slate-300">
+                <strong className="text-slate-900 dark:text-slate-100">4. Ausência de Conflito de Interesses:</strong> Declaro não possuir qualquer vínculo societário, familiar ou de parentesco direto com o fornecedor favorecido indicado.
               </span>
             </label>
 
-            <label className="flex items-start space-x-3 p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <label className="flex items-start space-x-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100/80 dark:hover:bg-slate-800 cursor-pointer transition">
               <input
                 type="checkbox"
                 checked={decPrevia}
                 onChange={(e) => setDecPrevia(e.target.checked)}
                 className="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-slate-700">
-                <strong className="text-slate-900">5. Aprovação Prévia ao Compromisso:</strong> Confirmo que nenhum compromisso financeiro formal ou informal foi assumido antes da autorização competente das alçadas designadas.
+              <span className="text-slate-700 dark:text-slate-300">
+                <strong className="text-slate-900 dark:text-slate-100">5. Aprovação Prévia ao Compromisso:</strong> Confirmo que nenhum compromisso financeiro formal ou informal foi assumido antes da autorização competente das alçadas designadas.
               </span>
             </label>
           </div>
@@ -1286,7 +1285,7 @@ export const NewRequestForm: React.FC<NewRequestFormProps> = ({
             type="button"
             onClick={onCancel}
             disabled={submitting}
-            className="px-4 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold border border-slate-200 shadow-sm transition"
+            className="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold border border-slate-200 dark:border-slate-700 shadow-sm transition"
           >
             Cancelar
           </button>
